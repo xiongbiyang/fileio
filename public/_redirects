@@ -1,0 +1,2 @@
+# Cloudflare Pages redirects
+/r/*  /tools/clipboard?room=:splat  302

@@ -1,0 +1,87 @@
+---
+title: "Free Online QR Code Generator — Custom Colors, Logo & Batch Export"
+---
+
+QR codes are everywhere — menus, payment links, WiFi sharing, event tickets. But most QR code generators are bloated with ads or require signup. Here's a better alternative.
+
+## Why Another QR Code Generator?
+
+Most free QR code tools have these problems:
+
+- **Watermarks** on free tier
+- **Require signup** just to download
+- **Upload your data** to their servers
+- **Limited customization** behind paywall
+- **No batch mode** for bulk generation
+
+ToolPort's [QR Code Generator](/tools/qr-code) solves all of these — free, no signup, fully local.
+
+## Features
+
+### Custom Design
+- **Foreground & background colors** — match your brand
+- **Logo overlay** — place your logo in the center
+- **Error correction levels** — L, M, Q, H (higher = more damage-resistant)
+- **Multiple sizes** — from 128px to 1024px
+
+### Scan & Decode
+- **Camera scanning** — use your device camera in real-time
+- **Image upload** — drag and drop any image containing a QR code
+- **Scan history** — recent scans saved locally for quick reference
+
+### Batch Generation
+- **CSV import** — upload a list of URLs, generate hundreds of QR codes at once
+- **Manual input** — paste URLs line by line
+- **Bulk download** — export all as individual PNGs or a ZIP archive
+
+### Download Formats
+- **PNG** — pixel format, great for screens and documents
+- **SVG** — vector format, perfect for print and scaling
+
+## How to Generate a QR Code
+
+1. Go to [toolport.dev/tools/qr-code](/tools/qr-code)
+2. Paste your URL or text in the input field
+3. Customize colors and add a logo (optional)
+4. Click **Download PNG** or **Download SVG**
+
+That's it. No signup, no watermark, no limits.
+
+## Common Use Cases
+
+### Business & Marketing
+- **Product packaging** — link to manuals or reviews
+- **Business cards** — link to your portfolio or LinkedIn
+- **Flyers & posters** — link to event details or booking pages
+
+### Restaurant & Retail
+- **Digital menus** — replace paper menus with QR codes
+- **WiFi sharing** — generate a WiFi QR code (SSID + password)
+- **Payment links** — direct customers to payment pages
+
+### Personal Use
+- **Share WiFi password** — guests scan and connect instantly
+- **Share contact info** — vCard QR codes
+- **Link to your playlist** — share Spotify/Apple Music links
+
+## QR Code Best Practices
+
+1. **Test before printing** — always scan your QR code to verify
+2. **Use high error correction (H)** if adding a logo
+3. **Ensure contrast** — dark foreground on light background
+4. **Keep URLs short** — shorter data = simpler QR code = faster scanning
+5. **Add a call-to-action** — "Scan to learn more" increases scan rates by 30%+
+
+## Privacy & Security
+
+- All QR code generation happens **in your browser** using JavaScript
+- Your URLs and data are **never sent to any server**
+- No tracking, no analytics, no cookies required
+
+## Try It Now
+
+Generate your first QR code in seconds: [QR Code Generator](/tools/qr-code)
+
+---
+
+*Need a tool we don't have yet? [Vote for new tools](/tool-request) and help shape ToolPort's roadmap.*

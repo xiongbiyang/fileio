@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Color tokens: light mode defaults ── */
+:root {
+  --color-surface-container-lowest: 255 255 255;
+  --color-surface-container-low: 243 244 245;
+  --color-surface-container: 237 238 240;
+  --color-surface-container-high: 231 232 234;
+  --color-surface-container-highest: 225 227 228;
+  --color-on-surface-variant: 62 73 70;
+  --color-outline: 111 121 119;
+  --color-outline-variant: 190 201 197;
+}
+
+/* ── Color tokens: dark mode overrides ── */
+.dark {
+  --color-surface-container-lowest: 14 17 17;
+  --color-surface-container-low: 25 28 29;
+  --color-surface-container: 29 33 32;
+  --color-surface-container-high: 39 43 42;
+  --color-surface-container-highest: 50 54 54;
+  --color-on-surface-variant: 188 201 197;
+  --color-outline: 136 148 145;
+  --color-outline-variant: 62 73 70;
+}
+
+/* ── Material Symbols config ── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ── Premium gradient ── */
+.premium-gradient,
+.primary-gradient {
+  background: linear-gradient(135deg, #005147 0%, #006b5e 100%);
+}
+
+/* ── Glass panel ── */
+.glass-panel {
+  background: rgba(248, 249, 250, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .glass-panel {
+  background: rgba(25, 28, 29, 0.85);
+}
+
+/* ── Ambient shadow ── */
+.shadow-ambient {
+  box-shadow: 0 20px 40px rgba(25, 28, 29, 0.04);
+}
+
+/* ── Soft pulse animation ── */
+.soft-pulse {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+/* ── Smooth scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bec9c5;
+  border-radius: 999px;
+}
+
+/* ── Base styles ── */
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid #005147;
+  outline-offset: 2px;
+}

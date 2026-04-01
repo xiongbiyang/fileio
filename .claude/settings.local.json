@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''d:/work/web/toolbase/i18n/en.json'',''utf8''\\)\\); console.log\\(''en.json OK''\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''d:/work/web/toolbase/i18n/zh-CN.json'',''utf8''\\)\\); console.log\\(''zh-CN.json OK''\\)\")",
+      "Bash(npx nuxt:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx nuxt build)",
+      "Bash(npm install:*)",
+      "Bash(find /d/work/web/toolbase -type d -name tool_*)",
+      "Bash(ls -1 /d/work/web/toolbase/stitch/tool_a_*)",
+      "Bash(xargs -n1 basename)",
+      "Bash(python3:*)"
+    ]
+  }
+}
