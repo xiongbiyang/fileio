@@ -27,5 +27,8 @@ logs
 # Wrangler temp files
 .wrangler/
 
+# PartyKit local state
+.partykit/state/
+
 # Design files (keep separate)
 stitch/
