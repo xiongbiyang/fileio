@@ -5,7 +5,7 @@
         <span class="font-headline text-lg font-bold text-on-surface dark:text-surface">ToolPort</span>
         <div v-if="isConnected" class="flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
           <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" /><span class="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
-          <span class="text-xs font-medium text-primary">{{ $t('toolA.mobileConnectedTo') }}</span>
+          <span class="text-xs font-medium text-primary">{{ $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) }}</span>
         </div>
         <div v-else class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full">
           <span class="w-2 h-2 rounded-full bg-outline animate-pulse" />
@@ -94,7 +94,7 @@
           </div>
           <div class="text-on-surface-variant text-sm font-medium">
             <p>{{ $t('toolA.scanQr') }}</p>
-            <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">toolport.dev/r/{{ roomId }}</p>
+            <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">toolport.dev/tools/text-transfer?r={{ roomId }}</p>
           </div>
         </div>
 
@@ -167,6 +167,7 @@ interface DocCard {
 
 defineProps<{
   isConnected: boolean
+  connectedDeviceName: string
   receivedMessages: WaitingMessage[]
   mobileRecentTransfers: RecentTransferItem[]
   qrExpired: boolean

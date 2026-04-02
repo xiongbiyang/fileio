@@ -11,6 +11,7 @@ interface WebRTCReturn {
   setRemoteDescription: (desc: RTCSessionDescriptionInit) => Promise<void>
   restartIce: () => Promise<RTCSessionDescriptionInit>
   receiveRestartOffer: (offer: RTCSessionDescriptionInit) => Promise<RTCSessionDescriptionInit>
+  sendControl: (type: string, data?: unknown) => void
   sendText: (text: string) => void
   sendFile: (file: File, onProgress?: (progress: number) => void) => Promise<void>
   cancelSend: () => void
@@ -152,10 +153,14 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     return pc.localDescription as RTCSessionDescriptionInit
   }
 
-  function sendText(text: string) {
+  function sendControl(type: string, data?: unknown) {
     if (dataChannel?.readyState === 'open') {
-      dataChannel.send(JSON.stringify({ type: 'text', data: text }))
+      dataChannel.send(JSON.stringify({ type, data }))
     }
+  }
+
+  function sendText(text: string) {
+    sendControl('text', text)
   }
 
   async function sendFile(file: File, onProgress?: (progress: number) => void) {
@@ -233,15 +238,16 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     disconnect()
   })
 
-  return {
-    connectionState,
-    connect,
-    setRemoteDescription,
-    restartIce,
-    receiveRestartOffer,
-    sendText,
-    sendFile,
-    cancelSend,
-    disconnect,
-  }
+    return {
+      connectionState,
+      connect,
+      setRemoteDescription,
+      restartIce,
+      receiveRestartOffer,
+      sendControl,
+      sendText,
+      sendFile,
+      cancelSend,
+      disconnect,
+    }
 }

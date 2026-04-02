@@ -3,13 +3,33 @@ import { renderQrCodeToCanvas } from '~/utils/qrcode'
 import { generateRoomId } from '~/utils/roomId'
 import { formatSize, formatSpeed, formatTime } from '~/utils/transferFormat'
 import {
-  sharedDeviceHistoryItems,
-  textTransferHistoryItems,
   textTransferKeyFingerprint,
-  textTransferRecentTransfers,
   textTransferSecurityLogs,
 } from '~/constants/toolPageData'
-import type { TransferState } from '~/types/toolPages'
+import type { DeviceHistoryItem, RecentTransferItem, TransferHistoryItem, TransferState } from '~/types/toolPages'
+
+interface StoredTransferRecord {
+  id: string
+  name: string
+  sizeBytes: number
+  direction: 'sent' | 'received'
+  status: 'pending' | 'completed' | 'failed'
+  timestamp: number
+  deviceName: string
+  deviceIcon: string
+}
+
+interface StoredDeviceRecord {
+  id: string
+  name: string
+  icon: string
+  lastSeen: number
+  online: boolean
+}
+
+const TRANSFER_HISTORY_KEY = 'tp_text_transfer_history'
+const DEVICE_HISTORY_KEY = 'tp_text_transfer_devices'
+const REMOTE_DEVICE_ID = 'remote-peer'
 
 export function useTextTransferPage() {
   const { t } = useI18n()
@@ -37,6 +57,10 @@ export function useTextTransferPage() {
   let disconnectTimer: ReturnType<typeof setTimeout> | null = null
   let receiveTimeoutTimer: ReturnType<typeof setTimeout> | null = null
   const RECEIVE_TIMEOUT_MS = 30_000
+  const transferRecords = ref<StoredTransferRecord[]>([])
+  const deviceRecords = ref<StoredDeviceRecord[]>([])
+  const remoteDeviceName = ref('')
+  const remoteDeviceIcon = ref('devices')
 
   const webrtc = useWebRTC({
     onMessage: (data) => {
@@ -45,6 +69,9 @@ export function useTextTransferPage() {
           const msg = JSON.parse(data)
           if (msg.type === 'text') {
             receivedMessages.value.push({ id: crypto.randomUUID(), content: msg.data as string, isSelf: false })
+          }
+          else if (msg.type === 'peer-meta') {
+            applyRemotePeerMeta(msg.data)
           }
           else if (msg.type === 'file-meta') {
             incomingFileMeta = { name: msg.name as string, size: msg.size as number, mimeType: msg.mimeType as string }
@@ -57,6 +84,13 @@ export function useTextTransferPage() {
           }
           else if (msg.type === 'file-end' && incomingFileMeta) {
             clearReceiveTimeout()
+            pushTransferRecord({
+              name: incomingFileMeta.name,
+              sizeBytes: incomingFileMeta.size,
+              direction: 'received',
+              status: 'completed',
+              ...getCurrentRemoteDeviceInfo(),
+            })
             const blob = new Blob(incomingFileChunks, { type: incomingFileMeta.mimeType || 'application/octet-stream' })
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
@@ -103,18 +137,22 @@ export function useTextTransferPage() {
     onStateChange: (connectionState) => {
       if (connectionState === 'connected') {
         clearDisconnectTimer()
+        markRemoteDeviceOnline(true)
+        sendLocalPeerMeta()
         if (state.value === 'pairing' || state.value === 'waiting' || state.value === 'reconnecting') {
           state.value = 'transferring'
         }
         signaling.disconnect()
       }
       else if (connectionState === 'disconnected' && state.value === 'transferring') {
+        markRemoteDeviceOnline(false)
         disconnectTimer = setTimeout(() => {
           if (webrtc.connectionState.value !== 'connected') attemptReconnect()
         }, 8000)
       }
       else if (connectionState === 'failed' && state.value === 'transferring') {
         clearDisconnectTimer()
+        markRemoteDeviceOnline(false)
         attemptReconnect()
       }
     },
@@ -122,14 +160,65 @@ export function useTextTransferPage() {
   const signaling = useSignaling(roomId)
 
   const queuedFiles = computed(() => fileQueue.value.map(file => ({ name: file.name, size: formatSize(file.size) })))
-  const mobileRecentTransfers = textTransferRecentTransfers
-  const devices = sharedDeviceHistoryItems
-  const historyStats = [
-    { icon: 'upload', value: '1.2 GB', label: t('toolA.totalSent') },
-    { icon: 'hub', value: '04', label: t('toolA.activeNodesLabel') },
-    { icon: 'lock', value: 'AES-256', label: t('toolA.securityLevelLabel') },
-  ]
-  const transferHistoryItems = textTransferHistoryItems
+  const mobileRecentTransfers = computed<RecentTransferItem[]>(() =>
+    transferRecords.value
+      .filter(item => item.status === 'completed')
+      .slice(0, 5)
+      .map(item => ({
+        icon: inferFileIcon(item.name),
+        name: item.name,
+        desc: `${formatSize(item.sizeBytes)} - ${item.direction === 'sent' ? t('toolA.recentDirectionSent') : t('toolA.recentDirectionReceived')}`,
+        time: formatCompactElapsed(item.timestamp, t),
+      })),
+  )
+  const devices = computed<DeviceHistoryItem[]>(() =>
+    deviceRecords.value.map(item => ({
+      icon: item.icon,
+      name: item.name,
+      time: formatElapsed(item.lastSeen, t),
+      online: item.online,
+    })),
+  )
+  const historyStats = computed(() => {
+    const sentBytes = transferRecords.value
+      .filter(item => item.direction === 'sent' && item.status === 'completed')
+      .reduce((sum, item) => sum + item.sizeBytes, 0)
+    const activeNodes = deviceRecords.value.filter(item => item.online).length
+    return [
+      { icon: 'upload', value: formatSize(sentBytes), label: t('toolA.totalSent') },
+      { icon: 'hub', value: String(activeNodes).padStart(2, '0'), label: t('toolA.activeNodesLabel') },
+      { icon: 'lock', value: 'AES-256', label: t('toolA.securityLevelLabel') },
+    ]
+  })
+  const transferHistoryItems = computed<TransferHistoryItem[]>(() =>
+    transferRecords.value
+      .filter((item) => {
+        if (historyFilter.value === 'Failed') return item.status === 'failed'
+        if (historyFilter.value === 'Pending') return item.status === 'pending'
+        return true
+      })
+      .map(item => ({
+        name: item.name,
+        size: formatSize(item.sizeBytes),
+        icon: inferFileIcon(item.name),
+        iconBg: item.status === 'completed' ? 'bg-primary-fixed/30' : item.status === 'failed' ? 'bg-error/10' : 'bg-secondary-container',
+        iconColor: item.status === 'completed' ? 'text-primary' : item.status === 'failed' ? 'text-error' : 'text-on-secondary-container',
+        device: item.deviceName,
+        deviceIcon: item.deviceIcon,
+        time: formatHistoryTimestamp(item.timestamp),
+        status: item.status === 'completed'
+          ? t('toolA.historyStatusCompleted')
+          : item.status === 'failed'
+              ? t('toolA.historyStatusFailed')
+              : t('toolA.historyStatusPending'),
+        statusClass: item.status === 'completed'
+          ? 'bg-primary-fixed text-on-primary-fixed-variant'
+          : item.status === 'failed'
+              ? 'bg-error-container text-on-error-container'
+              : 'bg-secondary-container text-on-secondary-container',
+        dotClass: item.status === 'completed' ? 'bg-primary' : item.status === 'failed' ? 'bg-error' : 'bg-on-secondary-container',
+      })),
+  )
   const keyFingerprint = textTransferKeyFingerprint
   const securityLogs = textTransferSecurityLogs
   const docCards = computed(() => [
@@ -138,12 +227,14 @@ export function useTextTransferPage() {
     { icon: 'history', title: t('toolA.docExpiringTitle'), desc: t('toolA.docExpiringDesc') },
   ])
   const isConnected = computed(() => webrtc.connectionState.value === 'connected')
+  const connectedDeviceName = computed(() => remoteDeviceName.value || t('toolA.unknownDevice'))
 
   onBeforeRouteLeave(() => {
     if (state.value === 'transferring' || state.value === 'pairing') return window.confirm(t('toolA.leaveWarning'))
   })
 
   onMounted(async () => {
+    loadPersistedState()
     window.addEventListener('beforeunload', handleBeforeUnload)
     document.addEventListener('visibilitychange', handleVisibilityChange)
     if (route.query.r) {
@@ -160,6 +251,7 @@ export function useTextTransferPage() {
   onUnmounted(() => {
     clearDisconnectTimer()
     clearReceiveTimeout()
+    markRemoteDeviceOnline(false)
     window.removeEventListener('beforeunload', handleBeforeUnload)
     document.removeEventListener('visibilitychange', handleVisibilityChange)
   })
@@ -191,6 +283,83 @@ export function useTextTransferPage() {
       clearTimeout(receiveTimeoutTimer)
       receiveTimeoutTimer = null
     }
+  }
+  function loadPersistedState() {
+    transferRecords.value = safeParseStorage<StoredTransferRecord[]>(TRANSFER_HISTORY_KEY, [])
+    deviceRecords.value = safeParseStorage<StoredDeviceRecord[]>(DEVICE_HISTORY_KEY, [])
+  }
+  function saveTransferRecords() {
+    if (!import.meta.client) return
+    localStorage.setItem(TRANSFER_HISTORY_KEY, JSON.stringify(transferRecords.value.slice(0, 100)))
+  }
+  function saveDeviceRecords() {
+    if (!import.meta.client) return
+    localStorage.setItem(DEVICE_HISTORY_KEY, JSON.stringify(deviceRecords.value.slice(0, 50)))
+  }
+  function upsertRemoteDevice(online: boolean) {
+    const info = getCurrentRemoteDeviceInfo()
+    const now = Date.now()
+    const idx = deviceRecords.value.findIndex(item => item.id === REMOTE_DEVICE_ID)
+    if (idx >= 0) {
+      deviceRecords.value[idx] = { ...deviceRecords.value[idx], ...info, online, lastSeen: now }
+    }
+    else {
+      deviceRecords.value.unshift({
+        id: REMOTE_DEVICE_ID,
+        name: info.name,
+        icon: info.icon,
+        online,
+        lastSeen: now,
+      })
+    }
+    saveDeviceRecords()
+  }
+  function markRemoteDeviceOnline(online: boolean) {
+    upsertRemoteDevice(online)
+  }
+  function sendLocalPeerMeta() {
+    const meta = inferLocalDeviceInfo()
+    webrtc.sendControl('peer-meta', {
+      name: meta.name,
+      icon: meta.icon,
+    })
+  }
+  function applyRemotePeerMeta(raw: unknown) {
+    if (!raw || typeof raw !== 'object') return
+    const payload = raw as Record<string, unknown>
+    const name = typeof payload.name === 'string' ? payload.name.trim() : ''
+    const icon = typeof payload.icon === 'string' ? payload.icon.trim() : ''
+    if (!name && !icon) return
+    remoteDeviceName.value = name || remoteDeviceName.value
+    remoteDeviceIcon.value = icon || remoteDeviceIcon.value
+    upsertRemoteDevice(isConnected.value)
+  }
+  function getCurrentRemoteDeviceInfo() {
+    return {
+      name: remoteDeviceName.value || t('toolA.unknownDevice'),
+      icon: remoteDeviceIcon.value,
+    }
+  }
+  function pushTransferRecord(record: Omit<StoredTransferRecord, 'id' | 'timestamp'>) {
+    const inserted = {
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      ...record,
+    }
+    transferRecords.value.unshift(inserted)
+    transferRecords.value = transferRecords.value.slice(0, 100)
+    saveTransferRecords()
+    return inserted.id
+  }
+  function updateTransferRecord(id: string, patch: Partial<StoredTransferRecord>) {
+    const idx = transferRecords.value.findIndex(item => item.id === id)
+    if (idx < 0) return
+    transferRecords.value[idx] = {
+      ...transferRecords.value[idx],
+      ...patch,
+      timestamp: patch.timestamp ?? Date.now(),
+    }
+    saveTransferRecords()
   }
   function handleBeforeUnload(event: BeforeUnloadEvent) {
     if (state.value === 'transferring' || state.value === 'pairing') {
@@ -281,9 +450,11 @@ export function useTextTransferPage() {
     }
   }
   function refreshQr() {
+    state.value = 'waiting'
     roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
     qrExpired.value = false
     reconnectAttempt.value = 3
+    markRemoteDeviceOnline(false)
     webrtc.disconnect()
     signaling.disconnect()
     generateRoomQr().then(() => startSenderSignaling())
@@ -314,6 +485,7 @@ export function useTextTransferPage() {
   async function startTransfer() {
     if (!fileQueue.value.length || !isConnected.value) return
     state.value = 'transferring'
+    let hasFailure = false
     let lastBytes = 0
     let lastTime = Date.now()
     for (const file of fileQueue.value) {
@@ -324,6 +496,13 @@ export function useTextTransferPage() {
       timeRemaining.value = '--'
       lastBytes = 0
       lastTime = Date.now()
+      const pendingRecordId = pushTransferRecord({
+        name: file.name,
+        sizeBytes: file.size,
+        direction: 'sent',
+        status: 'pending',
+        ...getCurrentRemoteDeviceInfo(),
+      })
       try {
         await webrtc.sendFile(file, (progress) => {
           transferProgress.value = progress
@@ -339,13 +518,16 @@ export function useTextTransferPage() {
             lastTime = now
           }
         })
+        updateTransferRecord(pendingRecordId, { status: 'completed' })
       }
       catch {
+        hasFailure = true
+        updateTransferRecord(pendingRecordId, { status: 'failed' })
         notify(t('common.transferFailed'), 'error')
       }
     }
     fileQueue.value = []
-    state.value = 'success'
+    state.value = hasFailure ? 'waiting' : 'success'
   }
   function cancelTransfer() {
     webrtc.cancelSend()
@@ -379,6 +561,13 @@ export function useTextTransferPage() {
     state.value = 'transferring'
     let lastBytes = 0
     let lastTime = Date.now()
+    const pendingRecordId = pushTransferRecord({
+      name: file.name,
+      sizeBytes: file.size,
+      direction: 'sent',
+      status: 'pending',
+      ...getCurrentRemoteDeviceInfo(),
+    })
     try {
       await webrtc.sendFile(file, (progress) => {
         transferProgress.value = progress
@@ -394,9 +583,11 @@ export function useTextTransferPage() {
           lastTime = now
         }
       })
+      updateTransferRecord(pendingRecordId, { status: 'completed' })
       state.value = 'success'
     }
     catch {
+      updateTransferRecord(pendingRecordId, { status: 'failed' })
       notify(t('common.transferFailed'), 'error')
       state.value = 'waiting'
     }
@@ -404,7 +595,7 @@ export function useTextTransferPage() {
 
   return {
     addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, confirmPairing, copyLink,
-    currentFile, devices, denyPairing, docCards, goToWaitingState, handleMobileFileSelect,
+    connectedDeviceName, currentFile, devices, denyPairing, docCards, goToWaitingState, handleMobileFileSelect,
     historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
     mobileSend, mobileTextInput, qrExpired, queuedFiles, receivedMessages, reconnectAttempt,
     refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
@@ -414,4 +605,62 @@ export function useTextTransferPage() {
 
 function generateVerificationCode(): string[] {
   return Array.from({ length: 4 }, () => Math.floor(Math.random() * 10).toString())
+}
+
+function safeParseStorage<T>(key: string, fallback: T): T {
+  if (!import.meta.client) return fallback
+  try {
+    const raw = localStorage.getItem(key)
+    return raw ? JSON.parse(raw) as T : fallback
+  }
+  catch {
+    return fallback
+  }
+}
+
+function inferFileIcon(fileName: string) {
+  const lower = fileName.toLowerCase()
+  if (/\.(png|jpg|jpeg|webp|gif|svg)$/.test(lower)) return 'image'
+  if (/\.(mp4|mov|avi|mkv|webm)$/.test(lower)) return 'movie'
+  if (/\.(mp3|wav|aac|ogg|flac)$/.test(lower)) return 'music_note'
+  return 'description'
+}
+
+function formatCompactElapsed(timestamp: number, t: (key: string, params?: Record<string, unknown>) => string) {
+  const diff = Date.now() - timestamp
+  if (diff < 60_000) return t('toolA.timeNowShort')
+  if (diff < 3_600_000) return t('toolA.timeMinuteShort', { n: Math.floor(diff / 60_000) })
+  if (diff < 86_400_000) return t('toolA.timeHourShort', { n: Math.floor(diff / 3_600_000) })
+  return t('toolA.timeDayShort', { n: Math.floor(diff / 86_400_000) })
+}
+
+function formatElapsed(timestamp: number, t: (key: string, params?: Record<string, unknown>) => string) {
+  const diff = Date.now() - timestamp
+  if (diff < 60_000) return t('toolA.timeJustNow')
+  if (diff < 3_600_000) return t('toolA.timeMinutesAgo', { n: Math.floor(diff / 60_000) })
+  if (diff < 86_400_000) return t('toolA.timeHoursAgo', { n: Math.floor(diff / 3_600_000) })
+  return t('toolA.timeDaysAgo', { n: Math.floor(diff / 86_400_000) })
+}
+
+function formatHistoryTimestamp(timestamp: number) {
+  return new Date(timestamp).toLocaleString(undefined, {
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+function inferLocalDeviceInfo() {
+  if (!import.meta.client) {
+    return { name: 'Web Device', icon: 'devices' }
+  }
+  const ua = navigator.userAgent.toLowerCase()
+  if (ua.includes('iphone')) return { name: 'iPhone', icon: 'smartphone' }
+  if (ua.includes('ipad')) return { name: 'iPad', icon: 'tablet_mac' }
+  if (ua.includes('android')) return { name: 'Android', icon: 'smartphone' }
+  if (ua.includes('windows')) return { name: 'Windows', icon: 'laptop_windows' }
+  if (ua.includes('mac os')) return { name: 'Mac', icon: 'laptop_mac' }
+  if (ua.includes('linux')) return { name: 'Linux', icon: 'computer' }
+  return { name: 'Web Device', icon: 'devices' }
 }

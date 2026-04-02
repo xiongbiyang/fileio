@@ -19,12 +19,12 @@
     <div class="flex gap-2">
       <button
         v-for="tab in historyTabs"
-        :key="tab"
+        :key="tab.key"
         class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
-        :class="historyFilter === tab ? 'primary-gradient text-on-primary' : 'bg-surface-container-high dark:bg-surface-container text-on-surface-variant'"
-        @click="$emit('updateHistoryFilter', tab)"
+        :class="historyFilter === tab.key ? 'primary-gradient text-on-primary' : 'bg-surface-container-high dark:bg-surface-container text-on-surface-variant'"
+        @click="$emit('updateHistoryFilter', tab.key)"
       >
-        {{ tab }}
+        {{ tab.label }}
       </button>
     </div>
 
@@ -88,5 +88,10 @@ defineEmits<{
   updateHistoryFilter: [value: string]
 }>()
 
-const historyTabs = ['All', 'Pending', 'Failed']
+const { t } = useI18n()
+const historyTabs = computed(() => [
+  { key: 'All', label: t('toolA.historyTabAll') },
+  { key: 'Pending', label: t('toolA.historyTabPending') },
+  { key: 'Failed', label: t('toolA.historyTabFailed') },
+])
 </script>

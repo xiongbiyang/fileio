@@ -7,7 +7,7 @@
       </div>
       <div class="flex gap-3">
         <button class="bg-surface-container-high dark:bg-surface-container rounded-lg px-4 py-2 text-sm font-semibold text-on-surface dark:text-surface" @click="$emit('goBack')">{{ $t('common.goBack') }}</button>
-        <button class="primary-gradient flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold text-on-primary transition-transform hover:scale-[1.02] active:scale-[0.98]">
+        <button class="primary-gradient flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold text-on-primary transition-transform hover:scale-[1.02] active:scale-[0.98]" @click="$emit('newConnection')">
           <span class="material-symbols-outlined text-lg">add_link</span>{{ $t('toolA.newConnection') }}
         </button>
       </div>
@@ -74,5 +74,6 @@ defineProps<{
 
 defineEmits<{
   goBack: []
+  newConnection: []
 }>()
 </script>

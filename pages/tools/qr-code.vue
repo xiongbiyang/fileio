@@ -762,7 +762,7 @@
 </template>
 
 <script setup lang="ts">
-import { getQrTemplates, getTemplateGuide, TEMPLATE_PRIORITY } from '~/utils/qr-template-data'
+import { getQrTemplates, getTemplateGuide, TEMPLATE_PRIORITY } from '~/utils/qr-template-data-clean'
 
 const { t, locale } = useI18n()
 const { downloadPngFromCanvas, downloadWebpFromCanvas, downloadSvgFromText } = useQrExport()
@@ -782,19 +782,19 @@ const seoDescription = computed(() => tr(
 ))
 const seoKeywords = 'QR code generator,QR code scanner,free QR code,custom QR code,batch QR code,QR code with logo,online QR code,no signup QR code'
 
-useHead({
+useHead(() => ({
   title: seoTitle.value,
   meta: [
     { name: 'description', content: seoDescription.value },
     { name: 'keywords', content: seoKeywords },
   ],
-})
+}))
 
-useSeoMeta({
-  ogTitle: computed(() => tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort')),
+useSeoMeta(() => ({
+  ogTitle: tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
   ogDescription: seoDescription.value,
   ogImage: 'https://toolport.dev/og-image.png',
-})
+}))
 
 useJsonLd({
   '@context': 'https://schema.org',

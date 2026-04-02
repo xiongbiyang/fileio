@@ -4,6 +4,7 @@
     <TextTransferWaiting
       v-if="state === 'waiting'"
       v-model:mobile-text-input="mobileTextInput"
+      :connected-device-name="connectedDeviceName"
       :doc-cards="docCards"
       :is-connected="isConnected"
       :mobile-recent-transfers="mobileRecentTransfers"
@@ -66,6 +67,7 @@
       v-else-if="state === 'deviceHistory'"
       :devices="devices"
       @go-back="goToWaitingState"
+      @new-connection="refreshQr"
     />
 
     <!-- ==================== STATE: TRANSFER HISTORY ==================== -->
@@ -162,6 +164,7 @@ const {
   cancelTransfer,
   clearFileQueue,
   confirmPairing,
+  connectedDeviceName,
   copyLink,
   currentFile,
   devices,
