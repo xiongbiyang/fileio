@@ -17,7 +17,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 useHead({
-  title: 'Terms of Service - ToolPort',
+  title: 'Terms of Service',
   meta: [
     { name: 'description', content: 'ToolPort terms of service: usage guidelines, intellectual property, disclaimers, and user responsibilities for our free online tools.' },
   ],

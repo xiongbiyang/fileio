@@ -48,8 +48,23 @@
       <p class="text-sm text-on-surface-variant leading-relaxed">{{ c.tip }}</p>
     </div>
 
+    <section class="mb-10">
+      <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-4">Related searches</h2>
+      <div class="flex flex-wrap gap-2">
+        <NuxtLink
+          v-for="link in relatedLinks"
+          :key="link.to"
+          :to="localePath(link.to)"
+          class="px-3 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-medium text-on-surface-variant hover:text-primary transition-colors"
+        >
+          {{ link.label }}
+        </NuxtLink>
+      </div>
+    </section>
+
     <!-- CTA -->
-    <NuxtLink :to="localePath('/tools/text-transfer')"
+    <NuxtLink
+:to="localePath('/tools/text-transfer')"
       class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
       {{ c.cta }}
       <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -100,15 +115,70 @@ const c = computed(() => {
 })
 
 useHead(() => ({
-  title: 'How to Transfer Files from Phone to PC Wirelessly — No App, No USB | ToolPort',
+  title: 'How to Transfer Files from Phone to PC Wirelessly — No App, No USB',
   meta: [
     { name: 'description', content: 'Step-by-step guide: transfer files wirelessly from Android or iPhone to PC without a USB cable or app. Free AirDrop alternative — just scan a QR code, end-to-end encrypted.' },
-    { name: 'keywords', content: 'how to transfer files phone to PC,how to send files wirelessly,AirDrop alternative guide,transfer photos Android to PC no cable,send files iPhone to Windows no app,wireless file transfer tutorial,QR code file transfer guide,file transfer without USB,cross-platform file sharing guide' },
+    { name: 'keywords', content: 'how to transfer files from phone to pc,wireless file transfer tutorial,airdrop alternative for windows guide,transfer photos android to pc without cable,send files iphone to windows no app,file transfer without usb,secure p2p file transfer,qr code file transfer' },
   ],
+  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/file-transfer' }],
 }))
 useSeoMeta({
-  ogTitle: 'How to Transfer Files from Phone to PC Without a Cable or App | ToolPort',
+  ogTitle: 'How to Transfer Files from Phone to PC Without a Cable or App',
   ogDescription: 'Step-by-step guide: wirelessly transfer files from Android or iPhone to PC. Free AirDrop alternative — scan a QR code, no app install, end-to-end encrypted.',
   ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/guides/file-transfer',
+  twitterTitle: 'How to Transfer Files from Phone to PC Wirelessly',
+  twitterDescription: 'No app and no USB. Learn a secure phone-to-PC transfer workflow in minutes.',
+  robots: 'index, follow',
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How do I transfer files from phone to PC without USB?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Open ToolPort on both devices, scan the QR code, and transfer files over an encrypted browser connection.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is there a free AirDrop alternative for Windows?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. ToolPort works as a free AirDrop alternative for Windows, Android, iPhone, and macOS with no app installation.',
+      },
+    },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
+    { '@type': 'ListItem', position: 3, name: 'File Transfer Guide', item: 'https://toolport.dev/guides/file-transfer' },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Transfer Files from Phone to PC',
+  description: 'Use ToolPort to transfer files/text wirelessly between devices.',
+  totalTime: 'PT3M',
+  step: [
+    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open ToolPort File & Text Transfer on your PC.', url: 'https://toolport.dev/tools/text-transfer' },
+    { '@type': 'HowToStep', name: 'Pair devices', text: 'Scan QR code or enter Room ID on your phone.' },
+    { '@type': 'HowToStep', name: 'Send file or text', text: 'Choose a file or input text and send through encrypted P2P session.' },
+    { '@type': 'HowToStep', name: 'Receive on target device', text: 'Open or save received content on the paired device.' },
+  ],
+})
+
+const relatedLinks = [
+  { to: '/tools/text-transfer', label: 'AirDrop alternative for Windows' },
+  { to: '/guides/clipboard', label: 'copy paste between phone and PC' },
+  { to: '/tools/qr-code', label: 'QR code file transfer workflow' },
+]
 </script>

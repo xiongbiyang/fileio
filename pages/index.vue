@@ -7,7 +7,7 @@
       <section class="px-5 pt-20 pb-10">
         <span class="font-label text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">{{ $t('home.badge') }}</span>
         <h1 class="font-headline text-4xl font-extrabold tracking-tighter text-on-surface dark:text-surface leading-[0.95] mt-3">
-          {{ $t('home.heroTitle1') }}<br/><span class="text-primary-container dark:text-primary-fixed">{{ $t('home.heroTitle2') }}</span>
+          {{ $t('home.heroTitle1') }}<br><span class="text-primary-container dark:text-primary-fixed">{{ $t('home.heroTitle2') }}</span>
         </h1>
         <p class="mt-4 text-base text-on-surface-variant leading-relaxed">{{ $t('home.heroSubtitle') }}</p>
         <NuxtLink :to="localePath('/tools')" class="inline-flex items-center gap-2 mt-6 px-8 py-4 primary-gradient text-on-primary rounded-xl font-bold text-base active:scale-95 transition-transform w-full justify-center">
@@ -76,7 +76,7 @@
 
         <!-- Heading -->
         <h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter text-on-surface dark:text-surface leading-[0.95]">
-          {{ $t('home.heroTitle1') }}<br/>
+          {{ $t('home.heroTitle1') }}<br>
           <span class="text-primary-container dark:text-primary-fixed">{{ $t('home.heroTitle2') }}</span>
         </h1>
 
@@ -155,7 +155,7 @@
               <p class="text-on-surface-variant text-sm leading-relaxed">{{ tool.desc }}</p>
             </div>
             <button class="w-full py-4 primary-gradient text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.98] transition-transform">
-              {{ $t('common.openTool') }}
+              {{ $t('common.openTool') }} · {{ tool.name }}
               <span class="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
           </NuxtLink>
@@ -188,21 +188,39 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 
 useHead({
-  title: 'ToolPort - Free Online Tools | File Transfer, QR Code, Clipboard',
+  title: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
   meta: [
-    { name: 'description', content: 'Free privacy-first online tools: encrypted file transfer between phone and PC, QR code generator & scanner, real-time online clipboard. No signup, no install, all data processed locally.' },
-    { name: 'keywords', content: 'online tools,file transfer,QR code generator,online clipboard,free tools,privacy tools,encrypted transfer,WebRTC,P2P' },
+    { name: 'description', content: 'Free privacy-first online tools: wireless file transfer between phone and PC, QR code generator and scanner, and online clipboard sync. No signup, no install, all data processed locally.' },
+    { name: 'keywords', content: 'free online tools,wireless file transfer phone to pc,airdrop alternative,airdrop alternative for windows,free qr code generator,qr code scanner online,online clipboard,copy paste between phone and pc,privacy-first tools,webrtc p2p file transfer' },
   ],
+})
+useSeoMeta({
+  ogTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
+  ogDescription: 'Wireless file transfer between phone and PC, free QR code generator and scanner, and online clipboard sync. Privacy-first, no signup, no install.',
+  ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/',
+  twitterTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
+  twitterDescription: 'Transfer files, generate QR codes, and sync clipboard instantly in your browser.',
+  robots: 'index, follow',
 })
 useJsonLd({
   '@context': 'https://schema.org',
-  '@type': 'WebApplication',
+  '@type': 'WebSite',
   name: 'ToolPort',
   url: 'https://toolport.dev',
-  description: 'Free, privacy-first browser tools for file transfer, QR codes, and clipboard sharing.',
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'Free privacy-first browser tools for wireless file transfer, QR code generation, and clipboard sync.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://toolport.dev/tools?query={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ToolPort',
+  url: 'https://toolport.dev',
+  logo: 'https://toolport.dev/og-image.png',
 })
 
 const trustCards = computed(() => [

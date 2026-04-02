@@ -13,7 +13,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "party:deploy": "partykit deploy",
-    "lint": "eslint .",
+    "lint": "eslint . --ignore-pattern .nuxt --ignore-pattern .nuxt-build* --ignore-pattern .output --ignore-pattern dist",
+    "lint:i18n": "python scripts/check_i18n.py",
     "test": "vitest",
     "test:e2e": "playwright test"
   },

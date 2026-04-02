@@ -68,21 +68,58 @@
 
 <script setup lang="ts">
 const localePath = useLocalePath()
+const posts = useBlogPosts()
 
 useHead({
-  title: 'Blog - Free Online Tools, AI & Privacy Tips | ToolPort',
+  title: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
   meta: [
-    { name: 'description', content: 'ToolPort blog: tutorials, tips, and guides on free online tools, AI tools, file transfer, QR codes, privacy, and web development.' },
-    { name: 'keywords', content: 'online tools blog,AI tools guide,file transfer tutorial,QR code tips,privacy tools,free tools' },
+    { name: 'description', content: 'Actionable tutorials for wireless file transfer phone to PC, free QR code generation and scanning, and online clipboard sync. Privacy-first guides with no-app workflows.' },
+    { name: 'keywords', content: 'file transfer guide phone to pc,airdrop alternative tutorial,free qr code generator tips,qr code scanner tutorial,online clipboard sync guide,copy paste across devices,privacy-first tools blog' },
   ],
+  link: [{ rel: 'canonical', href: 'https://toolport.dev/blog' }],
 })
 useSeoMeta({
-  ogTitle: 'Blog - Free Online Tools, AI & Privacy Tips | ToolPort',
-  ogDescription: 'Tutorials, tips, and guides on free online tools, AI tools, file transfer, QR codes, and privacy.',
+  ogTitle: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
+  ogDescription: 'Step-by-step tutorials for wireless file transfer, QR code generation/scanning, and cross-device clipboard sync.',
   ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/blog',
+  twitterTitle: 'ToolPort Blog: File Transfer, QR Code, Clipboard Guides',
+  twitterDescription: 'Learn no-app workflows for phone-to-PC transfer, QR code tasks, and clipboard sync.',
+  robots: 'index, follow',
 })
-
-const posts = useBlogPosts()
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'ToolPort Blog',
+  url: 'https://toolport.dev/blog',
+  description: 'Tutorials for wireless file transfer, QR code generation/scanning, and online clipboard sync.',
+  publisher: {
+    '@type': 'Organization',
+    name: 'ToolPort',
+    url: 'https://toolport.dev',
+  },
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://toolport.dev/blog' },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'ToolPort Blog Articles',
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: posts.length,
+  itemListElement: posts.map((post, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `https://toolport.dev/blog/${post.slug}`,
+    name: post.title,
+  })),
+})
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })

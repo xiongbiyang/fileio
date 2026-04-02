@@ -5,21 +5,26 @@
         <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-surface font-headline">ToolPort</span>
       </NuxtLink>
       <nav class="hidden md:flex items-center gap-1 font-headline">
-        <NuxtLink v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
+        <NuxtLink
+v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
           class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface dark:hover:text-surface transition-colors"
           :class="{ 'text-primary border-b-2 border-primary': isActive(item.path) }">
           {{ $t(item.key) }}
         </NuxtLink>
       </nav>
       <div class="flex items-center gap-3">
-        <button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+        <button
+class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
           :aria-label="isDark ? $t('common.lightMode') : $t('common.darkMode')" @click="toggleTheme">
           <span class="material-symbols-outlined text-xl">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
         </button>
         <LanguageSwitcher />
-        <button class="hidden md:inline-flex px-5 py-2 primary-gradient text-on-primary rounded-lg text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
+        <NuxtLink
+          :to="localePath('/auth/signin')"
+          class="hidden md:inline-flex px-5 py-2 primary-gradient text-on-primary rounded-lg text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
+        >
           {{ $t('common.signIn') }}
-        </button>
+        </NuxtLink>
       </div>
     </div>
   </header>

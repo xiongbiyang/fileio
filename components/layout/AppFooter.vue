@@ -6,7 +6,8 @@
         <span class="text-xs text-on-surface-variant/60">{{ $t('footer.copyright', { year: new Date().getFullYear() }) }}</span>
       </div>
       <div class="flex flex-wrap items-center gap-6">
-        <NuxtLink v-for="link in links" :key="link.key" :to="localePath(link.path)"
+        <NuxtLink
+v-for="link in links" :key="link.key" :to="localePath(link.path)"
           class="text-xs font-semibold text-on-surface-variant dark:text-on-surface-variant/60 uppercase tracking-widest hover:text-primary transition-colors">
           {{ $t(link.key) }}
         </NuxtLink>

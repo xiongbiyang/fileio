@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen bg-surface dark:bg-on-surface flex flex-col">
     <AppHeader />
+    <AppNotifications />
     <main class="flex-1 pt-16">
       <slot />
     </main>

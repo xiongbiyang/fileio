@@ -12,17 +12,23 @@
       <p class="text-on-surface-variant text-lg leading-relaxed max-w-2xl mx-auto mb-10">
         {{ $t('waitlist.desc') }}
       </p>
+      <div class="flex flex-col items-center gap-2 mb-8">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-bold tracking-wider uppercase text-primary">
+          {{ $t('waitlist.planIntentLabel') }}: {{ selectedPlanLabel }}
+        </span>
+        <p class="text-sm text-on-surface-variant">{{ selectedPlanDesc }}</p>
+      </div>
 
       <!-- Email Form -->
       <form class="max-w-lg mx-auto flex flex-col sm:flex-row gap-3 p-2 bg-surface-container-low dark:bg-surface-container rounded-2xl shadow-ambient" @submit.prevent="joinWaitlist">
-        <input v-model="email" type="email" class="flex-1 bg-transparent px-5 py-3.5 text-on-surface dark:text-surface placeholder:text-outline focus:outline-none rounded-xl" :placeholder="$t('waitlist.emailPlaceholder')" required />
+        <input v-model="email" type="email" class="flex-1 bg-transparent px-5 py-3.5 text-on-surface dark:text-surface placeholder:text-outline focus:outline-none rounded-xl" :placeholder="$t('waitlist.emailPlaceholder')" required >
         <button type="submit" class="px-8 py-3.5 primary-gradient text-on-primary rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform whitespace-nowrap" :disabled="joined">
           {{ joined ? $t('waitlist.joinedBtn') : $t('waitlist.joinBtn') }}
         </button>
       </form>
       <p v-if="joined" class="text-primary text-sm font-medium mt-4 flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1">check_circle</span>
-        {{ $t('waitlist.successMsg') }}
+        {{ $t('waitlist.successMsgWithPlan', { plan: selectedPlanLabel }) }}
       </p>
       <p v-else class="text-on-surface-variant text-sm mt-4">{{ $t('waitlist.socialProof') }}</p>
     </div>
@@ -182,28 +188,29 @@
         <h2 class="font-headline text-3xl md:text-4xl font-extrabold text-on-primary mb-4 relative z-10">{{ $t('waitlist.ctaTitle') }}</h2>
         <p class="text-on-primary/80 text-lg mb-8 max-w-lg mx-auto relative z-10">{{ $t('waitlist.ctaDesc') }}</p>
         <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-3 relative z-10" @submit.prevent="joinWaitlist">
-          <input v-model="email" type="email" class="flex-1 bg-primary-fixed/20 backdrop-blur-sm px-5 py-3.5 text-on-primary placeholder:text-on-primary/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-fixed" :placeholder="$t('waitlist.emailPlaceholder')" required />
+          <input v-model="email" type="email" class="flex-1 bg-primary-fixed/20 backdrop-blur-sm px-5 py-3.5 text-on-primary placeholder:text-on-primary/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-fixed" :placeholder="$t('waitlist.emailPlaceholder')" required >
           <button type="submit" class="px-8 py-3.5 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform whitespace-nowrap" :disabled="joined">
             {{ joined ? $t('waitlist.joinedBtn') : $t('waitlist.joinBtn') }}
           </button>
         </form>
-        <p v-if="joined" class="text-primary-fixed text-sm font-medium mt-4 relative z-10">{{ $t('waitlist.successMsg') }}</p>
+        <p v-if="joined" class="text-primary-fixed text-sm font-medium mt-4 relative z-10">{{ $t('waitlist.successMsgWithPlan', { plan: selectedPlanLabel }) }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const route = useRoute()
 useHead({
-  title: 'Pro Waitlist - Unlock 1GB Transfers & More | ToolPort',
+  title: 'Pro Waitlist - Unlock 1GB Transfers & More',
   meta: [
     { name: 'description', content: 'Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent clipboard rooms, custom room IDs, batch QR generation, and zero ads.' },
     { name: 'keywords', content: 'ToolPort Pro,pro waitlist,1GB file transfer,permanent clipboard,custom room ID,batch QR code' },
   ],
 })
 useSeoMeta({
-  ogTitle: 'Pro Waitlist - Unlock 1GB Transfers & More | ToolPort',
+  ogTitle: 'Pro Waitlist - Unlock 1GB Transfers & More',
   ogDescription: 'Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent rooms, custom room IDs, and zero ads.',
   ogImage: 'https://toolport.dev/og-image.png',
 })
@@ -212,8 +219,42 @@ const email = ref('')
 const joined = ref(false)
 const votedIndex = ref<number | null>(null)
 
-function joinWaitlist() {
+type WaitlistPlan = 'monthly' | 'yearly' | 'lifetime'
+
+function normalizePlan(raw: unknown): WaitlistPlan {
+  const value = String(raw || '').trim().toLowerCase()
+  if (value === 'monthly' || value === 'yearly' || value === 'lifetime') return value
+  return 'lifetime'
+}
+
+const selectedPlan = computed<WaitlistPlan>(() => normalizePlan(route.query.plan))
+const selectedPlanLabel = computed(() => {
+  if (selectedPlan.value === 'monthly') return t('waitlist.planMonthly')
+  if (selectedPlan.value === 'yearly') return t('waitlist.planYearly')
+  return t('waitlist.planLifetime')
+})
+const selectedPlanDesc = computed(() => {
+  if (selectedPlan.value === 'monthly') return t('waitlist.planMonthlyDesc')
+  if (selectedPlan.value === 'yearly') return t('waitlist.planYearlyDesc')
+  return t('waitlist.planLifetimeDesc')
+})
+
+async function joinWaitlist() {
   if (!email.value.trim()) return
+  try {
+    await $fetch('/api/waitlist', {
+      method: 'POST',
+      body: {
+        email: email.value.trim().toLowerCase(),
+        plan: selectedPlan.value,
+        locale: String(locale.value || 'en'),
+        source: 'pro-waitlist',
+      },
+    })
+  }
+  catch (error) {
+    console.error(error)
+  }
   joined.value = true
   email.value = ''
 }

@@ -68,7 +68,10 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
-useHead({ title: '404 - ToolPort' })
+useHead({
+  title: '404',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 
 const quickLinks = computed(() => [
   { path: '/tools/text-transfer', icon: 'devices', label: t('error404.linkTransfer') },

@@ -156,7 +156,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'tool' })
 useHead({
-  title: 'Settings - ToolPort',
+  title: 'Settings',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
 

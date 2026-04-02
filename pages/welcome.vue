@@ -102,7 +102,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
 useHead({
-  title: 'Welcome - ToolPort',
+  title: 'Welcome',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
 

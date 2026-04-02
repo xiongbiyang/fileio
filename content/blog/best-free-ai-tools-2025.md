@@ -92,3 +92,17 @@ Want to know when we launch new AI tools? [Join our survey](/tool-request) and l
 ---
 
 *Currently available: [File Transfer](/tools/text-transfer) | [QR Code Generator](/tools/qr-code) | [Online Clipboard](/tools/clipboard)*
+
+## Quick Actions You Can Use Right Now
+
+While we build more AI features, these ready-to-use tools can save time immediately:
+
+- Share files across devices: [File Transfer](/tools/text-transfer)
+- Generate a branded QR fast: [QR Code Generator](/tools/qr-code)
+- Start from high-intent templates:
+- [WiFi QR](/tools/qr-code?template=wifi)
+- [vCard QR](/tools/qr-code?template=vcard)
+- [Google Review QR](/tools/qr-code?template=review)
+- [Menu QR](/tools/qr-code?template=menu)
+- [Payment QR](/tools/qr-code?template=payment)
+- Sync text snippets live: [Online Clipboard](/tools/clipboard)

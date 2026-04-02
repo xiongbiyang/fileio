@@ -110,7 +110,7 @@
             v-model="toolName"
             class="w-full bg-surface-container-lowest dark:bg-surface-container-high px-5 py-3.5 rounded-xl text-sm text-on-surface dark:text-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20"
             :placeholder="$t('toolRequest.toolNamePlaceholder')"
-          />
+          >
         </div>
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">{{ $t('toolRequest.detailLabel') }}</label>
@@ -131,7 +131,7 @@
             :class="emailTouched && !isEmailValid ? 'ring-2 ring-error/50' : ''"
             :placeholder="$t('toolRequest.emailPlaceholder')"
             @blur="emailTouched = true"
-          />
+          >
           <p v-if="emailTouched && !isEmailValid" class="text-error text-xs mt-1">{{ $t('toolRequest.emailError') }}</p>
         </div>
       </div>
@@ -208,6 +208,7 @@ const toolDetail = ref('')
 const email = ref('')
 const submitted = ref(false)
 const activeCategory = ref('all')
+const { notify } = useNotifier()
 
 const categories = computed(() => [
   { key: 'all', label: t('toolRequest.catAll') },
@@ -312,5 +313,6 @@ function submit() {
   })
   localStorage.setItem('tp_tool_requests', JSON.stringify(existing))
   submitted.value = true
+  notify(t('toolRequest.thanks'))
 }
 </script>

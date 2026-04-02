@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen bg-surface dark:bg-on-surface flex flex-col">
     <AppHeader />
+    <AppNotifications />
     <SideNav />
     <main class="flex-1 lg:ml-64 pt-16 min-h-screen">
       <slot />

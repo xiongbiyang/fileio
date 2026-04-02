@@ -59,8 +59,23 @@
       <p class="text-sm text-on-surface-variant leading-relaxed">{{ c.tip }}</p>
     </div>
 
+    <section class="mb-10">
+      <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-4">Related searches</h2>
+      <div class="flex flex-wrap gap-2">
+        <NuxtLink
+          v-for="link in relatedLinks"
+          :key="link.to"
+          :to="localePath(link.to)"
+          class="px-3 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-medium text-on-surface-variant hover:text-primary transition-colors"
+        >
+          {{ link.label }}
+        </NuxtLink>
+      </div>
+    </section>
+
     <!-- CTA -->
-    <NuxtLink :to="localePath('/tools/clipboard')"
+    <NuxtLink
+:to="localePath('/tools/clipboard')"
       class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
       {{ c.cta }}
       <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -125,15 +140,70 @@ const c = computed(() => {
 })
 
 useHead(() => ({
-  title: 'How to Sync Clipboard Between Phone and PC — Copy Paste Across Devices | ToolPort',
+  title: 'How to Sync Clipboard Between Phone and PC — Copy Paste Across Devices',
   meta: [
     { name: 'description', content: 'Step-by-step guide: sync clipboard between phone and PC instantly. Copy text or links on one device, paste on another — no app, no signup, end-to-end encrypted.' },
-    { name: 'keywords', content: 'how to sync clipboard between devices,copy paste phone to computer guide,cross device clipboard tutorial,share text from phone to PC,send link phone to computer,clipboard sync guide,how to share clipboard across devices,copy on phone paste on PC' },
+    { name: 'keywords', content: 'online clipboard sync guide,copy paste between phone and pc,cross-device clipboard tutorial,share text from phone to computer,send link from phone to pc,clipboard sync without app,real-time clipboard sharing,copy on phone paste on pc' },
   ],
+  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/clipboard' }],
 }))
 useSeoMeta({
-  ogTitle: 'How to Sync Clipboard Between Phone and PC | ToolPort Guide',
+  ogTitle: 'How to Sync Clipboard Between Phone and PC Guide',
   ogDescription: 'Copy on your phone, paste on your PC instantly. Step-by-step guide to syncing clipboard across devices — no app, no signup, end-to-end encrypted.',
   ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/guides/clipboard',
+  twitterTitle: 'How to Sync Clipboard Between Phone and PC',
+  twitterDescription: 'Copy text on one device and paste on another with real-time encrypted clipboard rooms.',
+  robots: 'index, follow',
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How do I copy on phone and paste on PC?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Create or join the same ToolPort clipboard room on both devices. Text added on one device appears instantly on the other device.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need to install an app to sync clipboard across devices?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. ToolPort clipboard sync runs in your browser and does not require app installation or account signup.',
+      },
+    },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
+    { '@type': 'ListItem', position: 3, name: 'Clipboard Guide', item: 'https://toolport.dev/guides/clipboard' },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Sync Clipboard Between Phone and PC',
+  description: 'Use ToolPort Online Clipboard to sync text and links in real time.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', name: 'Open clipboard tool', text: 'Open ToolPort Online Clipboard.', url: 'https://toolport.dev/tools/clipboard' },
+    { '@type': 'HowToStep', name: 'Create or join room', text: 'Create a room on one device and join with same room ID on another.' },
+    { '@type': 'HowToStep', name: 'Sync content', text: 'Paste text or links and see instant sync across connected devices.' },
+    { '@type': 'HowToStep', name: 'Copy and use', text: 'Copy synced content and paste into any local app.' },
+  ],
+})
+
+const relatedLinks = [
+  { to: '/tools/clipboard', label: 'online clipboard sync' },
+  { to: '/guides/file-transfer', label: 'transfer text from phone to computer' },
+  { to: '/tools/text-transfer', label: 'send links from phone to PC' },
+]
 </script>

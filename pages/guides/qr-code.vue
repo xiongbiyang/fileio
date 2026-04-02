@@ -62,8 +62,23 @@
       </div>
     </div>
 
+    <section class="mb-10">
+      <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-4">Related searches</h2>
+      <div class="flex flex-wrap gap-2">
+        <NuxtLink
+          v-for="link in relatedLinks"
+          :key="link.to"
+          :to="localePath(link.to)"
+          class="px-3 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-medium text-on-surface-variant hover:text-primary transition-colors"
+        >
+          {{ link.label }}
+        </NuxtLink>
+      </div>
+    </section>
+
     <!-- CTA -->
-    <NuxtLink :to="localePath('/tools/qr-code')"
+    <NuxtLink
+:to="localePath('/tools/qr-code')"
       class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
       {{ c.cta }}
       <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -125,12 +140,67 @@ useHead(() => ({
   title: c.value.title + ' - ToolPort Guide',
   meta: [
     { name: 'description', content: 'How to generate and scan QR codes with ToolPort. Create custom QR codes with logos, batch generate from CSV, and scan from camera or image files.' },
-    { name: 'keywords', content: 'QR code guide,how to generate QR code,QR code scanner tutorial,custom QR code logo,batch QR code CSV,QR code colors' },
+    { name: 'keywords', content: 'free qr code generator guide,how to generate qr code online,qr code scanner tutorial,create qr code with logo,batch qr code generator csv,scan qr code from image' },
   ],
+  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/qr-code' }],
 }))
 useSeoMeta({
   ogTitle: 'QR Code Generator Guide - ToolPort',
   ogDescription: 'How to generate and scan QR codes with ToolPort. Create custom QR codes with logos, batch generate from CSV, and scan from camera or image files.',
   ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/guides/qr-code',
+  twitterTitle: 'How to Generate and Scan QR Codes Online',
+  twitterDescription: 'Create QR codes with logo and scan from camera or image files in your browser.',
+  robots: 'index, follow',
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How can I create a QR code for free online?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Open ToolPort QR Code tool, enter your text or URL, customize options, and download the generated PNG or SVG file.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I scan a QR code from an image file?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. You can upload a screenshot or photo that contains a QR code and ToolPort will decode it in your browser.',
+      },
+    },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
+    { '@type': 'ListItem', position: 3, name: 'QR Code Guide', item: 'https://toolport.dev/guides/qr-code' },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate and Scan QR Codes',
+  description: 'Generate QR codes and scan from camera/image in ToolPort.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', name: 'Open QR Code tool', text: 'Open ToolPort QR Code tool.', url: 'https://toolport.dev/tools/qr-code' },
+    { '@type': 'HowToStep', name: 'Generate QR', text: 'Enter text or URL and adjust style options.' },
+    { '@type': 'HowToStep', name: 'Scan QR', text: 'Switch to Scan and use camera or upload image.' },
+    { '@type': 'HowToStep', name: 'Export', text: 'Download QR in PNG, SVG, or WebP.' },
+  ],
+})
+
+const relatedLinks = [
+  { to: '/tools/qr-code', label: 'free QR code generator online' },
+  { to: '/guides/file-transfer', label: 'QR code file transfer guide' },
+  { to: '/tools/text-transfer', label: 'send files by QR code' },
+]
 </script>

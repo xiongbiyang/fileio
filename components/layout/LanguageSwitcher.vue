@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" ref="switcherRef">
+  <div ref="switcherRef" class="relative">
     <button
       class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
       @click="isOpen = !isOpen"

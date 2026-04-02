@@ -8,9 +8,18 @@ interface ClipboardMessage {
   timestamp: number
 }
 
+type DeviceType = 'iphone' | 'android' | 'ipad' | 'windows' | 'macos' | 'linux' | 'other'
+
+interface ClipboardParticipant {
+  id: string
+  deviceType: DeviceType
+  deviceName: string
+}
+
 interface ClipboardRoomOptions {
   onMessage?: (message: ClipboardMessage) => void
   onDeviceCountChange?: (count: number) => void
+  onParticipantsChange?: (participants: ClipboardParticipant[]) => void
   onClear?: () => void
   onTyping?: () => void
   onError?: (error: Error) => void
@@ -19,6 +28,7 @@ interface ClipboardRoomOptions {
 export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
   const isConnected = ref(false)
   const deviceCount = ref(0)
+  const participants = ref<ClipboardParticipant[]>([])
   const roomId = ref('')
   let socket: PartySocket | null = null
 
@@ -38,6 +48,36 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
     return (config.public as Record<string, string>).partykitHost || 'localhost:1999'
   }
 
+  function detectDeviceType(): DeviceType {
+    if (!import.meta.client) return 'other'
+    const ua = navigator.userAgent.toLowerCase()
+    if (/iphone/.test(ua)) return 'iphone'
+    if (/ipad/.test(ua)) return 'ipad'
+    if (/android/.test(ua)) return 'android'
+    if (/windows/.test(ua)) return 'windows'
+    if (/macintosh|mac os x/.test(ua)) return 'macos'
+    if (/linux/.test(ua)) return 'linux'
+    return 'other'
+  }
+
+  function detectDeviceName(type: DeviceType): string {
+    if (!import.meta.client) return 'Unknown Device'
+    const ua = navigator.userAgent
+    const map: Record<DeviceType, string> = {
+      iphone: 'iPhone',
+      ipad: 'iPad',
+      android: 'Android',
+      windows: 'Windows',
+      macos: 'Mac',
+      linux: 'Linux',
+      other: 'Unknown Device',
+    }
+    let baseName = map[type]
+    if (type === 'windows' && /edg/i.test(ua)) baseName = 'Windows (Edge)'
+    if (type === 'macos' && /safari/i.test(ua) && !/chrome|chromium|edg/i.test(ua)) baseName = 'Mac (Safari)'
+    return baseName
+  }
+
   function connect(id: string) {
     disconnect()
     roomId.value = id
@@ -51,6 +91,12 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
 
     socket.addEventListener('open', () => {
       isConnected.value = true
+      const deviceType = detectDeviceType()
+      socket?.send(JSON.stringify({
+        type: 'presence',
+        deviceType,
+        deviceName: detectDeviceName(deviceType),
+      }))
     })
 
     socket.addEventListener('message', (event: MessageEvent) => {
@@ -67,6 +113,21 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
         else if (data.type === 'device-count') {
           deviceCount.value = data.count
           options.onDeviceCountChange?.(data.count)
+        }
+        else if (data.type === 'participants' && Array.isArray(data.participants)) {
+          const list = data.participants
+            .map((item: unknown) => {
+              if (!item || typeof item !== 'object') return null
+              const obj = item as Record<string, unknown>
+              const id = String(obj.id || '').trim()
+              if (!id) return null
+              const deviceType = String(obj.deviceType || 'other') as DeviceType
+              const deviceName = String(obj.deviceName || '').trim() || 'Unknown Device'
+              return { id, deviceType, deviceName }
+            })
+            .filter((v): v is ClipboardParticipant => !!v)
+          participants.value = list
+          options.onParticipantsChange?.(list)
         }
         else if (data.type === 'clear') {
           options.onClear?.()
@@ -119,6 +180,7 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
     socket = null
     isConnected.value = false
     deviceCount.value = 0
+    participants.value = []
     roomId.value = ''
   }
 
@@ -129,6 +191,7 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
   return {
     isConnected,
     deviceCount,
+    participants,
     roomId,
     connect,
     sendMessage,

@@ -8,7 +8,7 @@
       <!-- Search -->
       <div class="relative mb-6">
         <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-lg">search</span>
-        <input class="w-full pl-11 pr-4 py-3 bg-surface-container-low dark:bg-surface-container rounded-xl text-sm text-on-surface dark:text-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20" :placeholder="$t('toolsDir.searchPlaceholder')" />
+        <input class="w-full pl-11 pr-4 py-3 bg-surface-container-low dark:bg-surface-container rounded-xl text-sm text-on-surface dark:text-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20" :placeholder="$t('toolsDir.searchPlaceholder')" >
       </div>
 
       <!-- Featured Tool -->
@@ -183,16 +183,48 @@ const { t } = useI18n()
 
 definePageMeta({ layout: 'tool' })
 useHead({
-  title: 'Free Online Tools - File Transfer, QR Code, Clipboard | ToolPort',
+  title: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
   meta: [
-    { name: 'description', content: 'Browse all free online tools: encrypted phone-to-PC file transfer, QR code generator & scanner, real-time online clipboard. Privacy-first, no signup required.' },
-    { name: 'keywords', content: 'free online tools,file transfer tool,QR code generator,QR code scanner,online clipboard,browser tools,privacy tools,no install' },
+    { name: 'description', content: 'Browse all free online tools: wireless file transfer phone to PC, free QR code generator and scanner, and real-time online clipboard sync. Privacy-first and no signup required.' },
+    { name: 'keywords', content: 'free online tools,airdrop alternative for windows,wireless file transfer tool,free qr code generator,qr code scanner online,online clipboard sync,copy paste across devices,privacy browser tools,no install tools' },
   ],
+  link: [{ rel: 'canonical', href: 'https://toolport.dev/tools' }],
 })
 useSeoMeta({
-  ogTitle: 'Free Online Tools - File Transfer, QR Code, Clipboard | ToolPort',
+  ogTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
   ogDescription: 'Encrypted file transfer, QR code generator & scanner, real-time clipboard — all free, no signup, privacy-first.',
   ogImage: 'https://toolport.dev/og-image.png',
+  ogUrl: 'https://toolport.dev/tools',
+  twitterTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
+  twitterDescription: 'Use ToolPort tools in your browser with no signup: file transfer, QR code, and clipboard sync.',
+  robots: 'index, follow',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'ToolPort Tools Directory',
+  description: 'All free online tools including phone-to-PC transfer, QR code generator/scanner, and online clipboard sync.',
+  url: 'https://toolport.dev/tools',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://toolport.dev/tools' },
+  ],
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'ToolPort Tools',
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  numberOfItems: 3,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, url: 'https://toolport.dev/tools/text-transfer', name: 'Phone-PC File & Text Transfer' },
+    { '@type': 'ListItem', position: 2, url: 'https://toolport.dev/tools/qr-code', name: 'QR Code Generator' },
+    { '@type': 'ListItem', position: 3, url: 'https://toolport.dev/tools/clipboard', name: 'Online Clipboard' },
+  ],
 })
 
 const localePath = useLocalePath()

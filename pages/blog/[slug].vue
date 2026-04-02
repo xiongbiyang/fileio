@@ -70,6 +70,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 
 const slug = computed(() => route.params.slug as string)
+const blogUrl = computed(() => `https://toolport.dev/blog/${slug.value}`)
 
 const posts = useBlogPosts()
 const post = computed(() => posts.find(p => p.slug === slug.value))
@@ -89,18 +90,118 @@ onMounted(async () => {
   }
 })
 
+function inferBlogType(p: NonNullable<typeof post.value>) {
+  const title = p.title.toLowerCase()
+  const tags = p.tags.map(tag => tag.toLowerCase())
+  if (title.startsWith('how to') || tags.includes('guide')) return 'howto'
+  if (tags.some(tag => tag.includes('qr'))) return 'qr'
+  if (tags.some(tag => tag.includes('airdrop') || tag.includes('file transfer') || tag.includes('phone to pc'))) return 'transfer'
+  return 'general'
+}
+
+function buildFaqForPost(p: NonNullable<typeof post.value>) {
+  const kind = inferBlogType(p)
+  if (kind === 'qr') {
+    return [
+      {
+        '@type': 'Question',
+        name: 'Can I create this QR code type without signup?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort QR code tools are free and browser-based with no signup required.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I export QR codes in high resolution?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. You can export PNG, SVG, and WebP with high-resolution options for print and HD usage.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I add logo and custom colors?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort supports branded QR design with logo overlay, custom colors, and transparent background.' },
+      },
+    ]
+  }
+  if (kind === 'transfer') {
+    return [
+      {
+        '@type': 'Question',
+        name: 'Do I need to install an app to transfer files?',
+        acceptedAnswer: { '@type': 'Answer', text: 'No. ToolPort works directly in your browser without app installation.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is transfer encrypted?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort file transfer is designed with privacy-first encrypted sessions.' },
+      },
+    ]
+  }
+  return [
+    {
+      '@type': 'Question',
+      name: 'Are ToolPort tools free to use?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes. Core ToolPort tools are free and browser-based.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I use ToolPort without creating an account?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes. Most workflows work without signup.' },
+    },
+  ]
+}
+
+function buildHowToForPost(p: NonNullable<typeof post.value>) {
+  const kind = inferBlogType(p)
+  const baseUrl = 'https://toolport.dev'
+  if (kind === 'howto' || kind === 'transfer') {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: p.title,
+      description: p.description,
+      totalTime: 'PT3M',
+      step: [
+        { '@type': 'HowToStep', name: 'Open ToolPort', text: 'Open ToolPort in your browser.', url: `${baseUrl}/tools` },
+        { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Go to the phone-to-PC transfer tool.', url: `${baseUrl}/tools/text-transfer` },
+        { '@type': 'HowToStep', name: 'Pair devices', text: 'Use QR pairing between phone and computer.' },
+        { '@type': 'HowToStep', name: 'Send data', text: 'Transfer files or text securely in your browser.' },
+      ],
+    }
+  }
+  if (kind === 'qr') {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: p.title,
+      description: p.description,
+      totalTime: 'PT2M',
+      step: [
+        { '@type': 'HowToStep', name: 'Open QR generator', text: 'Open ToolPort QR Code Generator.', url: `${baseUrl}/tools/qr-code` },
+        { '@type': 'HowToStep', name: 'Enter your content', text: 'Paste URL/text or choose a popular template.' },
+        { '@type': 'HowToStep', name: 'Customize design', text: 'Set colors, logo, and transparency options.' },
+        { '@type': 'HowToStep', name: 'Download QR', text: 'Export as PNG, SVG, or WebP in high resolution.' },
+      ],
+    }
+  }
+  return null
+}
+
 if (post.value) {
   useHead({
-    title: `${post.value.title} | ToolPort Blog`,
+    title: post.value.title,
     meta: [
       { name: 'description', content: post.value.description },
+      { name: 'keywords', content: `${post.value.tags.join(',')},wireless file transfer phone to pc,free qr code generator,online clipboard sync,privacy-first tools` },
     ],
+    link: [{ rel: 'canonical', href: blogUrl.value }],
   })
   useSeoMeta({
     ogTitle: post.value.title,
     ogDescription: post.value.description,
     ogType: 'article',
     ogImage: 'https://toolport.dev/og-image.png',
+    ogUrl: blogUrl.value,
+    twitterTitle: post.value.title,
+    twitterDescription: post.value.description,
+    robots: 'index, follow',
     articlePublishedTime: post.value.date,
     articleAuthor: ['ToolPort'],
   })
@@ -114,8 +215,24 @@ if (post.value) {
     author: { '@type': 'Organization', name: 'ToolPort', url: 'https://toolport.dev' },
     publisher: { '@type': 'Organization', name: 'ToolPort', url: 'https://toolport.dev', logo: { '@type': 'ImageObject', url: 'https://toolport.dev/og-image.png' } },
     image: 'https://toolport.dev/og-image.png',
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://toolport.dev/blog/${post.value.slug}` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': blogUrl.value },
   })
+  useJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://toolport.dev/blog' },
+      { '@type': 'ListItem', position: 3, name: post.value.title, item: blogUrl.value },
+    ],
+  })
+  useJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: buildFaqForPost(post.value),
+  })
+  const howToSchema = buildHowToForPost(post.value)
+  if (howToSchema) useJsonLd(howToSchema)
 }
 
 const tools = [

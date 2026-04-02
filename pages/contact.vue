@@ -11,7 +11,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Contact Form -->
       <div class="lg:col-span-7 bg-surface-container-low dark:bg-surface-container rounded-xl p-8 md:p-12">
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1 mb-2">{{ $t('contact.nameLabel') }}</label>
             <input
@@ -19,7 +19,7 @@
               type="text"
               class="w-full bg-surface-container-highest dark:bg-surface-container-high border-none rounded-lg p-4 text-on-surface dark:text-surface placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 transition-all"
               :placeholder="$t('contact.namePlaceholder')"
-            />
+            >
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1 mb-2">{{ $t('contact.emailLabel') }}</label>
@@ -29,7 +29,7 @@
               class="w-full bg-surface-container-highest dark:bg-surface-container-high border-none rounded-lg p-4 text-on-surface dark:text-surface placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 transition-all"
               :placeholder="$t('contact.emailPlaceholder')"
               required
-            />
+            >
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1 mb-2">{{ $t('contact.messageLabel') }}</label>
@@ -84,7 +84,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'tool' })
 useHead({
-  title: 'Contact Us - ToolPort',
+  title: 'Contact Us',
   meta: [
     { name: 'description', content: 'Get in touch with the ToolPort team. Questions, feedback, or partnership inquiries about our free online tools.' },
   ],
@@ -98,12 +98,15 @@ useSeoMeta({
 const form = reactive({ name: '', email: '', message: '' })
 const isSubmitting = ref(false)
 const submitted = ref(false)
+const { t } = useI18n()
+const { notify } = useNotifier()
 
 async function handleSubmit() {
   isSubmitting.value = true
   await new Promise(resolve => setTimeout(resolve, 1000))
   submitted.value = true
   isSubmitting.value = false
+  notify(t('contact.successMsg'))
   form.name = ''
   form.email = ''
   form.message = ''

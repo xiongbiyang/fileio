@@ -8,7 +8,8 @@
       </div>
     </div>
     <nav class="flex flex-col gap-1">
-      <NuxtLink v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
+      <NuxtLink
+v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
         class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all"
         :class="isActive(item.path) ? 'bg-surface-container-lowest dark:bg-surface-container-high text-primary shadow-sm' : 'text-on-surface-variant/70 hover:bg-surface-container-lowest dark:hover:bg-surface-container-high hover:translate-x-1'">
         <span class="material-symbols-outlined text-xl">{{ item.icon }}</span>

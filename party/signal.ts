@@ -48,7 +48,7 @@ export default class SignalParty implements Party.Server {
     }
   }
 
-  onClose(connection: Party.Connection) {
+  onClose(_connection: Party.Connection) {
     const count = [...this.room.getConnections()].length
     // Notify remaining peers
     this.room.broadcast(JSON.stringify({ type: 'peer-left' }))

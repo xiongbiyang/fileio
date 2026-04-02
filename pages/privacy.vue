@@ -78,7 +78,7 @@
 const { t } = useI18n()
 const localePath = useLocalePath()
 useHead({
-  title: 'Privacy Policy - ToolPort',
+  title: 'Privacy Policy',
   meta: [
     { name: 'description', content: 'ToolPort privacy policy: zero data collection, local-only processing, end-to-end encrypted transfers, 24-hour auto-expiring clipboard rooms. Your data never touches our servers.' },
   ],

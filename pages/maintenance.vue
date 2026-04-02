@@ -51,7 +51,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
 useHead({
-  title: 'Maintenance - ToolPort',
+  title: 'Maintenance',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
 const localePath = useLocalePath()

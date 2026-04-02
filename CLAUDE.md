@@ -286,9 +286,18 @@ NUXT_CLOUDFLARE_TURN_API_TOKEN=
 
 # Site URL for sitemap (hardcoded to https://toolport.dev in nuxt.config.ts)
 NUXT_PUBLIC_SITE_URL=https://toolport.dev
+
+# OAuth (Google / GitHub)
+# Keep false until provider apps are configured
+NUXT_PUBLIC_OAUTH_ENABLED=false
+NUXT_OAUTH_GOOGLE_CLIENT_ID=
+NUXT_OAUTH_GOOGLE_CLIENT_SECRET=
+NUXT_OAUTH_GITHUB_CLIENT_ID=
+NUXT_OAUTH_GITHUB_CLIENT_SECRET=
 ```
 
 All env vars are declared in `nuxt.config.ts` `runtimeConfig`. TURN keys are server-only (never exposed to client).
+OAuth setup and callback checklist: `docs/oauth-setup.md`.
 
 ## NPM Scripts
 
@@ -382,3 +391,64 @@ npm run party:deploy # Deploy PartyKit to production
 - Tools directory CTA → links to tool-request survey
 - Pricing Pro button → links to pro-waitlist
 - Side nav "Upgrade to Pro" → links to pro-waitlist
+## 2026-04 Update Snapshot
+
+### Auth & OAuth
+- Added real auth pages and flows:
+  - `pages/auth/signin.vue`
+  - `pages/auth/signup.vue`
+- Added server auth APIs (D1-backed, with local fallback behavior in UI when D1 is missing):
+  - `POST /api/auth/signin`
+  - `POST /api/auth/signup`
+- Added OAuth start/callback flow:
+  - `GET /api/auth/oauth-url`
+  - `GET /api/auth/callback/:provider`
+  - Shared helper: `server/utils/oauth.ts`
+- OAuth env vars are enabled via:
+  - `NUXT_PUBLIC_OAUTH_ENABLED`
+  - `NUXT_OAUTH_GOOGLE_CLIENT_ID`
+  - `NUXT_OAUTH_GOOGLE_CLIENT_SECRET`
+  - `NUXT_OAUTH_GITHUB_CLIENT_ID`
+  - `NUXT_OAUTH_GITHUB_CLIENT_SECRET`
+- Setup reference: `docs/oauth-setup.md`
+
+### Pricing & Waitlist Segmentation
+- Pricing upgraded to 4-card layout:
+  - Free
+  - Pro Monthly (`$6.99`)
+  - Pro Yearly (`$69.9`)
+  - Pro Lifetime (`$199.9`)
+- Pricing copy now clearly differentiates plans:
+  - Monthly = flexible, cancel anytime
+  - Yearly = lower annual cost
+  - Lifetime = one-time payment + future tools included
+- Current product state is pre-launch for paid plans:
+  - Monthly/Yearly/Lifetime CTA buttons route to waitlist, not checkout
+- Plan-specific waitlist routing:
+  - `/pro-waitlist?plan=monthly`
+  - `/pro-waitlist?plan=yearly`
+  - `/pro-waitlist?plan=lifetime`
+- Waitlist page now reads `plan` query and shows plan-intent messaging accordingly.
+
+### Waitlist Data Capture
+- Added waitlist API:
+  - `POST /api/waitlist`
+  - Captures `email + plan + locale + source`
+  - If D1 is unavailable, endpoint returns graceful success with storage-not-configured reason.
+- Added D1 schema for segmented waitlist:
+  - `db/migrations/0003_waitlist.sql`
+  - Table: `pro_waitlist_leads` with unique `(email, plan)`
+
+### New/Updated D1 Migrations
+- `0002_auth.sql` (auth users)
+- `0003_waitlist.sql` (plan-segmented waitlist leads)
+
+Apply (Cloudflare D1):
+
+```bash
+wrangler d1 migrations apply <DB_NAME>
+```
+
+### Notes
+- Price structured data (JSON-LD) now uses USD consistently for Monthly/Yearly/Lifetime offers.
+- Pricing card visual system was normalized (consistent button style, icon style, badge alignment, responsive spacing).

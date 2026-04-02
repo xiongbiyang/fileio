@@ -1,6 +1,7 @@
 <template>
   <nav class="fixed bottom-0 left-0 w-full bg-surface-container-lowest dark:bg-on-surface px-4 py-3 flex justify-around z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-    <NuxtLink v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
+    <NuxtLink
+v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
       class="flex flex-col items-center gap-0.5 text-xs font-medium transition-colors"
       :class="isActive(item.path) ? 'text-primary' : 'text-on-surface-variant'">
       <span class="material-symbols-outlined text-xl">{{ item.icon }}</span>

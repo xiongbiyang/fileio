@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 useHead({
-  htmlAttrs: { lang: 'en' },
   script: [
     {
       // Prevent dark mode flash: apply 'dark' class before first paint
