@@ -15,7 +15,7 @@
     "party:deploy": "partykit deploy",
     "lint": "eslint . --ignore-pattern .nuxt --ignore-pattern .nuxt-build* --ignore-pattern .output --ignore-pattern dist",
     "lint:i18n": "python scripts/check_i18n.py",
-    "test": "vitest",
+    "test": "vitest --exclude e2e/**",
     "test:e2e": "playwright test --pass-with-no-tests"
   },
   "dependencies": {

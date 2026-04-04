@@ -109,7 +109,7 @@ export function useQrExport() {
     const model = QRCode.create(options.text, {
       errorCorrectionLevel: options.errorCorrection,
     })
-    const modules = model.modules as { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => boolean }
+    const modules = model.modules as { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => number | boolean }
     const moduleCount = modules.size
     const margin = Math.max(0, Number.isFinite(options.margin) ? Number(options.margin) : 0)
     const totalModules = moduleCount + margin * 2
@@ -135,7 +135,7 @@ export function useQrExport() {
     for (let row = 0; row < moduleCount; row++) {
       for (let col = 0; col < moduleCount; col++) {
         const isDark = typeof modules.get === 'function'
-          ? modules.get(row, col)
+          ? Boolean(modules.get(row, col))
           : Boolean(modules.data[row * moduleCount + col])
         if (!isDark) continue
         const x = offset + col * moduleSize

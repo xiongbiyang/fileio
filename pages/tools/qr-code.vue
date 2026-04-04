@@ -1207,8 +1207,8 @@ async function overlayLogo(canvas: HTMLCanvasElement) {
   })
 }
 
-function getModule(modules: { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => boolean }, row: number, col: number): boolean {
-  if (typeof modules.get === 'function') return modules.get(row, col)
+function getModule(modules: { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => number | boolean }, row: number, col: number): boolean {
+  if (typeof modules.get === 'function') return Boolean(modules.get(row, col))
   return Boolean(modules.data[row * modules.size + col])
 }
 
@@ -1264,7 +1264,7 @@ async function renderQrToCanvas(canvas: HTMLCanvasElement, width: number) {
   if (!text) return
   const QRCode = await import('qrcode')
   const model = QRCode.create(text, { errorCorrectionLevel: errorCorrection.value as 'L' | 'M' | 'Q' | 'H' })
-  const modules = model.modules as { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => boolean }
+  const modules = model.modules as { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => number | boolean }
   const moduleCount = modules.size
   const margin = Math.max(0, Number.isFinite(qrMargin.value) ? qrMargin.value : 0)
   const totalModules = moduleCount + margin * 2
