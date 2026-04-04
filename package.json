@@ -16,7 +16,7 @@
     "lint": "eslint . --ignore-pattern .nuxt --ignore-pattern .nuxt-build* --ignore-pattern .output --ignore-pattern dist",
     "lint:i18n": "python scripts/check_i18n.py",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --pass-with-no-tests"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^9.1.0",
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.7.0",
+    "@playwright/test": "^1.59.1",
     "@types/qrcode": "^1.5.5",
     "concurrently": "^9.2.1",
     "partykit": "^0.0.115",

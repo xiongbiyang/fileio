@@ -10,6 +10,38 @@ export interface BlogPost {
 export function useBlogPosts(): BlogPost[] {
   return [
     {
+      slug: 'client-side-qr-code-creator-guide',
+      title: 'Frictionless Client-side QR Code Creator: Out-of-the-box Local Workflow',
+      description: 'Learn why frictionless client-side QR generation is safer for privacy-sensitive workflows and how to create local QR codes without server upload.',
+      date: '2026-04-04',
+      tags: ['QR Code', 'Client-side', 'Privacy', 'Local Processing', 'Guide'],
+      author: 'ToolPort Team',
+    },
+    {
+      slug: 'no-tracking-qr-code-generator-guide',
+      title: 'Frictionless No-Tracking QR Code Generator: Clean Links Out-of-the-box',
+      description: 'Create clean QR codes without auto-added tracking parameters, hidden redirects, or retargeting artifacts.',
+      date: '2026-04-04',
+      tags: ['QR Code', 'No Tracking', 'Privacy', 'Static QR', 'Guide'],
+      author: 'ToolPort Team',
+    },
+    {
+      slug: 'offline-qr-code-generator-guide',
+      title: 'Out-of-the-box Offline QR Code Generator: Frictionless Local-first Workflow',
+      description: 'Use a frictionless local-first QR workflow for unstable network conditions and generate QR assets with minimal cloud dependency.',
+      date: '2026-04-04',
+      tags: ['QR Code', 'Offline', 'Local-first', 'No Cloud', 'Guide'],
+      author: 'ToolPort Team',
+    },
+    {
+      slug: 'static-qr-without-expiration-guide',
+      title: 'Frictionless Static QR without Expiration: Create Never-expire Codes',
+      description: 'Understand static QR strategy and avoid expiring QR paywalls by using direct, durable QR links.',
+      date: '2026-04-04',
+      tags: ['QR Code', 'Static QR', 'Never Expire', 'Long-term', 'Guide'],
+      author: 'ToolPort Team',
+    },
+    {
       slug: 'toolport-vs-localsend-comparison',
       title: 'ToolPort vs LocalSend: Which Is Better for Everyday Phone-to-PC Transfer?',
       description: 'Compare ToolPort and LocalSend for no-install phone-to-PC transfer vs app-based LAN sharing. Pick the better workflow for daily cross-device use.',

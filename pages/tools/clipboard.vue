@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="pt-8 pb-12 px-8 min-h-screen flex flex-col items-center">
     <!-- Room Entry (not in room) -->
     <ClipboardEntry
@@ -79,29 +79,30 @@
 
 <script setup lang="ts">
 const localePath = useLocalePath()
-const requestUrl = useRequestURL()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const canonicalUrl = computed(() =>
-  new URL(localePath('/tools/clipboard'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/clipboard'), siteBaseUrl.value).toString(),
 )
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'Online Clipboard Sync - Copy Paste Between Phone and PC',
+  title: 'Frictionless Ephemeral Text Share - Out-of-the-box Clipboard Sync',
   meta: [
-    { name: 'description', content: 'Sync clipboard between phone, tablet, and PC instantly. Copy on one device, paste on another - no app, no signup. Encrypted rooms, real-time sharing, auto-deletes in 24 hours.' },
-    { name: 'keywords', content: 'online clipboard sync,copy paste between phone and pc,sync clipboard across devices,cross-device clipboard,share text between devices,send link from phone to computer,copy from phone paste to computer,real-time clipboard sync,encrypted clipboard sharing,no signup clipboard,browser clipboard sync' },
+    { name: 'description', content: 'Frictionless out-of-the-box ephemeral text sharing. Accountless browser-to-browser clipboard sync with encrypted rooms, no app, no signup, and 24-hour auto-delete.' },
+    { name: 'keywords', content: 'frictionless text share,out-of-the-box clipboard sync,ephemeral text share,browser-to-browser share,accountless text share,cross-device clipboard,no signup clipboard' },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'Copy Paste Between Phone and PC - Free Online Clipboard',
-  ogDescription: 'Sync clipboard between phone, tablet, and PC instantly. Copy on one device, paste on another - no app, no signup, end-to-end encrypted, auto-deletes in 24 hours.',
+  ogTitle: 'Ephemeral Text Share - Accountless Online Clipboard',
+  ogDescription: 'Browser-to-browser clipboard sync for phone and PC. Encrypted ephemeral rooms, no app install, no signup, auto-delete in 24 hours.',
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Online Clipboard Sync - Copy Paste Between Phone and PC',
-  twitterDescription: 'Copy on one device and paste on another with encrypted real-time rooms.',
+  twitterTitle: 'Ephemeral Text Share Between Phone and PC',
+  twitterDescription: 'Accountless browser-to-browser clipboard sync with encrypted temporary rooms.',
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort online clipboard interface preview',
   robots: 'index, follow',
@@ -112,7 +113,7 @@ useJsonLd({
   name: 'ToolPort Online Clipboard',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Web, Android, iOS, Windows, macOS',
-  description: 'Free online clipboard sync - copy on phone, paste on PC instantly. Encrypted real-time rooms, no app install, no signup, auto-expires in 24 hours.',
+  description: 'Ephemeral text share with accountless browser-to-browser clipboard sync. Encrypted real-time rooms that auto-expire in 24 hours.',
   featureList: [
     'Real-time sync across all devices',
     'No app install required',
@@ -151,6 +152,14 @@ useJsonLd({
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'No. ToolPort runs in your browser and does not require app installation or account registration.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does ToolPort support ephemeral text share for sensitive snippets?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Clipboard rooms are temporary and auto-expire after 24 hours, which is useful for short-lived text sharing across devices.',
       },
     },
   ],
@@ -203,4 +212,5 @@ const {
   voteFeatures,
 } = useClipboardPage()
 </script>
+
 

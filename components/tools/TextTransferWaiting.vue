@@ -66,12 +66,15 @@
             </span>
           </div>
         </div>
-        <div class="flex items-center gap-3 px-4 py-2 bg-surface-container-lowest dark:bg-surface-container-high rounded-xl shadow-ambient">
-          <div class="relative flex items-center justify-center">
+        <div class="flex items-center gap-3 px-4 py-2 rounded-xl shadow-ambient" :class="isConnected ? 'bg-primary/5' : 'bg-surface-container-lowest dark:bg-surface-container-high'">
+          <div v-if="isConnected" class="relative flex items-center justify-center">
             <span class="w-3 h-3 bg-primary rounded-full z-10" />
             <span class="absolute w-3 h-3 bg-primary-fixed-dim rounded-full soft-pulse" />
           </div>
-          <span class="text-sm font-medium text-on-surface-variant">{{ $t('toolA.waitingConnection') }}</span>
+          <span v-else class="w-3 h-3 rounded-full bg-outline animate-pulse" />
+          <span class="text-sm font-medium" :class="isConnected ? 'text-primary' : 'text-on-surface-variant'">
+            {{ isConnected ? $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) : $t('toolA.waitingConnection') }}
+          </span>
         </div>
       </div>
 

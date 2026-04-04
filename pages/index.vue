@@ -190,17 +190,17 @@ const localePath = useLocalePath()
 useHead({
   title: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
   meta: [
-    { name: 'description', content: 'Free privacy-first online tools: wireless file transfer between phone and PC, QR code generator and scanner, and online clipboard sync. No signup, no install, all data processed locally.' },
-    { name: 'keywords', content: 'free online tools,wireless file transfer phone to pc,airdrop alternative,airdrop alternative for windows,free qr code generator,qr code scanner online,online clipboard,copy paste between phone and pc,privacy-first tools,webrtc p2p file transfer' },
+    { name: 'description', content: 'Frictionless, out-of-the-box privacy-first tools: no-log WebRTC file drop, client-side QR creation, and ephemeral browser-to-browser text sharing.' },
+    { name: 'keywords', content: 'no-log webrtc file drop,frictionless file transfer,out-of-the-box tools,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share,privacy-first tools' },
   ],
 })
 useSeoMeta({
   ogTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
-  ogDescription: 'Wireless file transfer between phone and PC, free QR code generator and scanner, and online clipboard sync. Privacy-first, no signup, no install.',
+  ogDescription: 'Accountless no-cloud transfer, privacy-first QR tools, and ephemeral browser-to-browser text sharing.',
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: 'https://toolport.dev/',
   twitterTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
-  twitterDescription: 'Transfer files, generate QR codes, and sync clipboard instantly in your browser.',
+  twitterDescription: 'Accountless P2P web transfer, privacy-first QR, and ephemeral text share in your browser.',
   robots: 'index, follow',
 })
 useJsonLd({
@@ -208,7 +208,7 @@ useJsonLd({
   '@type': 'WebSite',
   name: 'ToolPort',
   url: 'https://toolport.dev',
-  description: 'Free privacy-first browser tools for wireless file transfer, QR code generation, and clipboard sync.',
+  description: 'Privacy-first browser tools for accountless no-cloud transfer, local QR code workflows, and ephemeral text sharing.',
   potentialAction: {
     '@type': 'SearchAction',
     target: 'https://toolport.dev/tools?query={search_term_string}',

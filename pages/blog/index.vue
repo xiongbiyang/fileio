@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="max-w-5xl mx-auto px-6 md:px-8 py-16 md:py-24">
     <!-- Header -->
     <div class="mb-12">
@@ -69,6 +69,11 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const posts = useBlogPosts()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const canonicalUrl = computed(() =>
+  new URL(localePath('/blog'), siteBaseUrl.value).toString(),
+)
 
 useHead({
   title: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
@@ -76,13 +81,13 @@ useHead({
     { name: 'description', content: 'Actionable tutorials for wireless file transfer phone to PC, free QR code generation and scanning, and online clipboard sync. Privacy-first guides with no-app workflows.' },
     { name: 'keywords', content: 'file transfer guide phone to pc,airdrop alternative tutorial,free qr code generator tips,qr code scanner tutorial,online clipboard sync guide,copy paste across devices,privacy-first tools blog' },
   ],
-  link: [{ rel: 'canonical', href: 'https://toolport.dev/blog' }],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 })
 useSeoMeta({
   ogTitle: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
   ogDescription: 'Step-by-step tutorials for wireless file transfer, QR code generation/scanning, and cross-device clipboard sync.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/blog',
+  ogUrl: () => canonicalUrl.value,
   twitterTitle: 'ToolPort Blog: File Transfer, QR Code, Clipboard Guides',
   twitterDescription: 'Learn no-app workflows for phone-to-PC transfer, QR code tasks, and clipboard sync.',
   robots: 'index, follow',
@@ -91,7 +96,7 @@ useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'Blog',
   name: 'ToolPort Blog',
-  url: 'https://toolport.dev/blog',
+  url: canonicalUrl.value,
   description: 'Tutorials for wireless file transfer, QR code generation/scanning, and online clipboard sync.',
   publisher: {
     '@type': 'Organization',
@@ -104,7 +109,7 @@ useJsonLd({
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://toolport.dev/blog' },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: canonicalUrl.value },
   ],
 })
 useJsonLd({
@@ -116,7 +121,7 @@ useJsonLd({
   itemListElement: posts.map((post, index) => ({
     '@type': 'ListItem',
     position: index + 1,
-    url: `https://toolport.dev/blog/${post.slug}`,
+    url: new URL(localePath(`/blog/${post.slug}`), canonicalUrl.value).toString(),
     name: post.title,
   })),
 })
@@ -129,3 +134,4 @@ function isNew(date: string) {
   return Date.now() - new Date(date).getTime() < 30 * 24 * 60 * 60 * 1000
 }
 </script>
+

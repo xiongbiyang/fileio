@@ -1,12 +1,10 @@
-<template>
+﻿<template>
   <article class="max-w-2xl mx-auto px-6 py-12">
-    <!-- Back -->
     <NuxtLink :to="localePath('/tools')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       {{ c.back }}
     </NuxtLink>
 
-    <!-- Header -->
     <div class="mb-10">
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
         <span class="material-symbols-outlined text-sm">swap_horiz</span>
@@ -16,10 +14,8 @@
       <p class="text-on-surface-variant">{{ c.readTime }}</p>
     </div>
 
-    <!-- Intro -->
     <p class="text-on-surface dark:text-surface leading-relaxed mb-10 text-base">{{ c.intro }}</p>
 
-    <!-- Steps -->
     <section class="mb-10">
       <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-6">{{ c.stepsTitle }}</h2>
       <div class="flex flex-col gap-6">
@@ -33,7 +29,6 @@
       </div>
     </section>
 
-    <!-- Security note -->
     <div class="rounded-xl border border-primary/20 bg-primary/5 p-5 mb-10 flex gap-3">
       <span class="material-symbols-outlined text-primary mt-0.5 flex-shrink-0">verified_user</span>
       <div>
@@ -42,7 +37,6 @@
       </div>
     </div>
 
-    <!-- Tip -->
     <div class="rounded-xl bg-surface-container-low dark:bg-surface-container p-5 mb-10 flex gap-3">
       <span class="material-symbols-outlined text-on-surface-variant mt-0.5 flex-shrink-0">lightbulb</span>
       <p class="text-sm text-on-surface-variant leading-relaxed">{{ c.tip }}</p>
@@ -53,7 +47,7 @@
       <div class="flex flex-wrap gap-2">
         <NuxtLink
           v-for="link in relatedLinks"
-          :key="link.to"
+          :key="link.label"
           :to="localePath(link.to)"
           class="px-3 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-medium text-on-surface-variant hover:text-primary transition-colors"
         >
@@ -62,10 +56,10 @@
       </div>
     </section>
 
-    <!-- CTA -->
     <NuxtLink
-:to="localePath('/tools/text-transfer')"
-      class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
+      :to="localePath('/tools/text-transfer')"
+      class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
+    >
       {{ c.cta }}
       <span class="material-symbols-outlined text-lg">arrow_forward</span>
     </NuxtLink>
@@ -75,6 +69,12 @@
 <script setup lang="ts">
 const { locale } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const canonicalUrl = computed(() =>
+  new URL(localePath('/guides/file-transfer'), siteBaseUrl.value).toString(),
+)
+
 definePageMeta({ layout: 'default' })
 
 const c = computed(() => {
@@ -83,54 +83,54 @@ const c = computed(() => {
     back: zh ? '返回全部工具' : 'All Tools',
     tag: zh ? '使用指南' : 'Guide',
     readTime: zh ? '约 3 分钟阅读' : '3 min read',
-    title: zh
-      ? '如何在手机和电脑之间传输文件与文字'
-      : 'How to Transfer Files & Text Between Phone and PC',
+    title: zh ? '如何在手机和电脑之间传输文件与文本' : 'How to Transfer Files & Text Between Phone and PC',
     intro: zh
-      ? 'ToolPort 的文件与文字传输工具通过 WebRTC 在你的手机和电脑之间建立加密的点对点连接。无需账号，无需安装任何 App，文件直接从设备传送到设备，不经过任何服务器中转。'
-      : "ToolPort's File & Text Transfer tool creates a direct, encrypted P2P connection between your phone and computer using WebRTC. No account required, no app to install — files and text go device-to-device without touching any server.",
+      ? 'ToolPort 通过 WebRTC 在手机和电脑间建立加密直连。无需账号、无需安装 App，文件与文本可在设备间直接传输。'
+      : "ToolPort's File & Text Transfer tool creates a direct encrypted WebRTC connection between your phone and computer, with no account and no app installation required.",
     stepsTitle: zh ? '操作步骤' : 'Step-by-step',
     steps: zh ? [
-      { title: '在电脑上打开工具', desc: '访问「文件与文字传输」工具，页面会自动生成一个二维码和房间 ID。' },
-      { title: '用手机扫描二维码', desc: '打开手机相机对准二维码扫描，或手动输入房间 ID，即可建立加密连接。' },
-      { title: '等待连接成功', desc: '连接建立后，电脑和手机界面都会显示「已连接」状态，整个过程通常不超过 3 秒。' },
-      { title: '传输文字', desc: '在手机的文字输入框中粘贴或输入内容，点击发送，文字会立即出现在电脑界面上。' },
-      { title: '传输文件', desc: '点击手机界面的文件按钮，选择要发送的文件（图片、文档等），文件会通过加密通道直接传输到电脑。' },
+      { title: '在电脑端打开工具', desc: '进入工具后会自动生成二维码与房间 ID。' },
+      { title: '手机扫码连接', desc: '使用手机扫码，或手动输入房间 ID 完成配对。' },
+      { title: '等待连接成功', desc: '通常几秒内即可建立连接。' },
+      { title: '发送文本', desc: '在手机输入文本后发送，电脑会实时收到。' },
+      { title: '发送文件', desc: '选择文件后可通过加密通道直接传输到电脑。' },
     ] : [
-      { title: 'Open the tool on your computer', desc: 'Visit the File & Text Transfer tool — a QR code and Room ID are generated automatically.' },
-      { title: 'Scan the QR code with your phone', desc: "Open your phone's camera and point it at the QR code, or enter the Room ID manually, to establish the encrypted connection." },
+      { title: 'Open the tool on your computer', desc: 'Visit the File & Text Transfer tool - a QR code and Room ID are generated automatically.' },
+      { title: 'Scan the QR code with your phone', desc: "Open your phone's camera and point it at the QR code, or enter the Room ID manually to establish the encrypted connection." },
       { title: 'Wait for the connection', desc: 'Once connected, both screens show a "Connected" status. This typically takes under 3 seconds.' },
-      { title: 'Send text', desc: 'Type or paste text into the mobile input box and tap Send — it appears on your PC instantly.' },
+      { title: 'Send text', desc: 'Type or paste text into the mobile input box and tap Send - it appears on your PC instantly.' },
       { title: 'Send a file', desc: 'Tap the file button on your phone, pick any file (photo, document, etc.), and it transfers directly to your PC through the encrypted channel.' },
     ],
     secTitle: zh ? '端到端加密' : 'End-to-End Encrypted',
     secDesc: zh
-      ? '所有数据在离开设备之前均使用 AES-256-GCM 加密。ToolPort 的服务器只负责协助建立初始连接，不会接触任何传输内容。'
+      ? '所有传输内容在离开设备前完成加密，服务端仅用于协助建立连接。'
       : 'All data is encrypted with AES-256-GCM before it leaves your device. ToolPort servers only assist in establishing the initial handshake and never see the content of your transfer.',
     tip: zh
-      ? '提示：会话在 10 分钟无活动后自动过期。如需重新连接，点击「刷新二维码」即可开始新会话。'
+      ? '提示：会话在长时间无操作后会过期，可随时刷新二维码重新连接。'
       : 'Tip: Sessions expire after 10 minutes of inactivity. Click "Refresh QR Code" to start a new session at any time.',
     cta: zh ? '立即使用传输工具' : 'Open Transfer Tool',
   }
 })
 
 useHead(() => ({
-  title: 'How to Transfer Files from Phone to PC Wirelessly — No App, No USB',
+  title: 'Accountless P2P Web Transfer Guide: Phone to PC Without Cloud',
   meta: [
-    { name: 'description', content: 'Step-by-step guide: transfer files wirelessly from Android or iPhone to PC without a USB cable or app. Free AirDrop alternative — just scan a QR code, end-to-end encrypted.' },
-    { name: 'keywords', content: 'how to transfer files from phone to pc,wireless file transfer tutorial,airdrop alternative for windows guide,transfer photos android to pc without cable,send files iphone to windows no app,file transfer without usb,secure p2p file transfer,qr code file transfer' },
+    { name: 'description', content: 'Step-by-step accountless file transfer guide: move files from iPhone or Android to PC with browser-to-browser WebRTC P2P. No cloud upload, no app, no USB.' },
+    { name: 'keywords', content: 'accountless file transfer,p2p web transfer,browser-to-browser share,no cloud file transfer,how to transfer files from phone to pc,airdrop alternative for windows guide,secure p2p file transfer,qr code file transfer' },
   ],
-  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/file-transfer' }],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
+
 useSeoMeta({
-  ogTitle: 'How to Transfer Files from Phone to PC Without a Cable or App',
-  ogDescription: 'Step-by-step guide: wirelessly transfer files from Android or iPhone to PC. Free AirDrop alternative — scan a QR code, no app install, end-to-end encrypted.',
+  ogTitle: 'Accountless P2P Web Transfer Guide for Phone to PC',
+  ogDescription: 'Learn browser-to-browser no-cloud transfer from iPhone/Android to PC with WebRTC P2P encryption. No app install or signup.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/guides/file-transfer',
-  twitterTitle: 'How to Transfer Files from Phone to PC Wirelessly',
-  twitterDescription: 'No app and no USB. Learn a secure phone-to-PC transfer workflow in minutes.',
+  ogUrl: () => canonicalUrl.value,
+  twitterTitle: 'No-Cloud P2P Web Transfer Guide',
+  twitterDescription: 'Accountless browser-to-browser transfer workflow for phone to PC.',
   robots: 'index, follow',
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -151,17 +151,27 @@ useJsonLd({
         text: 'Yes. ToolPort works as a free AirDrop alternative for Windows, Android, iPhone, and macOS with no app installation.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'What does accountless P2P web transfer mean?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'It means you can transfer directly in the browser via WebRTC peer-to-peer without creating an account, and without routing your file through cloud storage.',
+      },
+    },
   ],
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
     { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
-    { '@type': 'ListItem', position: 3, name: 'File Transfer Guide', item: 'https://toolport.dev/guides/file-transfer' },
+    { '@type': 'ListItem', position: 3, name: 'File Transfer Guide', item: canonicalUrl.value },
   ],
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -177,8 +187,9 @@ useJsonLd({
 })
 
 const relatedLinks = [
-  { to: '/tools/text-transfer', label: 'AirDrop alternative for Windows' },
-  { to: '/guides/clipboard', label: 'copy paste between phone and PC' },
-  { to: '/tools/qr-code', label: 'QR code file transfer workflow' },
+  { to: '/tools/text-transfer', label: 'accountless file transfer' },
+  { to: '/tools/text-transfer', label: 'p2p web transfer' },
+  { to: '/tools/text-transfer', label: 'zero-knowledge file drop' },
 ]
 </script>
+

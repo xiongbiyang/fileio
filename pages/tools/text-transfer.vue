@@ -93,29 +93,30 @@
 
 <script setup lang="ts">
 const localePath = useLocalePath()
-const requestUrl = useRequestURL()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const canonicalUrl = computed(() =>
-  new URL(localePath('/tools/text-transfer'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/text-transfer'), siteBaseUrl.value).toString(),
 )
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'Wireless File Transfer Phone to PC - Free AirDrop Alternative',
+  title: 'Frictionless No-Log WebRTC File Drop - Accountless P2P Transfer',
   meta: [
-    { name: 'description', content: 'Transfer files wirelessly between phone and computer - no app, no signup, no USB cable. Free AirDrop alternative for Android, iPhone & Windows. End-to-end encrypted, scan a QR code to start.' },
-    { name: 'keywords', content: 'transfer files phone to pc,wireless file transfer,airdrop alternative,airdrop alternative for windows,send files from iphone to windows,transfer photos android to pc,file transfer without usb,file transfer no app,file transfer no signup,webrtc file transfer,p2p file transfer,encrypted file transfer,browser file transfer,cross-platform file sharing' },
+    { name: 'description', content: 'Frictionless, out-of-the-box browser-to-browser transfer between phone and PC. No-log design for transfer content, no cloud upload, no app, no signup, powered by WebRTC P2P.' },
+    { name: 'keywords', content: 'no-log webrtc file drop,frictionless file transfer,out-of-the-box file transfer,accountless file transfer,p2p web transfer,no cloud file transfer,browser-to-browser share,airdrop alternative for windows' },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'Wireless File Transfer - Free AirDrop Alternative for Any Device',
-  ogDescription: 'Send files between phone and PC instantly. No app, no signup, no USB cable. End-to-end encrypted P2P - just scan a QR code. Works on iOS, Android, Windows, Mac.',
+  ogTitle: 'Frictionless No-Log WebRTC File Drop',
+  ogDescription: 'Out-of-the-box browser-to-browser file transfer with no cloud upload. WebRTC P2P, no app install, no signup.',
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Wireless File Transfer Phone to PC - Free AirDrop Alternative',
-  twitterDescription: 'Transfer files between phone and PC instantly with no app or signup.',
+  twitterTitle: 'No-Log WebRTC File Drop for Phone and PC',
+  twitterDescription: 'Frictionless accountless transfer. No cloud upload, no app, no signup.',
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort file transfer interface preview',
   robots: 'index, follow',
@@ -126,7 +127,7 @@ useJsonLd({
   name: 'ToolPort File Transfer',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Web, Android, iOS, Windows, macOS',
-  description: 'Free wireless file transfer between phone and PC. AirDrop alternative that works cross-platform - no app install, no signup, end-to-end encrypted via WebRTC P2P.',
+  description: 'Accountless no-cloud file transfer with browser-to-browser WebRTC P2P encryption. Private cross-platform AirDrop alternative for phone to PC.',
   featureList: [
     'No app install required',
     'No signup or account needed',
@@ -165,6 +166,14 @@ useJsonLd({
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Yes. File transfer runs in the browser and does not require USB cables, accounts, or app installation.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is this an accountless P2P web transfer with zero-knowledge design?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. ToolPort uses direct browser-to-browser WebRTC transfer with end-to-end encryption, and the service is designed so transfer content is not visible to ToolPort servers.',
       },
     },
   ],
@@ -211,5 +220,6 @@ const {
   verificationDigits,
 } = useTextTransferPage()
 </script>
+
 
 

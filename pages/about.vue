@@ -78,13 +78,13 @@ const { t } = useI18n()
 useHead({
   title: 'About ToolPort - Privacy-First Online Tools',
   meta: [
-    { name: 'description', content: 'ToolPort is committed to building high-quality, privacy-first browser tools. No accounts, no installs, no data collection. All processing happens locally with end-to-end encryption.' },
-    { name: 'keywords', content: 'about ToolPort,privacy-first tools,free browser tools,no tracking,encrypted tools,open source tools' },
+    { name: 'description', content: 'ToolPort builds privacy-first browser tools for accountless file transfer, ephemeral text share, and no-cloud workflows. Zero-knowledge architecture principles, no tracking, and end-to-end encryption.' },
+    { name: 'keywords', content: 'about ToolPort,privacy-first tools,accountless file transfer,ephemeral text share,no cloud tools,zero-knowledge file drop,browser-to-browser share' },
   ],
 })
 useSeoMeta({
   ogTitle: 'About ToolPort - Privacy-First Online Tools',
-  ogDescription: 'ToolPort builds privacy-first browser tools. No accounts, no installs, no data collection. All processing happens locally with end-to-end encryption.',
+  ogDescription: 'Privacy-first browser tools for accountless transfer and ephemeral sharing, designed with zero-knowledge architecture principles.',
   ogImage: 'https://toolport.dev/og-image.png',
 })
 

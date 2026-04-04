@@ -2,6 +2,7 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <AdBlockNotice />
   <CookieConsent />
 </template>
 

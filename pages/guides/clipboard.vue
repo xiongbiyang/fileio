@@ -1,12 +1,10 @@
-<template>
+﻿<template>
   <article class="max-w-2xl mx-auto px-6 py-12">
-    <!-- Back -->
     <NuxtLink :to="localePath('/tools')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       {{ c.back }}
     </NuxtLink>
 
-    <!-- Header -->
     <div class="mb-10">
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
         <span class="material-symbols-outlined text-sm">content_paste</span>
@@ -16,10 +14,8 @@
       <p class="text-on-surface-variant">{{ c.readTime }}</p>
     </div>
 
-    <!-- Intro -->
     <p class="text-on-surface dark:text-surface leading-relaxed mb-10 text-base">{{ c.intro }}</p>
 
-    <!-- Steps -->
     <section class="mb-10">
       <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-6">{{ c.stepsTitle }}</h2>
       <div class="flex flex-col gap-6">
@@ -33,7 +29,6 @@
       </div>
     </section>
 
-    <!-- Use cases -->
     <section class="mb-10">
       <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface mb-4">{{ c.usecaseTitle }}</h2>
       <ul class="flex flex-col gap-3">
@@ -44,7 +39,6 @@
       </ul>
     </section>
 
-    <!-- Note -->
     <div class="rounded-xl border border-primary/20 bg-primary/5 p-5 mb-10 flex gap-3">
       <span class="material-symbols-outlined text-primary mt-0.5 flex-shrink-0">schedule</span>
       <div>
@@ -53,7 +47,6 @@
       </div>
     </div>
 
-    <!-- Tip -->
     <div class="rounded-xl bg-surface-container-low dark:bg-surface-container p-5 mb-10 flex gap-3">
       <span class="material-symbols-outlined text-on-surface-variant mt-0.5 flex-shrink-0">lightbulb</span>
       <p class="text-sm text-on-surface-variant leading-relaxed">{{ c.tip }}</p>
@@ -64,7 +57,7 @@
       <div class="flex flex-wrap gap-2">
         <NuxtLink
           v-for="link in relatedLinks"
-          :key="link.to"
+          :key="link.label"
           :to="localePath(link.to)"
           class="px-3 py-1.5 rounded-full bg-surface-container-low dark:bg-surface-container text-xs font-medium text-on-surface-variant hover:text-primary transition-colors"
         >
@@ -73,10 +66,10 @@
       </div>
     </section>
 
-    <!-- CTA -->
     <NuxtLink
-:to="localePath('/tools/clipboard')"
-      class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">
+      :to="localePath('/tools/clipboard')"
+      class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
+    >
       {{ c.cta }}
       <span class="material-symbols-outlined text-lg">arrow_forward</span>
     </NuxtLink>
@@ -86,6 +79,12 @@
 <script setup lang="ts">
 const { locale } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const canonicalUrl = computed(() =>
+  new URL(localePath('/guides/clipboard'), siteBaseUrl.value).toString(),
+)
+
 definePageMeta({ layout: 'default' })
 
 const c = computed(() => {
@@ -94,68 +93,68 @@ const c = computed(() => {
     back: zh ? '返回全部工具' : 'All Tools',
     tag: zh ? '使用指南' : 'Guide',
     readTime: zh ? '约 2 分钟阅读' : '2 min read',
-    title: zh
-      ? '如何跨设备同步剪贴板内容'
-      : 'How to Sync Your Clipboard Across Devices',
+    title: zh ? '如何跨设备同步剪贴板内容' : 'How to Sync Your Clipboard Across Devices',
     intro: zh
-      ? 'ToolPort 的在线剪贴板工具可以创建一个临时的共享房间，让你在手机、平板和电脑之间即时同步文字、链接和代码片段。所有设备加入同一个房间后，任何一端的内容变化都会实时同步给其他设备。'
-      : "ToolPort's Online Clipboard creates a temporary shared room where you can instantly sync text, links, and code snippets between your phone, tablet, and computer. Any content change on one device is synced to all others in real time.",
+      ? 'ToolPort 在线剪贴板会创建一个临时房间，帮助你在手机和电脑之间实时同步文本内容。'
+      : "ToolPort's Online Clipboard creates a temporary room where you can sync text and links between your devices in real time.",
     stepsTitle: zh ? '操作步骤' : 'How to use it',
     steps: zh ? [
-      { title: '打开在线剪贴板工具', desc: '进入「在线剪贴板」页面。' },
-      { title: '创建房间', desc: '点击「创建房间」，系统会生成一个唯一的房间 ID。你也可以手动输入一个自定义 ID，方便记忆。' },
-      { title: '在其他设备上加入房间', desc: '在另一台设备上打开同一工具，输入相同的房间 ID 并点击「加入」，或直接扫描第一台设备上显示的二维码（如果有的话）。' },
-      { title: '粘贴或输入内容', desc: '在任意设备上粘贴文字、链接或代码片段，内容会实时同步到所有连接的设备上。' },
-      { title: '复制到剪贴板', desc: '在其他设备上点击收到的内容，一键复制到本地剪贴板，即可在任何应用中粘贴使用。' },
+      { title: '打开在线剪贴板', desc: '进入工具页面。' },
+      { title: '创建房间', desc: '点击创建房间，系统会生成房间 ID。' },
+      { title: '其他设备加入', desc: '在另一台设备输入同一房间 ID 加入。' },
+      { title: '输入或粘贴文本', desc: '内容会在连接设备间实时同步。' },
+      { title: '一键复制', desc: '在接收端点击复制即可粘贴到任意应用。' },
     ] : [
       { title: 'Open the Online Clipboard tool', desc: 'Go to the Online Clipboard page.' },
-      { title: 'Create a room', desc: 'Click "Create Room" — a unique Room ID is generated. You can also type a custom ID that\'s easy to remember.' },
+      { title: 'Create a room', desc: 'Click "Create Room" - a unique Room ID is generated. You can also type a custom ID.' },
       { title: 'Join from your other device', desc: 'On another device, open the same tool, enter the same Room ID and click "Join".' },
-      { title: 'Paste or type content', desc: 'Paste text, links, or code snippets on any device — the content syncs instantly to all connected devices.' },
-      { title: 'Copy to clipboard', desc: 'On any device, tap the received content to copy it to your local clipboard and paste it anywhere.' },
+      { title: 'Paste or type content', desc: 'Paste text, links, or code snippets on any device - the content syncs instantly to connected devices.' },
+      { title: 'Copy to clipboard', desc: 'On any device, tap the received content to copy it to your local clipboard.' },
     ],
-    usecaseTitle: zh ? '适用场景' : 'Common use cases',
+    usecaseTitle: zh ? '常见场景' : 'Common use cases',
     usecases: zh ? [
-      '把手机上的链接快速发送到电脑浏览器',
-      '在不同电脑之间传递代码片段或命令',
-      '把电脑上的长段文字快速发送到手机',
-      '临时共享会议链接或验证码给多台设备',
-      '无需 iCloud / Google 账号的跨平台文字传输',
+      '把手机里的链接快速发到电脑',
+      '跨设备传递代码片段或命令',
+      '把电脑上的长文本同步到手机',
+      '临时分享会议链接或验证码',
+      '无需 iCloud 或 Google 账号的文本同步',
     ] : [
       'Quickly send a link from your phone to your desktop browser',
       'Share code snippets or terminal commands between computers',
-      'Send a long text from your PC to your phone for on-the-go reading',
+      'Send a long text from your PC to your phone',
       'Share a meeting link or OTP code to multiple devices instantly',
       'Cross-platform text sharing without needing iCloud or Google accounts',
     ],
-    expireTitle: zh ? '自动过期' : 'Auto-Expiring Rooms',
+    expireTitle: zh ? '自动过期房间' : 'Auto-Expiring Rooms',
     expireDesc: zh
-      ? '每个房间在创建后 24 小时会自动清空并关闭，不会永久保存任何内容。请勿将房间用于存储敏感的长期数据。'
-      : 'Every room auto-expires and is cleared 24 hours after creation. No content is stored permanently. Do not use rooms for long-term sensitive data storage.',
+      ? '每个房间会在 24 小时后自动清空并关闭，不会永久保存内容。'
+      : 'Every room auto-expires and is cleared 24 hours after creation. No content is stored permanently.',
     tip: zh
-      ? '提示：房间 ID 区分大小写，且在有效期内任何知道 ID 的人都可以加入。请避免使用过于简单的 ID（如 "123"）以防他人误入。'
-      : 'Tip: Room IDs are case-sensitive and anyone who knows the ID can join during the session. Avoid very simple IDs like "123" to prevent accidental collisions.',
+      ? '提示：房间 ID 区分大小写，且知道 ID 的人都可加入，请避免过于简单的 ID。'
+      : 'Tip: Room IDs are case-sensitive and anyone who knows the ID can join during the session. Avoid very simple IDs.',
     cta: zh ? '立即使用在线剪贴板' : 'Open Online Clipboard',
   }
 })
 
 useHead(() => ({
-  title: 'How to Sync Clipboard Between Phone and PC — Copy Paste Across Devices',
+  title: 'Ephemeral Text Share Guide: Browser-to-Browser Clipboard Sync',
   meta: [
-    { name: 'description', content: 'Step-by-step guide: sync clipboard between phone and PC instantly. Copy text or links on one device, paste on another — no app, no signup, end-to-end encrypted.' },
-    { name: 'keywords', content: 'online clipboard sync guide,copy paste between phone and pc,cross-device clipboard tutorial,share text from phone to computer,send link from phone to pc,clipboard sync without app,real-time clipboard sharing,copy on phone paste on pc' },
+    { name: 'description', content: 'Step-by-step ephemeral text share guide: browser-to-browser clipboard sync between phone and PC. Accountless, encrypted, no app install, and auto-expiring rooms.' },
+    { name: 'keywords', content: 'ephemeral text share,browser-to-browser share,accountless text share,online clipboard sync guide,copy paste between phone and pc,cross-device clipboard tutorial,clipboard sync without app' },
   ],
-  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/clipboard' }],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
+
 useSeoMeta({
-  ogTitle: 'How to Sync Clipboard Between Phone and PC Guide',
-  ogDescription: 'Copy on your phone, paste on your PC instantly. Step-by-step guide to syncing clipboard across devices — no app, no signup, end-to-end encrypted.',
+  ogTitle: 'Ephemeral Text Share Guide for Phone and PC',
+  ogDescription: 'Accountless browser-to-browser clipboard sync with encrypted temporary rooms and instant cross-device copy/paste.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/guides/clipboard',
-  twitterTitle: 'How to Sync Clipboard Between Phone and PC',
-  twitterDescription: 'Copy text on one device and paste on another with real-time encrypted clipboard rooms.',
+  ogUrl: () => canonicalUrl.value,
+  twitterTitle: 'Ephemeral Text Share Guide',
+  twitterDescription: 'Sync text across devices with accountless browser-to-browser clipboard rooms.',
   robots: 'index, follow',
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -176,17 +175,27 @@ useJsonLd({
         text: 'No. ToolPort clipboard sync runs in your browser and does not require app installation or account signup.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'What is ephemeral text share?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ephemeral text share means temporary cross-device text syncing where room content auto-expires after a set period.',
+      },
+    },
   ],
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
     { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
-    { '@type': 'ListItem', position: 3, name: 'Clipboard Guide', item: 'https://toolport.dev/guides/clipboard' },
+    { '@type': 'ListItem', position: 3, name: 'Clipboard Guide', item: canonicalUrl.value },
   ],
 })
+
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -202,8 +211,9 @@ useJsonLd({
 })
 
 const relatedLinks = [
-  { to: '/tools/clipboard', label: 'online clipboard sync' },
-  { to: '/guides/file-transfer', label: 'transfer text from phone to computer' },
-  { to: '/tools/text-transfer', label: 'send links from phone to PC' },
+  { to: '/tools/clipboard', label: 'ephemeral text share' },
+  { to: '/tools/clipboard', label: 'browser-to-browser share' },
+  { to: '/tools/text-transfer', label: 'accountless transfer between devices' },
 ]
 </script>
+

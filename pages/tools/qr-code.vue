@@ -283,7 +283,7 @@
             </div>
 
             <!-- Popular Templates -->
-            <div class="rounded-2xl border-2 border-primary/25 bg-primary/5 dark:bg-primary/10 p-4 md:p-5 shadow-sm">
+            <div class="rounded-2xl border border-outline-variant/25 bg-surface-container-low dark:bg-surface-container p-4 md:p-5 shadow-sm">
               <div class="flex items-center justify-between mb-3">
                 <h3 class="font-headline text-lg font-extrabold text-on-surface dark:text-surface">{{ $t('toolB.popularTemplates') }}</h3>
                 <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-primary text-on-primary">{{ $t('toolB.hotBadge') }}</span>
@@ -294,7 +294,7 @@
                     v-for="template in uiQrTemplates"
                     :key="template.key"
                     class="text-left rounded-xl border bg-surface-container-lowest dark:bg-surface-container-high p-3 transition-colors"
-                    :class="activeTemplateKey === template.key ? 'border-primary/60 bg-primary/5' : 'border-outline-variant/20 hover:border-primary/40 hover:bg-primary/5'"
+                    :class="activeTemplateKey === template.key ? 'border-primary/60 bg-surface-container-high dark:bg-surface-container-high' : 'border-outline-variant/20 hover:border-primary/40 hover:bg-surface-container-high dark:hover:bg-surface-container-high'"
                     @click="applyQrTemplateByKey(template.key)"
                   >
                     <p class="text-sm font-bold text-on-surface dark:text-surface">{{ template.title }}</p>
@@ -318,7 +318,6 @@
           <!-- Right Column: Live Preview -->
           <div class="lg:col-span-5 flex flex-col gap-4">
             <div class="w-full bg-surface-container-low dark:bg-surface-container rounded-3xl relative flex items-center justify-center overflow-hidden min-h-[240px] md:min-h-[320px]">
-              <div class="absolute inset-0 opacity-10" style="background: radial-gradient(circle at 30% 30%, rgba(0,81,71,0.1) 0%, transparent 70%)" />
               <div class="relative z-10 p-8 bg-white rounded-2xl shadow-ambient">
                 <canvas v-show="!!inputText" ref="qrCanvas" class="w-full h-auto" />
                 <div v-if="!inputText" class="w-48 h-48 flex items-center justify-center">
@@ -434,10 +433,18 @@
               <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
                 {{ $t('toolB.labelColorConfig') }}
               </label>
-              <div class="flex items-center gap-6">
+              <div class="flex flex-wrap items-center gap-6">
                 <div class="flex items-center gap-2">
                   <input v-model="fgColor" type="color" class="w-9 h-9 rounded-full border-4 border-surface-container cursor-pointer">
-                  <span class="text-sm text-on-surface-variant">{{ $t('toolB.foreground') }}</span>
+                  <span class="text-sm text-on-surface-variant">{{ tr('数据点', 'Dots') }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input v-model="cornersSquareColor" type="color" class="w-9 h-9 rounded-full border-4 border-surface-container cursor-pointer">
+                  <span class="text-sm text-on-surface-variant">{{ tr('角外框', 'Corner Square') }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input v-model="cornersDotColor" type="color" class="w-9 h-9 rounded-full border-4 border-surface-container cursor-pointer">
+                  <span class="text-sm text-on-surface-variant">{{ tr('角内点', 'Corner Dot') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <input v-model="bgColor" :disabled="transparentBackground" type="color" class="w-9 h-9 rounded-full border-4 border-surface-container shadow-inner cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
@@ -451,20 +458,104 @@
               <p class="mt-1 pl-6 text-xs text-on-surface-variant/80">{{ $t('toolB.transparentBackgroundHint') }}</p>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
+                  {{ tr('数据点样式', 'Dots Type') }}
+                </label>
+                <select
+                  v-model="dotsType"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface"
+                >
+                  <option value="dots">Dots</option>
+                  <option value="rounded">Rounded</option>
+                  <option value="classy">Classy</option>
+                  <option value="classy-rounded">Classy-Rounded</option>
+                  <option value="square">Square</option>
+                  <option value="extra-rounded">Extra-Rounded</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
+                  {{ tr('角外框样式', 'Corners Square Type') }}
+                </label>
+                <select
+                  v-model="cornersSquareType"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface"
+                >
+                  <option value="dot">Dot</option>
+                  <option value="square">Square</option>
+                  <option value="extra-rounded">Extra-Rounded</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
+                  {{ tr('角内点样式', 'Corners Dot Type') }}
+                </label>
+                <select
+                  v-model="cornersDotType"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface"
+                >
+                  <option value="dot">Dot</option>
+                  <option value="square">Square</option>
+                </select>
+              </div>
+            </div>
+
             <div>
               <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
                 {{ $t('toolB.brandLogo') }}
               </label>
-              <div class="p-3 bg-surface-container-high dark:bg-surface-container-highest rounded-lg flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2 min-w-0">
-                  <span class="material-symbols-outlined text-lg text-on-surface-variant">add_photo_alternate</span>
-                  <span class="text-xs text-on-surface-variant truncate">{{ logoFile ? logoFile.name : $t('toolB.logoUploadHint') }}</span>
+              <div class="space-y-2">
+                <input
+                  v-model.trim="logoUrl"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface placeholder:text-outline"
+                  :placeholder="tr('Logo URL（可选）', 'Logo URL (optional)')"
+                >
+                <div class="p-3 bg-surface-container-high dark:bg-surface-container-highest rounded-lg flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="material-symbols-outlined text-lg text-on-surface-variant">add_photo_alternate</span>
+                    <span class="text-xs text-on-surface-variant truncate">{{ logoFile ? logoFile.name : $t('toolB.logoUploadHint') }}</span>
+                  </div>
+                  <button class="px-2.5 py-1.5 rounded-md bg-primary text-on-primary text-xs font-bold inline-flex items-center justify-center" :title="$t('toolB.logoUploadHint')" @click="triggerLogoInput">
+                    <span class="material-symbols-outlined text-sm">upload</span>
+                  </button>
                 </div>
-                <button class="px-2.5 py-1.5 rounded-md bg-primary text-on-primary text-xs font-bold inline-flex items-center justify-center" :title="$t('toolB.logoUploadHint')" @click="triggerLogoInput">
-                  <span class="material-symbols-outlined text-sm">upload</span>
+                <button
+                  class="text-xs text-on-surface-variant hover:text-primary text-left"
+                  @click="logoFile = null"
+                >
+                  {{ tr('清除已上传 Logo（改用 URL）', 'Clear uploaded logo (use URL instead)') }}
                 </button>
               </div>
               <input ref="logoInput" type="file" accept="image/*" hidden @change="handleLogoUpload">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
+                  {{ tr('二维码边距 (Margin)', 'QR Margin') }}
+                </label>
+                <input
+                  v-model.number="qrMargin"
+                  type="number"
+                  min="0"
+                  max="32"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface"
+                >
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">
+                  {{ tr('Logo 边距 (Logo Margin)', 'Logo Margin') }}
+                </label>
+                <input
+                  v-model.number="logoPadding"
+                  type="number"
+                  min="0"
+                  max="40"
+                  class="w-full bg-surface-container-high dark:bg-surface-container-highest border-none rounded-lg px-3 py-2 text-sm text-on-surface dark:text-surface"
+                >
+              </div>
             </div>
           </div>
         </template>
@@ -740,9 +831,10 @@ const { notify } = useNotifier()
 const { downloadPngFromCanvas, downloadWebpFromCanvas, downloadSvgFromText } = useQrExport()
 const { decodeQrFromImageData, parseQrScanRaw } = useQrScan()
 const localePath = useLocalePath()
-const requestUrl = useRequestURL()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const canonicalUrl = computed(() =>
-  new URL(localePath('/tools/qr-code'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/qr-code'), siteBaseUrl.value).toString(),
 )
 const isZhLocale = computed(() => locale.value.startsWith('zh'))
 const tr = (zh: string, en: string) => (isZhLocale.value ? zh : en)
@@ -750,14 +842,14 @@ const tr = (zh: string, en: string) => (isZhLocale.value ? zh : en)
 // Page metadata and SEO
 definePageMeta({ layout: 'tool' })
 const seoTitle = computed(() => tr(
-  '免费二维码生成器与扫描器 - 免登录 | ToolPort',
-  'Free QR Code Generator & Scanner - No Signup | ToolPort',
+  'Frictionless Client-side QR Code Creator - No-Tracking, Static QR',
+  'Frictionless Client-side QR Code Creator - No-Tracking, Static QR',
 ))
 const seoDescription = computed(() => tr(
-  '免费在线二维码生成器与扫描器。支持自定义配色、Logo、批量CSV生成与摄像头扫码。100% 浏览器本地处理，不上传、不登录。',
-  'Free online QR code generator and scanner. Custom colors, logo overlay, batch CSV generation, and camera scanning. 100% browser-based, no upload, no signup.',
+  'Frictionless, out-of-the-box QR workflow: client-side generation, no-tracking QR content, and static codes without expiration. Everything runs locally in your browser.',
+  'Frictionless, out-of-the-box QR workflow: client-side generation, no-tracking QR content, and static codes without expiration. Everything runs locally in your browser.',
 ))
-const seoKeywords = 'QR code generator,QR code scanner,free QR code,custom QR code,batch QR code,QR code with logo,online QR code,no signup QR code'
+const seoKeywords = 'frictionless qr code creator,client-side qr code creator,no-tracking qr code,out-of-the-box qr generator,offline qr code generator,static qr without expiration,never expire qr code'
 
 useHead(() => ({
   title: seoTitle.value,
@@ -769,13 +861,13 @@ useHead(() => ({
 }))
 
 useSeoMeta({
-  ogTitle: () => tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
+  ogTitle: () => tr('Frictionless Client-side QR Code Creator | ToolPort', 'Frictionless Client-side QR Code Creator | ToolPort'),
   ogDescription: () => seoDescription.value,
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: () => tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
+  twitterTitle: () => tr('No-Tracking Frictionless QR Generator | ToolPort', 'No-Tracking Frictionless QR Generator | ToolPort'),
   twitterDescription: () => seoDescription.value,
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: () => tr('ToolPort 二维码工具界面预览', 'ToolPort QR code tool preview'),
@@ -785,7 +877,7 @@ useSeoMeta({
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'ToolPort QR Code Generator',
+  name: 'ToolPort Client-side QR Code Creator',
   applicationCategory: 'UtilitiesApplication',
   applicationSubCategory: 'QR Code Utility',
   operatingSystem: 'Web',
@@ -794,6 +886,44 @@ useJsonLd({
   description: seoDescription.value,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   url: canonicalUrl.value,
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is ToolPort a client-side QR code creator?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. QR code generation and scanning run locally in your browser instead of uploading your content to a cloud server.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does this no-tracking QR code generator add UTM or pixel tracking?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. ToolPort does not auto-insert UTM parameters or tracking pixels into your QR content.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Are generated codes static QR without expiration?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. The generated QR codes are static and do not include forced expiration by ToolPort.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can it work as an offline QR code generator?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'After the page is loaded, generation can continue locally in many cases because QR creation itself is client-side.',
+      },
+    },
+  ],
 })
 
 // Core state
@@ -810,6 +940,13 @@ const errorCorrection = ref('M')
 const fgColor = ref('#000000')
 const bgColor = ref('#ffffff')
 const transparentBackground = ref(false)
+const qrMargin = ref(2)
+const logoPadding = ref(5)
+const cornersSquareColor = ref(fgColor.value)
+const cornersDotColor = ref(fgColor.value)
+const dotsType = ref<'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded'>('square')
+const cornersSquareType = ref<'dot' | 'square' | 'extra-rounded'>('square')
+const cornersDotType = ref<'dot' | 'square'>('square')
 const exportScaleOptions = [1, 2, 3, 4]
 const exportScale = ref(1)
 const qrCanvas = ref<HTMLCanvasElement>()
@@ -856,10 +993,14 @@ const templateGuide = computed(() => getTemplateGuide(activeTemplateKey.value, i
 // Logo
 const logoInput = ref<HTMLInputElement>()
 const logoFile = ref<File | null>(null)
+const logoUrl = ref('')
 function triggerLogoInput() { logoInput.value?.click() }
 function handleLogoUpload(e: Event) {
   const input = e.target as HTMLInputElement
-  if (input.files?.[0]) logoFile.value = input.files[0]
+  if (input.files?.[0]) {
+    logoFile.value = input.files[0]
+    logoUrl.value = ''
+  }
 }
 
 // Mobile settings
@@ -902,6 +1043,11 @@ interface GenerationHistoryItem {
   bgColor: string
   transparentBackground: boolean
   templateKey: string | null
+  cornersSquareColor?: string
+  cornersDotColor?: string
+  dotsType?: 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded'
+  cornersSquareType?: 'dot' | 'square' | 'extra-rounded'
+  cornersDotType?: 'dot' | 'square'
 }
 const {
   items: scanHistory,
@@ -936,9 +1082,9 @@ function clearScanHistory() {
 function addGenerationHistoryFromCurrent() {
   const text = inputText.value.trim()
   if (!text) return
-  const sig = `${text}|${qrSize.value}|${errorCorrection.value}|${fgColor.value}|${bgColor.value}|${transparentBackground.value}|${activeTemplateKey.value ?? ''}`
+  const sig = `${text}|${qrSize.value}|${errorCorrection.value}|${fgColor.value}|${bgColor.value}|${transparentBackground.value}|${activeTemplateKey.value ?? ''}|${cornersSquareColor.value}|${cornersDotColor.value}|${dotsType.value}|${cornersSquareType.value}|${cornersDotType.value}`
   const existing = generationHistory.value.find(item =>
-    `${item.text}|${item.size}|${item.errorCorrection}|${item.fgColor}|${item.bgColor}|${item.transparentBackground}|${item.templateKey ?? ''}` === sig,
+    `${item.text}|${item.size}|${item.errorCorrection}|${item.fgColor}|${item.bgColor}|${item.transparentBackground}|${item.templateKey ?? ''}|${item.cornersSquareColor ?? item.fgColor}|${item.cornersDotColor ?? item.fgColor}|${item.dotsType ?? 'square'}|${item.cornersSquareType ?? 'square'}|${item.cornersDotType ?? 'square'}` === sig,
   )
 
   const payload: GenerationHistoryItem = {
@@ -951,6 +1097,11 @@ function addGenerationHistoryFromCurrent() {
     bgColor: bgColor.value,
     transparentBackground: transparentBackground.value,
     templateKey: activeTemplateKey.value,
+    cornersSquareColor: cornersSquareColor.value,
+    cornersDotColor: cornersDotColor.value,
+    dotsType: dotsType.value,
+    cornersSquareType: cornersSquareType.value,
+    cornersDotType: cornersDotType.value,
   }
 
   generationHistory.value = [payload, ...generationHistory.value.filter(item => item.id !== payload.id)].slice(0, 20)
@@ -965,6 +1116,11 @@ function restoreGenerationHistory(item: GenerationHistoryItem) {
   bgColor.value = item.bgColor
   transparentBackground.value = item.transparentBackground
   activeTemplateKey.value = item.templateKey
+  cornersSquareColor.value = item.cornersSquareColor ?? item.fgColor
+  cornersDotColor.value = item.cornersDotColor ?? item.fgColor
+  dotsType.value = item.dotsType ?? 'square'
+  cornersSquareType.value = item.cornersSquareType ?? 'square'
+  cornersDotType.value = item.cornersDotType ?? 'square'
 }
 
 function removeGenerationHistory(id: string) {
@@ -1014,47 +1170,156 @@ const contextCards = computed(() => [
 ])
 
 async function overlayLogo(canvas: HTMLCanvasElement) {
-  if (!logoFile.value) return
+  if (!logoFile.value && !logoUrl.value.trim()) return
   return new Promise<void>((resolve) => {
     const img = new Image()
-    const objUrl = URL.createObjectURL(logoFile.value!)
+    img.crossOrigin = 'anonymous'
+    const srcFromUrl = logoUrl.value.trim()
+    const objUrl = logoFile.value ? URL.createObjectURL(logoFile.value) : null
+    const src = objUrl || srcFromUrl
+    if (!src) {
+      resolve()
+      return
+    }
     img.onload = () => {
       const ctx = canvas.getContext('2d')
-      if (!ctx) { URL.revokeObjectURL(objUrl); resolve(); return }
+      if (!ctx) {
+        if (objUrl) URL.revokeObjectURL(objUrl)
+        resolve()
+        return
+      }
       const logoSize = canvas.width * 0.22
       const x = (canvas.width - logoSize) / 2
       const y = (canvas.height - logoSize) / 2
       ctx.fillStyle = '#ffffff'
       ctx.beginPath()
-      ctx.roundRect(x - 5, y - 5, logoSize + 10, logoSize + 10, 8)
+      ctx.roundRect(x - logoPadding.value, y - logoPadding.value, logoSize + logoPadding.value * 2, logoSize + logoPadding.value * 2, 8)
       ctx.fill()
       ctx.drawImage(img, x, y, logoSize, logoSize)
-      URL.revokeObjectURL(objUrl)
+      if (objUrl) URL.revokeObjectURL(objUrl)
       resolve()
     }
-    img.onerror = () => { URL.revokeObjectURL(objUrl); resolve() }
-    img.src = objUrl
+    img.onerror = () => {
+      if (objUrl) URL.revokeObjectURL(objUrl)
+      resolve()
+    }
+    img.src = src
   })
 }
 
-watch([inputText, qrSize, errorCorrection, fgColor, bgColor, transparentBackground, logoFile], async () => {
+function getModule(modules: { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => boolean }, row: number, col: number): boolean {
+  if (typeof modules.get === 'function') return modules.get(row, col)
+  return Boolean(modules.data[row * modules.size + col])
+}
+
+function getFinderKind(row: number, col: number, size: number): 'outer' | 'inner' | null {
+  const origins = [
+    { r: 0, c: 0 },
+    { r: 0, c: size - 7 },
+    { r: size - 7, c: 0 },
+  ]
+  for (const origin of origins) {
+    const dr = row - origin.r
+    const dc = col - origin.c
+    if (dr < 0 || dr > 6 || dc < 0 || dc > 6) continue
+    const isInner = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4
+    if (isInner) return 'inner'
+    const isOuter = dr === 0 || dr === 6 || dc === 0 || dc === 6
+    if (isOuter) return 'outer'
+  }
+  return null
+}
+
+function drawModule(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  style: 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded' | 'dot',
+  row: number,
+  col: number,
+) {
+  if (style === 'square') {
+    ctx.fillRect(x, y, size, size)
+    return
+  }
+  if (style === 'dots' || style === 'dot') {
+    ctx.beginPath()
+    ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2)
+    ctx.fill()
+    return
+  }
+  let radius = size * 0.25
+  if (style === 'rounded') radius = size * 0.32
+  if (style === 'classy') radius = (row + col) % 2 === 0 ? size * 0.5 : size * 0.2
+  if (style === 'classy-rounded') radius = (row + col) % 2 === 0 ? size * 0.5 : size * 0.35
+  if (style === 'extra-rounded') radius = size * 0.5
+  ctx.beginPath()
+  ctx.roundRect(x, y, size, size, radius)
+  ctx.fill()
+}
+
+async function renderQrToCanvas(canvas: HTMLCanvasElement, width: number) {
   const text = inputText.value.trim()
   if (!text) return
-  const lightColor = transparentBackground.value ? '#0000' : bgColor.value
-  const opts = {
-    errorCorrectionLevel: errorCorrection.value as 'L' | 'M' | 'Q' | 'H',
-    color: { dark: fgColor.value, light: lightColor },
-    margin: 2,
+  const QRCode = await import('qrcode')
+  const model = QRCode.create(text, { errorCorrectionLevel: errorCorrection.value as 'L' | 'M' | 'Q' | 'H' })
+  const modules = model.modules as { size: number; data: ArrayLike<number>; get?: (row: number, col: number) => boolean }
+  const moduleCount = modules.size
+  const margin = Math.max(0, Number.isFinite(qrMargin.value) ? qrMargin.value : 0)
+  const totalModules = moduleCount + margin * 2
+  const moduleSize = width / totalModules
+  const offset = margin * moduleSize
+
+  canvas.width = width
+  canvas.height = width
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  ctx.clearRect(0, 0, width, width)
+  if (!transparentBackground.value) {
+    ctx.fillStyle = bgColor.value
+    ctx.fillRect(0, 0, width, width)
   }
+
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (!getModule(modules, row, col)) continue
+      const finderKind = getFinderKind(row, col, moduleCount)
+      const x = offset + col * moduleSize
+      const y = offset + row * moduleSize
+
+      if (finderKind === 'outer') {
+        ctx.fillStyle = cornersSquareColor.value
+        drawModule(ctx, x, y, moduleSize, cornersSquareType.value === 'dot' ? 'dot' : cornersSquareType.value, row, col)
+        continue
+      }
+      if (finderKind === 'inner') {
+        ctx.fillStyle = cornersDotColor.value
+        drawModule(ctx, x, y, moduleSize, cornersDotType.value === 'dot' ? 'dot' : 'square', row, col)
+        continue
+      }
+      ctx.fillStyle = fgColor.value
+      drawModule(ctx, x, y, moduleSize, dotsType.value, row, col)
+    }
+  }
+
+  if (logoFile.value || logoUrl.value.trim()) await overlayLogo(canvas)
+}
+
+watch(fgColor, (next, prev) => {
+  if (cornersSquareColor.value === prev) cornersSquareColor.value = next
+  if (cornersDotColor.value === prev) cornersDotColor.value = next
+})
+
+watch([inputText, qrSize, errorCorrection, fgColor, bgColor, transparentBackground, logoFile, logoUrl, qrMargin, logoPadding, cornersSquareColor, cornersDotColor, dotsType, cornersSquareType, cornersDotType], async () => {
+  const text = inputText.value.trim()
+  if (!text) return
   try {
-    const QRCode = await import('qrcode')
     if (qrCanvas.value) {
-      await QRCode.toCanvas(qrCanvas.value, text, { ...opts, width: qrSize.value })
-      if (logoFile.value) await overlayLogo(qrCanvas.value)
+      await renderQrToCanvas(qrCanvas.value, qrSize.value)
     }
     if (qrCanvasMobile.value) {
-      await QRCode.toCanvas(qrCanvasMobile.value, text, { ...opts, width: 200 })
-      if (logoFile.value) await overlayLogo(qrCanvasMobile.value)
+      await renderQrToCanvas(qrCanvasMobile.value, 200)
     }
   }
   catch {
@@ -1090,16 +1355,52 @@ async function downloadPng() {
   downloadPngFromCanvas(qrCanvas.value, getExportWidth())
 }
 
+async function resolveSvgLogoDataUrl() {
+  if (logoFile.value) {
+    return await new Promise<string | null>((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null)
+      reader.onerror = () => resolve(null)
+      reader.readAsDataURL(logoFile.value as Blob)
+    })
+  }
+  const src = logoUrl.value.trim()
+  if (!src) return null
+  try {
+    const res = await fetch(src)
+    if (!res.ok) return null
+    const blob = await res.blob()
+    return await new Promise<string | null>((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null)
+      reader.onerror = () => resolve(null)
+      reader.readAsDataURL(blob)
+    })
+  } catch {
+    return null
+  }
+}
+
 async function downloadSvg() {
   if (!inputText.value.trim()) return
   addGenerationHistoryFromCurrent()
   try {
+    const svgLogoDataUrl = await resolveSvgLogoDataUrl()
     await downloadSvgFromText({
       text: inputText.value,
       width: getExportWidth(),
       errorCorrection: errorCorrection.value as 'L' | 'M' | 'Q' | 'H',
       darkColor: fgColor.value,
       lightColor: transparentBackground.value ? '#0000' : bgColor.value,
+      margin: qrMargin.value,
+      cornersSquareColor: cornersSquareColor.value,
+      cornersDotColor: cornersDotColor.value,
+      dotsType: dotsType.value,
+      cornersSquareType: cornersSquareType.value,
+      cornersDotType: cornersDotType.value,
+      logoDataUrl: svgLogoDataUrl,
+      logoPadding: logoPadding.value,
+      logoSizeRatio: 0.22,
     })
   } catch {
     // ignore svg export failures
@@ -1276,5 +1577,6 @@ async function downloadBatchAll() {
   }
 }
 </script>
+
 
 

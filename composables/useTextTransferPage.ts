@@ -142,7 +142,9 @@ export function useTextTransferPage() {
         markRemoteDeviceOnline(true)
         sendLocalPeerMeta()
         if (state.value === 'pairing' || state.value === 'waiting' || state.value === 'reconnecting') {
-          state.value = 'transferring'
+          // Keep interactive controls available after handshake.
+          // Actual transfer state is entered only when sending/receiving payload.
+          state.value = 'waiting'
         }
         signaling.disconnect()
       }
@@ -472,7 +474,7 @@ export function useTextTransferPage() {
   }
   function confirmPairing() {
     if (webrtc.connectionState.value !== 'connected') return
-    state.value = 'transferring'
+    state.value = 'waiting'
   }
   function denyPairing() {
     state.value = 'waiting'

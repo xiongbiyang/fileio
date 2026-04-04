@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen">
     <!-- ============ MOBILE TOOLS DIRECTORY ============ -->
     <div class="md:hidden px-5 pt-6 pb-28">
@@ -181,38 +181,39 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
-const requestUrl = useRequestURL()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const canonicalUrl = computed(() =>
-  new URL(localePath('/tools'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools'), siteBaseUrl.value).toString(),
 )
 const toolTextTransferUrl = computed(() =>
-  new URL(localePath('/tools/text-transfer'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/text-transfer'), siteBaseUrl.value).toString(),
 )
 const toolQrUrl = computed(() =>
-  new URL(localePath('/tools/qr-code'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/qr-code'), siteBaseUrl.value).toString(),
 )
 const toolClipboardUrl = computed(() =>
-  new URL(localePath('/tools/clipboard'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+  new URL(localePath('/tools/clipboard'), siteBaseUrl.value).toString(),
 )
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
+  title: 'All Frictionless Tools: No-Log Transfer, Client-side QR, Ephemeral Share',
   meta: [
-    { name: 'description', content: 'Browse all free online tools: wireless file transfer phone to PC, free QR code generator and scanner, and real-time online clipboard sync. Privacy-first and no signup required.' },
-    { name: 'keywords', content: 'free online tools,airdrop alternative for windows,wireless file transfer tool,free qr code generator,qr code scanner online,online clipboard sync,copy paste across devices,privacy browser tools,no install tools' },
+    { name: 'description', content: 'Out-of-the-box privacy-first tools: frictionless no-log WebRTC file drop, client-side no-tracking QR creation, and ephemeral browser-to-browser sharing.' },
+    { name: 'keywords', content: 'frictionless tools,no-log webrtc file drop,out-of-the-box transfer,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share' },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
   ogTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
-  ogDescription: 'Encrypted file transfer, QR code generator & scanner, real-time clipboard - all free, no signup, privacy-first.',
+  ogDescription: 'Accountless no-cloud transfer, privacy-first QR workflows, and ephemeral browser-to-browser text sharing.',
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
-  twitterDescription: 'Use ToolPort tools in your browser with no signup: file transfer, QR code, and clipboard sync.',
+  twitterDescription: 'Use ToolPort tools with no signup: accountless P2P transfer, privacy-first QR, and ephemeral text share.',
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort tools directory preview',
   robots: 'index, follow',
@@ -221,7 +222,7 @@ useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'ToolPort Tools Directory',
-  description: 'All free online tools including phone-to-PC transfer, QR code generator/scanner, and online clipboard sync.',
+  description: 'Privacy-first tools directory for accountless no-cloud transfer, QR workflows, and ephemeral text sharing.',
   url: canonicalUrl.value,
 })
 useJsonLd({
@@ -324,3 +325,4 @@ const categories = computed(() => [
 .featured-slide-enter-from { opacity: 0; transform: translateX(12px); }
 .featured-slide-leave-to  { opacity: 0; transform: translateX(-12px); }
 </style>
+

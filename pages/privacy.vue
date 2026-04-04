@@ -80,12 +80,13 @@ const localePath = useLocalePath()
 useHead({
   title: 'Privacy Policy',
   meta: [
-    { name: 'description', content: 'ToolPort privacy policy: zero data collection, local-only processing, end-to-end encrypted transfers, 24-hour auto-expiring clipboard rooms. Your data never touches our servers.' },
+    { name: 'description', content: 'ToolPort privacy policy for no-cloud browser-to-browser sharing: accountless file transfer, ephemeral text share, and zero-knowledge architecture principles with end-to-end encryption.' },
+    { name: 'keywords', content: 'privacy policy,no cloud file transfer,accountless file transfer,ephemeral text share,browser-to-browser share,zero-knowledge file drop,webrtc p2p privacy' },
   ],
 })
 useSeoMeta({
   ogTitle: 'Privacy Policy - ToolPort',
-  ogDescription: 'ToolPort: zero data collection, local-only processing, end-to-end encrypted transfers. Your data never touches our servers.',
+  ogDescription: 'No-cloud browser-to-browser privacy model with accountless transfer, ephemeral rooms, and zero-knowledge architecture principles.',
   ogImage: 'https://toolport.dev/og-image.png',
 })
 

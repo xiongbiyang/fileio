@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <article class="max-w-2xl mx-auto px-6 py-12">
     <!-- Back -->
     <NuxtLink :to="localePath('/tools')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
@@ -89,6 +89,11 @@
 <script setup lang="ts">
 const { locale } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const canonicalUrl = computed(() =>
+  new URL(localePath('/guides/qr-code'), siteBaseUrl.value).toString(),
+)
 definePageMeta({ layout: 'default' })
 
 const c = computed(() => {
@@ -97,60 +102,58 @@ const c = computed(() => {
     back: zh ? '返回全部工具' : 'All Tools',
     tag: zh ? '使用指南' : 'Guide',
     readTime: zh ? '约 2 分钟阅读' : '2 min read',
-    title: zh
-      ? '如何生成二维码和用摄像头扫描二维码'
-      : 'How to Generate QR Codes and Scan from Camera',
+    title: zh ? '如何生成二维码并进行扫码识别' : 'How to Generate QR Codes and Scan from Camera',
     intro: zh
-      ? 'ToolPort 的二维码工具完全在你的浏览器本地运行。你可以为任意链接或文本生成高质量的二维码，也可以直接用摄像头或上传图片来扫描二维码，全程无需上传任何数据到服务器。'
-      : "ToolPort's QR Code tool runs entirely in your browser. Generate high-quality QR codes for any URL or text, or scan codes directly from your camera or image files — no data is ever uploaded to a server.",
+      ? 'ToolPort 二维码工具在浏览器本地运行。你可以为链接或文本生成二维码，也可以用摄像头或图片进行扫码识别，全程无需上传内容。'
+      : "ToolPort's QR code tool runs fully in your browser. Generate QR codes for URLs or text, and scan from camera or image files without uploading your content.",
     generateTitle: zh ? '生成二维码' : 'Generate a QR Code',
     generateSteps: zh ? [
-      { title: '打开二维码工具', desc: '进入「二维码工具」页面，默认显示「生成」标签。' },
-      { title: '输入内容', desc: '在输入框中粘贴或输入任意网址、文字或其他内容，二维码会实时生成。' },
-      { title: '调整参数（可选）', desc: '可以调整尺寸、纠错级别，以及前景色和背景色，满足不同使用场景。' },
-      { title: '下载二维码', desc: '点击「下载 PNG」或「下载 SVG」保存二维码图片，PNG 适合普通使用，SVG 适合打印和高清场景。' },
+      { title: '打开二维码工具', desc: '进入二维码页面，默认会展示“生成”模式。' },
+      { title: '输入内容', desc: '输入链接或文本，二维码会实时生成。' },
+      { title: '调整参数（可选）', desc: '可调整尺寸、纠错等级和前景/背景色。' },
+      { title: '下载二维码', desc: '支持下载 PNG 或 SVG，便于线上与打印场景。' },
     ] : [
-      { title: 'Open the QR Code tool', desc: 'Go to the QR Code tool page — the Generate tab is shown by default.' },
+      { title: 'Open the QR Code tool', desc: 'Go to the QR Code tool page, with Generate mode selected by default.' },
       { title: 'Enter your content', desc: 'Paste or type any URL, text, or data into the input field. The QR code generates in real time as you type.' },
       { title: 'Adjust settings (optional)', desc: 'Tweak the size, error correction level, and foreground/background colors to suit your use case.' },
       { title: 'Download', desc: 'Click "Download PNG" or "Download SVG" to save your QR code. PNG for everyday use, SVG for print and high-resolution needs.' },
     ],
-    scanTitle: zh ? '扫描二维码' : 'Scan a QR Code',
+    scanTitle: zh ? '扫码识别' : 'Scan a QR Code',
     scanSteps: zh ? [
-      { title: '切换到「扫描」标签', desc: '点击页面顶部的「扫描二维码」标签。' },
-      { title: '上传图片或使用摄像头', desc: '点击扫描区域，选择上传包含二维码的图片，或调用摄像头实时扫描。' },
-      { title: '查看结果', desc: '识别结果会立即显示。如果是网址，可以直接点击跳转；如果是文字，可以一键复制。' },
+      { title: '切换到扫描模式', desc: '点击页面中的“扫描”标签。' },
+      { title: '上传图片或启用摄像头', desc: '可上传含二维码图片，或直接使用摄像头实时扫描。' },
+      { title: '查看结果', desc: '识别成功后可直接打开链接或复制内容。' },
     ] : [
       { title: 'Switch to the Scan tab', desc: 'Click the "Scan QR" tab at the top of the page.' },
       { title: 'Upload an image or use camera', desc: 'Click the scan area to upload an image containing a QR code, or activate your camera for live scanning.' },
       { title: 'View the result', desc: 'The decoded content appears instantly. If it\'s a URL you can click to open it; if it\'s text you can copy it with one click.' },
     ],
     tip: zh
-      ? '提示：扫描时确保二维码图片清晰、光线充足，识别成功率会更高。如果扫描失败，可以尝试提高纠错级别后重新生成。'
+      ? '提示：请确保二维码清晰并光线充足；若识别失败，可提高纠错等级后重新生成。'
       : 'Tip: For best scan results, make sure the QR code image is clear and well-lit. If scanning fails, try regenerating with a higher error correction level (Q or H).',
     privacyTitle: zh ? '100% 本地处理' : '100% Local Processing',
     privacyDesc: zh
-      ? '二维码的生成和扫描全部在你的浏览器中完成，不会向任何服务器上传你的内容或图片。'
+      ? '二维码生成与扫描都在浏览器本地完成，不会上传你的内容或图片。'
       : 'Both QR code generation and scanning happen entirely inside your browser. Your content and images are never sent to any server.',
     cta: zh ? '立即使用二维码工具' : 'Open QR Code Tool',
   }
 })
 
 useHead(() => ({
-  title: c.value.title + ' - ToolPort Guide',
+  title: 'Client-side QR Code Creator Guide - No-Tracking & Static QR',
   meta: [
-    { name: 'description', content: 'How to generate and scan QR codes with ToolPort. Create custom QR codes with logos, batch generate from CSV, and scan from camera or image files.' },
-    { name: 'keywords', content: 'free qr code generator guide,how to generate qr code online,qr code scanner tutorial,create qr code with logo,batch qr code generator csv,scan qr code from image' },
+    { name: 'description', content: 'Learn how to use a client-side QR code creator: no-tracking QR code, offline-friendly generation, and static QR without expiration.' },
+    { name: 'keywords', content: 'client-side qr code creator,no-tracking qr code,offline qr code generator,static qr without expiration,never expire qr code,scan qr code from image' },
   ],
-  link: [{ rel: 'canonical', href: 'https://toolport.dev/guides/qr-code' }],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'QR Code Generator Guide - ToolPort',
-  ogDescription: 'How to generate and scan QR codes with ToolPort. Create custom QR codes with logos, batch generate from CSV, and scan from camera or image files.',
+  ogTitle: 'Client-side QR Code Creator Guide - ToolPort',
+  ogDescription: 'No-tracking QR code workflow with local generation, offline-friendly usage, and static QR without expiration.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/guides/qr-code',
-  twitterTitle: 'How to Generate and Scan QR Codes Online',
-  twitterDescription: 'Create QR codes with logo and scan from camera or image files in your browser.',
+  ogUrl: () => canonicalUrl.value,
+  twitterTitle: 'No-Tracking QR Code Guide',
+  twitterDescription: 'Client-side and static QR workflow, including offline-friendly generation tips.',
   robots: 'index, follow',
 })
 useJsonLd({
@@ -173,6 +176,14 @@ useJsonLd({
         text: 'Yes. You can upload a screenshot or photo that contains a QR code and ToolPort will decode it in your browser.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'Are ToolPort QR codes static without expiration?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. ToolPort generates static QR codes and does not force expiration timers for generated codes.',
+      },
+    },
   ],
 })
 useJsonLd({
@@ -181,7 +192,7 @@ useJsonLd({
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
     { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
-    { '@type': 'ListItem', position: 3, name: 'QR Code Guide', item: 'https://toolport.dev/guides/qr-code' },
+    { '@type': 'ListItem', position: 3, name: 'QR Code Guide', item: canonicalUrl.value },
   ],
 })
 useJsonLd({
@@ -199,8 +210,10 @@ useJsonLd({
 })
 
 const relatedLinks = [
-  { to: '/tools/qr-code', label: 'free QR code generator online' },
-  { to: '/guides/file-transfer', label: 'QR code file transfer guide' },
-  { to: '/tools/text-transfer', label: 'send files by QR code' },
+  { to: '/tools/qr-code', label: 'client-side qr code creator' },
+  { to: '/tools/qr-code', label: 'no-tracking qr code' },
+  { to: '/tools/qr-code', label: 'offline qr code generator' },
+  { to: '/tools/qr-code', label: 'static qr without expiration' },
 ]
 </script>
+

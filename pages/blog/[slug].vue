@@ -68,13 +68,14 @@ import { marked } from 'marked'
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+const runtimeConfig = useRuntimeConfig()
 
 const slug = computed(() => route.params.slug as string)
-const siteBaseUrl = 'https://toolport.dev'
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const localizedBlogPath = computed(() => localePath(`/blog/${slug.value}`))
 const localizedBlogListPath = computed(() => localePath('/blog'))
 const localizedHomePath = computed(() => localePath('/'))
-const blogUrl = computed(() => new URL(localizedBlogPath.value, siteBaseUrl).toString())
+const blogUrl = computed(() => new URL(localizedBlogPath.value, siteBaseUrl.value).toString())
 
 const posts = useBlogPosts()
 const post = computed(() => posts.find(p => p.slug === slug.value))
@@ -288,7 +289,7 @@ function buildHowToForPost(p: NonNullable<typeof post.value>) {
     return null
   }
   const kind = inferBlogType(p)
-  const baseUrl = siteBaseUrl
+  const baseUrl = siteBaseUrl.value
   if (kind === 'howto' || kind === 'transfer') {
     return {
       '@context': 'https://schema.org',
@@ -439,8 +440,8 @@ if (post.value) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(localizedHomePath.value, siteBaseUrl).toString() },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL(localizedBlogListPath.value, siteBaseUrl).toString() },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(localizedHomePath.value, siteBaseUrl.value).toString() },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL(localizedBlogListPath.value, siteBaseUrl.value).toString() },
       { '@type': 'ListItem', position: 3, name: post.value.title, item: blogUrl.value },
     ],
   })
