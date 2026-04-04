@@ -10,6 +10,8 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    env:
+      NUXT_BUILD_DIR: .nuxt
 
     steps:
       - name: Checkout
