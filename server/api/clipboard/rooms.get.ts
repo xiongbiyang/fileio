@@ -1,4 +1,5 @@
-import { getD1Binding, requireUserId } from '~/server/utils/d1'
+import { getD1Binding } from '~/server/utils/d1'
+import { requireAuthSessionUser } from '~/server/utils/session'
 
 interface DbRoomRow {
   id: string
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
     return { ok: false, reason: 'D1_NOT_CONFIGURED', rooms: [] }
   }
 
-  const userId = requireUserId(getQuery(event).userId)
+  const { uid: userId } = await requireAuthSessionUser(event)
   const result = await db
     .prepare(`
       SELECT id, name, description, is_e2ee, created_at, updated_at

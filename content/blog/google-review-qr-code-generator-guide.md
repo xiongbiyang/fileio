@@ -1,5 +1,6 @@
 ---
 title: "Google Review QR Code Generator: Get More Reviews from Offline Customers"
+updated: "2026-04-04"
 ---
 
 If customers must search your business manually, most of them never leave a review. A **google review qr code generator** removes friction and improves review completion from offline touchpoints.
@@ -33,6 +34,8 @@ It is a QR code that points directly to your Google review page. Users scan, ope
 
 - Need menu links too? [Menu QR generator guide](/blog/menu-qr-code-generator-for-restaurants)
 - Need social links? [Instagram/WhatsApp/Facebook QR usage](/tools/qr-code?template=whatsapp)
+- Need on-site navigation? [Google Maps QR guide](/blog/google-maps-qr-code-generator-guide)
+- Need survey feedback loop? [Form QR guide](/blog/form-survey-qr-code-generator-guide)
 
 ## Start Here
 

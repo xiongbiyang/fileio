@@ -1,6 +1,7 @@
 import { writeToClipboard } from '~/utils/clipboard'
 import { renderQrCodeToCanvas } from '~/utils/qrcode'
 import { generateRoomId } from '~/utils/roomId'
+import { buildRoomJoinUrl } from '~/utils/shareLink'
 import {
   clipboardVoteFeatures,
 } from '~/constants/toolPageData'
@@ -12,6 +13,7 @@ import type {
 
 export function useClipboardPage() {
   const { t } = useI18n()
+  const localePath = useLocalePath()
   const route = useRoute()
   const { notify } = useNotifier()
   const auth = useAuthState()
@@ -59,7 +61,7 @@ export function useClipboardPage() {
       messages.value = []
       if (cloudPersistenceEnabled.value && auth.userId.value && currentRoom.value) {
         clearRoomMessages(auth.userId.value, currentRoom.value)
-        void clearRoomMessagesInCloud(auth.userId.value, currentRoom.value)
+        void clearRoomMessagesInCloud(currentRoom.value)
       }
     },
     onDeviceCountChange: (_count) => {
@@ -294,7 +296,7 @@ export function useClipboardPage() {
     view.value = 'settings'
   }
 
-  async function getRoomsFromCloud(userId: string) {
+  async function getRoomsFromCloud() {
     try {
       const res = await $fetch<{ ok: boolean, rooms?: Array<{
         id: string
@@ -303,9 +305,7 @@ export function useClipboardPage() {
         e2ee: boolean
         createdAt: number
         updatedAt: number
-      }> }>('/api/clipboard/rooms', {
-        query: { userId },
-      })
+      }> }>('/api/clipboard/rooms')
       if (!res.ok || !Array.isArray(res.rooms)) return []
       return res.rooms
     }
@@ -342,12 +342,11 @@ export function useClipboardPage() {
     return `${Math.max(1, Math.floor(diffMs / 86_400_000))}d ago`
   }
 
-  async function saveRoomToCloud(userId: string, room: ClipboardPastRoom) {
+  async function saveRoomToCloud(room: ClipboardPastRoom) {
     try {
       await $fetch('/api/clipboard/rooms', {
         method: 'POST',
         body: {
-          userId,
           room: {
             id: room.id,
             name: room.name,
@@ -363,11 +362,9 @@ export function useClipboardPage() {
     }
   }
 
-  async function getRoomMessagesFromCloud(userId: string, roomId: string) {
+  async function getRoomMessagesFromCloud(roomId: string) {
     try {
-      const res = await $fetch<{ ok: boolean, messages?: ClipboardMessage[] }>(`/api/clipboard/rooms/${roomId}/messages`, {
-        query: { userId },
-      })
+      const res = await $fetch<{ ok: boolean, messages?: ClipboardMessage[] }>(`/api/clipboard/rooms/${roomId}/messages`)
       if (!res.ok || !Array.isArray(res.messages)) return []
       return res.messages
     }
@@ -376,12 +373,11 @@ export function useClipboardPage() {
     }
   }
 
-  async function saveRoomMessagesToCloud(userId: string, roomId: string, nextMessages: ClipboardMessage[]) {
+  async function saveRoomMessagesToCloud(roomId: string, nextMessages: ClipboardMessage[]) {
     try {
       await $fetch(`/api/clipboard/rooms/${roomId}/messages`, {
         method: 'PUT',
         body: {
-          userId,
           messages: nextMessages,
         },
       })
@@ -391,11 +387,10 @@ export function useClipboardPage() {
     }
   }
 
-  async function clearRoomMessagesInCloud(userId: string, roomId: string) {
+  async function clearRoomMessagesInCloud(roomId: string) {
     try {
       await $fetch(`/api/clipboard/rooms/${roomId}/messages`, {
         method: 'DELETE',
-        query: { userId },
       })
     }
     catch {
@@ -403,11 +398,10 @@ export function useClipboardPage() {
     }
   }
 
-  async function deleteRoomInCloud(userId: string, roomId: string) {
+  async function deleteRoomInCloud(roomId: string) {
     try {
       await $fetch(`/api/clipboard/rooms/${roomId}`, {
         method: 'DELETE',
-        query: { userId },
       })
     }
     catch {
@@ -416,7 +410,7 @@ export function useClipboardPage() {
   }
 
   async function hydrateRoomsFromCloud(userId: string) {
-    const cloudRooms = await getRoomsFromCloud(userId)
+    const cloudRooms = await getRoomsFromCloud()
     if (!cloudRooms.length) return
     const mapped = cloudRooms.map(toPastRoom)
     pastRooms.value = mapped
@@ -429,7 +423,7 @@ export function useClipboardPage() {
     if (local.length) {
       messages.value = local
     }
-    const cloudMessages = await getRoomMessagesFromCloud(auth.userId.value, currentRoom.value)
+    const cloudMessages = await getRoomMessagesFromCloud(currentRoom.value)
     if (cloudMessages.length) {
       messages.value = cloudMessages
       saveRoomMessages(auth.userId.value, currentRoom.value, cloudMessages)
@@ -442,7 +436,7 @@ export function useClipboardPage() {
     if (cloudMessageSyncTimer) clearTimeout(cloudMessageSyncTimer)
     cloudMessageSyncTimer = setTimeout(() => {
       if (!auth.userId.value || !currentRoom.value) return
-      void saveRoomMessagesToCloud(auth.userId.value, currentRoom.value, messages.value)
+      void saveRoomMessagesToCloud(currentRoom.value, messages.value)
     }, 450)
   }
 
@@ -466,7 +460,7 @@ export function useClipboardPage() {
     })
     savePastRooms(pastRooms.value, auth.userId.value)
     if (cloudPersistenceEnabled.value && auth.userId.value) {
-      void saveRoomToCloud(auth.userId.value, pastRooms.value[0])
+      void saveRoomToCloud(pastRooms.value[0])
     }
   }
 
@@ -495,7 +489,7 @@ export function useClipboardPage() {
       })
       savePastRooms(pastRooms.value, auth.userId.value)
       if (cloudPersistenceEnabled.value && auth.userId.value) {
-        void saveRoomToCloud(auth.userId.value, pastRooms.value[0])
+        void saveRoomToCloud(pastRooms.value[0])
       }
     }
   }
@@ -551,7 +545,8 @@ export function useClipboardPage() {
     if (!currentRoom.value) return
 
     try {
-      const url = `${window.location.origin}/tools/clipboard?r=${currentRoom.value}`
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/clipboard'), currentRoom.value)
+      if (!url) return
       if (qrCanvas.value) await renderQrCodeToCanvas(qrCanvas.value, url, { width: 96, margin: 1 })
       if (qrCanvasModal.value) await renderQrCodeToCanvas(qrCanvasModal.value, url, { width: 128, margin: 1 })
     }
@@ -571,7 +566,9 @@ export function useClipboardPage() {
   }
 
   function copyRoomLink() {
-    copyToClipboard(`${window.location.origin}/tools/clipboard?r=${currentRoom.value}`)
+    const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/clipboard'), currentRoom.value)
+    if (!url) return
+    copyToClipboard(url)
   }
 
   function sendImageDataUrl(dataUrl: string) {
@@ -634,7 +631,7 @@ export function useClipboardPage() {
     messages.value = []
     if (cloudPersistenceEnabled.value && auth.userId.value && currentRoom.value) {
       clearRoomMessages(auth.userId.value, currentRoom.value)
-      void clearRoomMessagesInCloud(auth.userId.value, currentRoom.value)
+      void clearRoomMessagesInCloud(currentRoom.value)
     }
     room.clearRoom()
   }
@@ -658,7 +655,7 @@ export function useClipboardPage() {
     const room = pastRooms.value[index]
     if (room && cloudPersistenceEnabled.value && auth.userId.value) {
       clearRoomMessages(auth.userId.value, room.id)
-      void deleteRoomInCloud(auth.userId.value, room.id)
+      void deleteRoomInCloud(room.id)
     }
     pastRooms.value.splice(index, 1)
     savePastRooms(pastRooms.value, auth.userId.value)

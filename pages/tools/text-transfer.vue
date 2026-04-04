@@ -92,21 +92,32 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
+const requestUrl = useRequestURL()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/tools/text-transfer'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+)
+
 definePageMeta({ layout: 'tool' })
-useHead({
+useHead(() => ({
   title: 'Wireless File Transfer Phone to PC - Free AirDrop Alternative',
   meta: [
     { name: 'description', content: 'Transfer files wirelessly between phone and computer - no app, no signup, no USB cable. Free AirDrop alternative for Android, iPhone & Windows. End-to-end encrypted, scan a QR code to start.' },
     { name: 'keywords', content: 'transfer files phone to pc,wireless file transfer,airdrop alternative,airdrop alternative for windows,send files from iphone to windows,transfer photos android to pc,file transfer without usb,file transfer no app,file transfer no signup,webrtc file transfer,p2p file transfer,encrypted file transfer,browser file transfer,cross-platform file sharing' },
   ],
-})
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
+}))
 useSeoMeta({
   ogTitle: 'Wireless File Transfer - Free AirDrop Alternative for Any Device',
   ogDescription: 'Send files between phone and PC instantly. No app, no signup, no USB cable. End-to-end encrypted P2P - just scan a QR code. Works on iOS, Android, Windows, Mac.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/tools/text-transfer',
+  ogUrl: () => canonicalUrl.value,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
   twitterTitle: 'Wireless File Transfer Phone to PC - Free AirDrop Alternative',
   twitterDescription: 'Transfer files between phone and PC instantly with no app or signup.',
+  twitterImage: 'https://toolport.dev/og-image.png',
+  twitterImageAlt: 'ToolPort file transfer interface preview',
   robots: 'index, follow',
 })
 useJsonLd({
@@ -125,7 +136,8 @@ useJsonLd({
     'No file size limit',
   ],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  url: 'https://toolport.dev/tools/text-transfer',
+  isAccessibleForFree: true,
+  url: canonicalUrl.value,
 })
 useJsonLd({
   '@context': 'https://schema.org',

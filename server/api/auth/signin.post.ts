@@ -1,5 +1,6 @@
 import { getD1Binding } from '~/server/utils/d1'
 import { normalizeEmail, verifyPassword, validateCredentials } from '~/server/utils/auth'
+import { setAuthSession } from '~/server/utils/session'
 
 interface SigninBody {
   email: string
@@ -34,6 +35,11 @@ export default defineEventHandler(async (event) => {
   if (!passwordMatched) {
     throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
   }
+
+  await setAuthSession(event, {
+    id: user.id,
+    email: normalizeEmail(user.email),
+  })
 
   return {
     ok: true as const,

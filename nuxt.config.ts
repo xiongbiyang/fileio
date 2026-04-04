@@ -1,6 +1,16 @@
-﻿// https://nuxt.com/docs/api/configuration/nuxt-config
+import { useBlogPosts } from './composables/useBlogPosts'
+
+const blogSitemapUrls = useBlogPosts().map(post => ({
+  loc: `/blog/${post.slug}`,
+  lastmod: post.date,
+  changefreq: 'monthly' as const,
+  priority: post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7,
+}))
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
+  debug: false,
   devtools: { enabled: process.env.NODE_ENV === 'development' },
   buildDir: process.env.NUXT_BUILD_DIR || (process.env.NODE_ENV === 'production' ? '.nuxt-build' : '.nuxt'),
 
@@ -12,11 +22,12 @@ export default defineNuxtConfig({
     oauthGoogleClientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET || '',
     oauthGithubClientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
     oauthGithubClientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
+    authSessionSecret: process.env.NUXT_AUTH_SESSION_SECRET || '',
     public: {
       // Development: leave empty (defaults to localhost:1999)
       // Production: set NUXT_PUBLIC_PARTYKIT_HOST in Cloudflare Pages env vars
       //   e.g. toolport.your-username.partykit.dev
-      partykitHost: process.env.NUXT_PUBLIC_PARTYKIT_HOST || 'localhost:1999',
+      partykitHost: process.env.NUXT_PUBLIC_PARTYKIT_HOST || '',
       // Keep cloud persistence disabled until login is officially launched.
       enableClipboardCloudPersistence: process.env.NUXT_PUBLIC_ENABLE_CLIPBOARD_CLOUD === 'true',
       oauthEnabled: process.env.NUXT_PUBLIC_OAUTH_ENABLED === 'true',
@@ -46,15 +57,7 @@ export default defineNuxtConfig({
       { loc: '/guides/qr-code', lastmod: '2026-04-02', changefreq: 'weekly', priority: 0.8 },
       { loc: '/guides/file-transfer', lastmod: '2026-04-02', changefreq: 'weekly', priority: 0.8 },
       { loc: '/guides/clipboard', lastmod: '2026-04-02', changefreq: 'weekly', priority: 0.8 },
-      { loc: '/blog/payment-paypal-crypto-qr-code-generator-guide', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.75 },
-      { loc: '/blog/vcard-contact-business-card-qr-code-guide', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.75 },
-      { loc: '/blog/menu-qr-code-generator-for-restaurants', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.75 },
-      { loc: '/blog/google-review-qr-code-generator-guide', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.75 },
-      { loc: '/blog/wifi-qr-code-generator-guide', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.75 },
-      { loc: '/blog/best-airdrop-alternative-for-windows-2026', lastmod: '2026-04-01', changefreq: 'monthly', priority: 0.7 },
-      { loc: '/blog/how-to-transfer-files-phone-to-pc', lastmod: '2025-03-15', changefreq: 'monthly', priority: 0.7 },
-      { loc: '/blog/free-online-qr-code-generator', lastmod: '2026-04-02', changefreq: 'monthly', priority: 0.8 },
-      { loc: '/blog/best-free-ai-tools-2025', lastmod: '2025-03-25', changefreq: 'monthly', priority: 0.65 },
+      ...blogSitemapUrls,
     ],
   },
 
@@ -145,6 +148,13 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    cloudflare: {
+      nodeCompat: true,
+    },
+    storage: {
+      // Keep prerender cache in-memory to avoid Windows file:// cache-driver resolution warnings.
+      'internal:nuxt:prerender': { driver: 'memory' },
+    },
     prerender: {
       crawlLinks: true,
       routes: ['/blog', '/guides/qr-code', '/guides/file-transfer', '/guides/clipboard'],

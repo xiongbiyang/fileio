@@ -1,5 +1,6 @@
 name = "toolport"
 compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
 # KV namespace for session data (optional, for future use)

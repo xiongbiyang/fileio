@@ -1,5 +1,6 @@
 ---
 title: "10 Best Free AI Tools Online in 2025 — No Signup Required"
+updated: "2026-04-04"
 ---
 
 AI tools have transformed how we work, create, and communicate. But many require expensive subscriptions or force you to upload sensitive data to the cloud. Here are the best free AI tools that respect your privacy.

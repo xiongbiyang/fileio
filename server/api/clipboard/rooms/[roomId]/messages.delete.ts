@@ -1,4 +1,5 @@
-import { getD1Binding, requireUserId } from '~/server/utils/d1'
+import { getD1Binding } from '~/server/utils/d1'
+import { requireAuthSessionUser } from '~/server/utils/session'
 
 export default defineEventHandler(async (event) => {
   const db = getD1Binding(event)
@@ -6,7 +7,7 @@ export default defineEventHandler(async (event) => {
     return { ok: false, reason: 'D1_NOT_CONFIGURED' }
   }
 
-  const userId = requireUserId(getQuery(event).userId)
+  const { uid: userId } = await requireAuthSessionUser(event)
   const roomId = String(getRouterParam(event, 'roomId') || '').trim().toUpperCase()
   if (!roomId) {
     throw createError({ statusCode: 400, statusMessage: 'Room ID required' })

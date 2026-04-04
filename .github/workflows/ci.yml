@@ -32,3 +32,9 @@ jobs:
 
       - name: Unit tests
         run: npm run test -- --run
+
+      - name: Typecheck
+        run: npm exec nuxi typecheck
+
+      - name: Build
+        run: npm run build

@@ -1,5 +1,6 @@
 ---
 title: "WiFi QR Code Generator: Share WiFi Password with a QR Code"
+updated: "2026-04-04"
 ---
 
 Typing passwords is slow, especially for guests and events. A **WiFi QR code generator** lets people scan and connect in seconds, which is why terms like **wifi password qr code** and **share wifi qr code** are growing fast.
@@ -35,6 +36,8 @@ Typing passwords is slow, especially for guests and events. A **WiFi QR code gen
 
 - Restaurant menu QR: [Menu QR guide](/blog/menu-qr-code-generator-for-restaurants)
 - Business profile links: [Google review QR guide](/blog/google-review-qr-code-generator-guide)
+- Printable documents: [PDF QR guide](/blog/pdf-qr-code-generator-guide)
+- Event check-in flow: [Event QR guide](/blog/event-qr-code-generator-guide)
 
 ## Generate Yours
 

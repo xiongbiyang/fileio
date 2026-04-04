@@ -41,11 +41,14 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
     return id
   }
 
-  function getHost(): string {
+  function getHost(): string | null {
     if (!import.meta.client) return 'localhost:1999'
     // Injected via runtimeConfig: NUXT_PUBLIC_PARTYKIT_HOST
     const config = useRuntimeConfig()
-    return (config.public as Record<string, string>).partykitHost || 'localhost:1999'
+    const configuredHost = String((config.public as Record<string, string>).partykitHost || '').trim()
+    if (configuredHost) return configuredHost
+    if (import.meta.dev) return 'localhost:1999'
+    return null
   }
 
   function detectDeviceType(): DeviceType {
@@ -81,9 +84,14 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
   function connect(id: string) {
     disconnect()
     roomId.value = id
+    const host = getHost()
+    if (!host) {
+      options.onError?.(new Error('PartyKit host is not configured'))
+      return
+    }
 
     socket = new PartySocket({
-      host: getHost(),
+      host,
       room: id,
       party: 'clipboard',
       id: getDeviceId(),
@@ -115,7 +123,7 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
           options.onDeviceCountChange?.(data.count)
         }
         else if (data.type === 'participants' && Array.isArray(data.participants)) {
-          const list = data.participants
+          const list = (data.participants as unknown[])
             .map((item: unknown) => {
               if (!item || typeof item !== 'object') return null
               const obj = item as Record<string, unknown>
@@ -125,7 +133,7 @@ export function useClipboardRoom(options: ClipboardRoomOptions = {}) {
               const deviceName = String(obj.deviceName || '').trim() || 'Unknown Device'
               return { id, deviceType, deviceName }
             })
-            .filter((v): v is ClipboardParticipant => !!v)
+            .filter((v: ClipboardParticipant | null): v is ClipboardParticipant => !!v)
           participants.value = list
           options.onParticipantsChange?.(list)
         }

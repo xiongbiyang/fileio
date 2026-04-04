@@ -79,22 +79,31 @@
 
 <script setup lang="ts">
 const localePath = useLocalePath()
+const requestUrl = useRequestURL()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/tools/clipboard'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+)
 
 definePageMeta({ layout: 'tool' })
-useHead({
+useHead(() => ({
   title: 'Online Clipboard Sync - Copy Paste Between Phone and PC',
   meta: [
     { name: 'description', content: 'Sync clipboard between phone, tablet, and PC instantly. Copy on one device, paste on another - no app, no signup. Encrypted rooms, real-time sharing, auto-deletes in 24 hours.' },
     { name: 'keywords', content: 'online clipboard sync,copy paste between phone and pc,sync clipboard across devices,cross-device clipboard,share text between devices,send link from phone to computer,copy from phone paste to computer,real-time clipboard sync,encrypted clipboard sharing,no signup clipboard,browser clipboard sync' },
   ],
-})
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
+}))
 useSeoMeta({
   ogTitle: 'Copy Paste Between Phone and PC - Free Online Clipboard',
   ogDescription: 'Sync clipboard between phone, tablet, and PC instantly. Copy on one device, paste on another - no app, no signup, end-to-end encrypted, auto-deletes in 24 hours.',
   ogImage: 'https://toolport.dev/og-image.png',
-  ogUrl: 'https://toolport.dev/tools/clipboard',
+  ogUrl: () => canonicalUrl.value,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
   twitterTitle: 'Online Clipboard Sync - Copy Paste Between Phone and PC',
   twitterDescription: 'Copy on one device and paste on another with encrypted real-time rooms.',
+  twitterImage: 'https://toolport.dev/og-image.png',
+  twitterImageAlt: 'ToolPort online clipboard interface preview',
   robots: 'index, follow',
 })
 useJsonLd({
@@ -113,7 +122,8 @@ useJsonLd({
     'Auto-expires in 24 hours',
   ],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  url: 'https://toolport.dev/tools/clipboard',
+  isAccessibleForFree: true,
+  url: canonicalUrl.value,
 })
 useJsonLd({
   '@context': 'https://schema.org',

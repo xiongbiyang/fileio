@@ -1,5 +1,6 @@
 import { getD1Binding } from '~/server/utils/d1'
 import { hashPassword, normalizeUserId, validateCredentials } from '~/server/utils/auth'
+import { setAuthSession } from '~/server/utils/session'
 
 interface SignupBody {
   email: string
@@ -38,6 +39,11 @@ export default defineEventHandler(async (event) => {
     `)
     .bind(userId, email, passwordHash, now, now)
     .run()
+
+  await setAuthSession(event, {
+    id: userId,
+    email,
+  })
 
   return {
     ok: true as const,

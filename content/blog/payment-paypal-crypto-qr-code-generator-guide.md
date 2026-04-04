@@ -1,5 +1,6 @@
 ---
 title: "Payment QR Code Generator: PayPal and Crypto Link QR Guide"
+updated: "2026-04-04"
 ---
 
 Payment QR codes reduce checkout friction. A reliable **payment qr code generator** for **paypal qr code generator** and **crypto qr code generator** workflows lets users scan and pay instantly.
@@ -36,6 +37,8 @@ Payment QR codes reduce checkout friction. A reliable **payment qr code generato
 
 - For profile/contact sharing: [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)
 - For menu and in-store usage: [Menu QR guide](/blog/menu-qr-code-generator-for-restaurants)
+- For support contact flow: [Email QR guide](/blog/email-qr-code-generator-guide)
+- For quick text checkout support: [SMS QR guide](/blog/sms-qr-code-generator-guide)
 
 ## Create Your Payment QR
 

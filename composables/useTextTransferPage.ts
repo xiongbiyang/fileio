@@ -2,6 +2,7 @@ import { writeToClipboard } from '~/utils/clipboard'
 import { renderQrCodeToCanvas } from '~/utils/qrcode'
 import { generateRoomId } from '~/utils/roomId'
 import { formatSize, formatSpeed, formatTime } from '~/utils/transferFormat'
+import { buildRoomJoinUrl } from '~/utils/shareLink'
 import {
   textTransferKeyFingerprint,
   textTransferSecurityLogs,
@@ -33,6 +34,7 @@ const REMOTE_DEVICE_ID = 'remote-peer'
 
 export function useTextTransferPage() {
   const { t } = useI18n()
+  const localePath = useLocalePath()
   const route = useRoute()
   const { notify } = useNotifier()
   const state = ref<TransferState>('waiting')
@@ -301,13 +303,19 @@ export function useTextTransferPage() {
     const now = Date.now()
     const idx = deviceRecords.value.findIndex(item => item.id === REMOTE_DEVICE_ID)
     if (idx >= 0) {
-      deviceRecords.value[idx] = { ...deviceRecords.value[idx], ...info, online, lastSeen: now }
+      deviceRecords.value[idx] = {
+        ...deviceRecords.value[idx],
+        name: info.deviceName,
+        icon: info.deviceIcon,
+        online,
+        lastSeen: now,
+      }
     }
     else {
       deviceRecords.value.unshift({
         id: REMOTE_DEVICE_ID,
-        name: info.name,
-        icon: info.icon,
+        name: info.deviceName,
+        icon: info.deviceIcon,
         online,
         lastSeen: now,
       })
@@ -336,8 +344,8 @@ export function useTextTransferPage() {
   }
   function getCurrentRemoteDeviceInfo() {
     return {
-      name: remoteDeviceName.value || t('toolA.unknownDevice'),
-      icon: remoteDeviceIcon.value,
+      deviceName: remoteDeviceName.value || t('toolA.unknownDevice'),
+      deviceIcon: remoteDeviceIcon.value,
     }
   }
   function pushTransferRecord(record: Omit<StoredTransferRecord, 'id' | 'timestamp'>) {
@@ -408,7 +416,8 @@ export function useTextTransferPage() {
     await nextTick()
     if (!qrCanvasTransfer.value || !roomId.value) return
     try {
-      const url = `${window.location.origin}/tools/text-transfer?r=${roomId.value}`
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
+      if (!url) return
       await renderQrCodeToCanvas(qrCanvasTransfer.value, url, { width: 220, margin: 2 })
     }
     catch {
@@ -442,7 +451,9 @@ export function useTextTransferPage() {
   }
   async function copyLink() {
     try {
-      await writeToClipboard(`${window.location.origin}/tools/text-transfer?r=${roomId.value}`)
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
+      if (!url) return
+      await writeToClipboard(url)
       notify(t('common.copied'))
     }
     catch {

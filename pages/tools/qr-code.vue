@@ -472,7 +472,7 @@
         <!-- Scan Tab -->
         <template v-else>
           <!-- Upload Area -->
-          <div class="lg:col-span-7 flex flex-col gap-6">
+          <div class="flex flex-col gap-6" :class="hasDesktopScanSidebar ? 'lg:col-span-7' : 'lg:col-span-12'">
             <!-- Error State -->
             <div v-if="scanError" class="space-y-4">
               <div class="flex items-center gap-3 mb-2">
@@ -505,28 +505,6 @@
               v-else-if="!scanResult"
               class="space-y-4"
             >
-              <div v-if="cameraActive" class="bg-surface-container-low dark:bg-surface-container rounded-xl overflow-hidden">
-                <div class="relative">
-                  <video ref="cameraVideoDesktop" autoplay muted playsinline class="w-full aspect-video object-cover" />
-                  <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <div class="w-[54%] max-w-[300px] aspect-square border border-white/70 rounded-2xl shadow-[0_0_0_999px_rgba(0,0,0,0.2)]" />
-                  </div>
-                </div>
-                <div class="px-4 py-2 flex items-center justify-between">
-                  <span class="text-xs font-bold uppercase tracking-wider text-primary">{{ $t('toolB.cameraScanning') }}</span>
-                  <button class="text-xs font-semibold text-on-surface-variant hover:text-primary" @click="stopCameraScan">{{ $t('toolB.stopCamera') }}</button>
-                </div>
-                <p class="px-4 pb-3 text-xs text-on-surface-variant">{{ $t('toolB.cameraAlignHint') }}</p>
-              </div>
-
-              <button
-                v-if="!cameraActive"
-                class="px-5 py-3 primary-gradient text-on-primary rounded-xl font-bold text-sm"
-                @click="startCameraScan"
-              >
-                {{ $t('toolB.startCamera') }}
-              </button>
-
               <div
                 class="w-full aspect-video rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer transition-colors border-2 border-dashed"
                 :class="isDragging
@@ -576,6 +554,9 @@
                     <button class="px-6 py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm flex items-center justify-center gap-2" @click="copyResult">
                       <span class="material-symbols-outlined text-lg">content_copy</span>{{ $t('common.copyResult') }}
                     </button>
+                    <button class="px-6 py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm flex items-center justify-center gap-2" @click="resetScan">
+                      <span class="material-symbols-outlined text-lg">qr_code_scanner</span>{{ $t('common.scanAgain') }}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -585,7 +566,7 @@
           </div>
 
           <!-- Right Sidebar -->
-          <div class="lg:col-span-5 flex flex-col gap-6">
+          <div v-if="hasDesktopScanSidebar" class="lg:col-span-5 flex flex-col gap-6">
             <!-- Raw Metadata (when result exists) -->
             <div v-if="scanResult" class="bg-surface-container-highest/30 dark:bg-surface-container rounded-xl p-8">
               <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3 block">{{ $t('toolB.rawMetadata') }}</span>
@@ -650,16 +631,6 @@
               </div>
             </div>
 
-            <!-- Scan Another (when result or default) -->
-            <div v-if="scanResult || !scanError" class="bg-primary/5 rounded-xl p-8 flex flex-col items-center text-center gap-4">
-              <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                <span class="material-symbols-outlined text-primary text-2xl">qr_code_scanner</span>
-              </div>
-              <p class="font-bold text-on-surface dark:text-surface text-sm">{{ $t('toolB.needScanMore') }}</p>
-              <button class="px-6 py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm hover:bg-surface-container transition-colors" @click="resetScan">
-                {{ $t('common.scanAgain') }}
-              </button>
-            </div>
           </div>
         </template>
 
@@ -762,11 +733,17 @@
 </template>
 
 <script setup lang="ts">
-import { getQrTemplates, getTemplateGuide, TEMPLATE_PRIORITY } from '~/utils/qr-template-data-clean'
+import { getQrTemplates, getTemplateGuide, TEMPLATE_PRIORITY } from '~/utils/qr-template-data'
 
 const { t, locale } = useI18n()
+const { notify } = useNotifier()
 const { downloadPngFromCanvas, downloadWebpFromCanvas, downloadSvgFromText } = useQrExport()
 const { decodeQrFromImageData, parseQrScanRaw } = useQrScan()
+const localePath = useLocalePath()
+const requestUrl = useRequestURL()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/tools/qr-code'), `${requestUrl.protocol}//${requestUrl.host}`).toString(),
+)
 const isZhLocale = computed(() => locale.value.startsWith('zh'))
 const tr = (zh: string, en: string) => (isZhLocale.value ? zh : en)
 
@@ -788,27 +765,38 @@ useHead(() => ({
     { name: 'description', content: seoDescription.value },
     { name: 'keywords', content: seoKeywords },
   ],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 
-useSeoMeta(() => ({
-  ogTitle: tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
-  ogDescription: seoDescription.value,
+useSeoMeta({
+  ogTitle: () => tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
+  ogDescription: () => seoDescription.value,
   ogImage: 'https://toolport.dev/og-image.png',
-}))
+  ogUrl: () => canonicalUrl.value,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => tr('免费二维码生成器与扫描器 | ToolPort', 'Free QR Code Generator & Scanner | ToolPort'),
+  twitterDescription: () => seoDescription.value,
+  twitterImage: 'https://toolport.dev/og-image.png',
+  twitterImageAlt: () => tr('ToolPort 二维码工具界面预览', 'ToolPort QR code tool preview'),
+  robots: 'index, follow',
+})
 
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'ToolPort QR Code Generator',
   applicationCategory: 'UtilitiesApplication',
+  applicationSubCategory: 'QR Code Utility',
   operatingSystem: 'Web',
+  inLanguage: isZhLocale.value ? 'zh-CN' : 'en',
+  isAccessibleForFree: true,
   description: seoDescription.value,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  url: 'https://toolport.dev/tools/qr-code',
+  url: canonicalUrl.value,
 })
 
 // Core state
-const localePath = useLocalePath()
 const activeTab = ref<'generate' | 'scan' | 'batch'>('generate')
 const inputText = ref('')
 function pasteFromClipboard() {
@@ -1011,6 +999,7 @@ const scanResultType = ref<'url' | 'wifi' | 'text'>('text')
 const scanResultTitle = ref('')
 const scanMeta = ref<Array<{ label: string; value: string }>>([])
 const scanError = ref(false)
+const hasDesktopScanSidebar = computed(() => scanError.value || !!scanResult.value || scanHistory.value.length > 0)
 
 const optimizationTips = computed(() => [
   { icon: 'light_mode', title: t('toolB.tipLighting'), desc: t('toolB.tipLightingDesc') },
@@ -1182,7 +1171,7 @@ async function handleScanImage(e: Event) {
     try {
       const code = await decodeQrFromImageData(imageData)
 
-      if (code) {
+      if (code?.data) {
         applyScanResult(code.data)
       } else {
         scanError.value = true
@@ -1196,8 +1185,29 @@ async function handleScanImage(e: Event) {
   img.src = url
 }
 
-function openUrl(url: string) { window.open(url, '_blank', 'noopener') }
-function copyResult() { navigator.clipboard.writeText(scanResult.value) }
+function openUrl(url: string) {
+  const value = String(url || '').trim()
+  if (!value) return
+  try {
+    const parsed = new URL(value)
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      notify(tr('仅支持打开 http/https 链接', 'Only http/https links are allowed'))
+      return
+    }
+    window.open(parsed.toString(), '_blank', 'noopener')
+  }
+  catch {
+    notify(tr('链接格式无效', 'Invalid URL format'))
+  }
+}
+async function copyResult() {
+  try {
+    await navigator.clipboard.writeText(scanResult.value)
+  }
+  catch {
+    notify(tr('复制失败，请手动复制', 'Copy failed. Please copy manually.'))
+  }
+}
 
 function resetScan() {
   stopCameraScan()

@@ -148,8 +148,8 @@ async function handleSignIn() {
       notify(t('auth.signInSuccess'))
     }
     else if (result.reason === 'AUTH_STORAGE_NOT_CONFIGURED') {
-      auth.signIn(normalizedEmail)
-      notify(t('auth.signInLocalFallback'))
+      notify(t('auth.signInFailed'))
+      return
     }
     else {
       notify(t('auth.signInFailed'))

@@ -1,7 +1,7 @@
-import { getD1Binding, requireUserId } from '~/server/utils/d1'
+import { getD1Binding } from '~/server/utils/d1'
+import { requireAuthSessionUser } from '~/server/utils/session'
 
 interface MessagesBody {
-  userId: string
   messages: unknown[]
 }
 
@@ -17,7 +17,15 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody<MessagesBody>(event)
-  const userId = requireUserId(body?.userId)
+  const { uid: userId } = await requireAuthSessionUser(event)
+  const room = await db
+    .prepare('SELECT id FROM clipboard_rooms WHERE id = ? AND user_id = ? LIMIT 1')
+    .bind(roomId, userId)
+    .first<{ id: string }>()
+  if (!room?.id) {
+    throw createError({ statusCode: 404, statusMessage: 'Room not found' })
+  }
+
   const messages = Array.isArray(body?.messages) ? body.messages : []
   const payload = JSON.stringify(messages.slice(-300))
   const now = Date.now()

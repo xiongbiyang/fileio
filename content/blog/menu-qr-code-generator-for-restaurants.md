@@ -1,5 +1,6 @@
 ---
 title: "Menu QR Code Generator for Restaurants: Fast Setup Guide"
+updated: "2026-04-04"
 ---
 
 Menu QR codes are now standard for restaurants, cafes, and food trucks. A fast **menu qr code generator** should prioritize scan speed, readability, and easy updates.
@@ -36,6 +37,8 @@ Menu QR codes are now standard for restaurants, cafes, and food trucks. A fast *
 
 - Need customer reviews too? [Google review QR guide](/blog/google-review-qr-code-generator-guide)
 - Need business card QR? [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)
+- Need printable file menus? [PDF QR guide](/blog/pdf-qr-code-generator-guide)
+- Need order app installs? [App Download QR guide](/blog/app-download-qr-code-generator-guide)
 
 ## Build Your Menu QR Now
 

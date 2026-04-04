@@ -1,5 +1,6 @@
 ---
 title: "Free Online QR Code Generator — Custom Colors, Logo & Batch Export"
+updated: "2026-04-04"
 ---
 
 QR codes are everywhere — menus, payment links, WiFi sharing, event tickets. But most QR code generators are bloated with ads or require signup. Here's a better alternative.
@@ -112,6 +113,13 @@ Direct links:
 - All QR code generation happens **in your browser** using JavaScript
 - Your URLs and data are **never sent to any server**
 - No tracking, no analytics, no cookies required
+
+## More QR Use Cases (Long-Tail Guides)
+
+- Document sharing: [PDF QR code generator guide](/blog/pdf-qr-code-generator-guide)
+- Location navigation: [Google Maps QR code guide](/blog/google-maps-qr-code-generator-guide)
+- App campaigns: [App Download QR guide](/blog/app-download-qr-code-generator-guide)
+- Feedback collection: [Form and Survey QR guide](/blog/form-survey-qr-code-generator-guide)
 
 ## Try It Now
 
