@@ -925,6 +925,30 @@ useJsonLd({
     },
   ],
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to create a privacy-first static QR code',
+  description: 'Generate a client-side QR code with no cloud upload and export it as PNG, SVG, or WebP.',
+  totalTime: 'PT2M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Enter content',
+      text: 'Paste a URL or text into the QR input field.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Adjust design',
+      text: 'Choose colors, style, and optional logo settings.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Export static QR',
+      text: 'Download as PNG, SVG, or WebP. The generated code does not expire by platform policy.',
+    },
+  ],
+})
 
 // Core state
 const activeTab = ref<'generate' | 'scan' | 'batch'>('generate')

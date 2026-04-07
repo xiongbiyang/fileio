@@ -164,6 +164,30 @@ useJsonLd({
     },
   ],
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to share ephemeral text between phone and PC',
+  description: 'Create a temporary room and sync text across devices without signup.',
+  totalTime: 'PT1M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Create or join a room',
+      text: 'Create a room or enter a room ID on both devices.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Paste text',
+      text: 'Send text, links, or snippets to the room in real time.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Use and leave',
+      text: 'Copy on the target device and leave the temporary room when done.',
+    },
+  ],
+})
 const {
   activeSearchFilter,
   activeSort,

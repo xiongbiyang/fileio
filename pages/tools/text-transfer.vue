@@ -178,6 +178,30 @@ useJsonLd({
     },
   ],
 })
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to transfer files from phone to PC without app install',
+  description: 'Use ToolPort WebRTC pairing to send files directly between devices in the browser.',
+  totalTime: 'PT1M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Open on both devices',
+      text: 'Open the text transfer tool on phone and PC.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Pair devices',
+      text: 'Scan the QR code and confirm pairing.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Send files',
+      text: 'Select files and transfer through the encrypted peer-to-peer channel.',
+    },
+  ],
+})
 
 const {
   addFilesToQueue,
