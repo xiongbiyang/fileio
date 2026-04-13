@@ -1,5 +1,4 @@
----
-title:"离线 QR 码生成器：开箱即用的本地优先工作流"
+"离线 QR 码生成器：开箱即用的本地优先工作流"
 updated: "2026-04-04"
 ---
 
@@ -30,7 +29,7 @@ ToolPort QR generation is client-side. After the page is loaded, generation can 
 
 Offline capability depends on browser cache state and environment, but QR generation logic itself is local-first.
 
-## 相关推荐 Reads
+## 相关阅读
 
 - [Client-side QR Code Creator Guide](/blog/client-side-qr-code-creator-guide)
 - [No-Tracking QR Code Generator Guide](/blog/no-tracking-qr-code-generator-guide)

@@ -1,5 +1,4 @@
----
-title:"iPhone 传文件到 Windows 无需安装应用：浏览器快速传输"
+"iPhone 传文件到 Windows 无需安装应用：浏览器快速传输"
 updated: "2026-04-04"
 ---
 
@@ -20,14 +19,14 @@ If you need **iphone to windows file transfer no app**, the fastest path is brow
 4. Send and receive on Windows instantly
 5. Start a new session when done
 
-## 最佳实践 for Stable Transfer
+## Best Practices for Stable Transfer
 
 - Keep both devices on a reliable network
 - Keep the page active while transferring
 - For large files, avoid backgrounding browser tabs
 - Reconnect via QR if the session expires
 
-## 相关推荐 Guides
+## 相关指南
 
 - Full walkthrough: [How to transfer files phone to PC](/blog/how-to-transfer-files-phone-to-pc)
 - Windows-focused comparison: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)

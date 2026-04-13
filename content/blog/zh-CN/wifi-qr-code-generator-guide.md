@@ -1,5 +1,4 @@
----
-title:"WiFi QR 码生成器：用二维码分享 WiFi 密码"
+"WiFi QR 码生成器：用二维码分享 WiFi 密码"
 updated: "2026-04-04"
 ---
 
@@ -17,7 +16,7 @@ Typing passwords is slow, especially for guests and events. A **WiFi QR code gen
 1. Open [ToolPort QR Code Generator](/tools/qr-code?template=wifi)
 2. Enter WiFi string format or a connection instruction link
 3. Customize color and logo if needed
-4. 下载 PNG 或 SVG 格式
+4. Download as PNG or SVG
 5. Print or display it near your router
 
 ## 最佳实践
@@ -27,18 +26,18 @@ Typing passwords is slow, especially for guests and events. A **WiFi QR code gen
 - Test on iOS and Android before publishing
 - Regenerate if your password changes
 
-## PNG vs SVG for WiFi QR
+## PNG 与 SVG 对比 for WiFi QR
 
 - PNG: quick sharing in chat or social
 - SVG: best for print, posters, and high-res assets
 
-## 相关推荐 Use Cases
+## 相关使用场景
 
 - Restaurant menu QR: [Menu QR guide](/blog/menu-qr-code-generator-for-restaurants)
 - Business profile links: [Google review QR guide](/blog/google-review-qr-code-generator-guide)
 - Printable documents: [PDF QR guide](/blog/pdf-qr-code-generator-guide)
 - Event check-in flow: [Event QR guide](/blog/event-qr-code-generator-guide)
 
-## Generate Yours
+## 立即生成
 
 Use the free [WiFi QR Code Generator](/tools/qr-code?template=wifi) now.

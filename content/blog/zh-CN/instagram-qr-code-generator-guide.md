@@ -1,5 +1,4 @@
----
-title:"Instagram QR 码生成器：从线下流量增长主页访问"
+"Instagram QR 码生成器：从线下流量增长主页访问"
 updated: "2026-04-04"
 ---
 
@@ -27,7 +26,7 @@ An **instagram qr code generator** helps convert offline traffic into profile vi
 - Use high contrast for fast decode
 - Update printed assets if your username changes
 
-## 相关推荐 Guides
+## 相关指南
 
 - For contact exchange: [vCard QR setup](/blog/vcard-contact-business-card-qr-code-guide)
 - For review campaigns: [Google Review QR guide](/blog/google-review-qr-code-generator-guide)

@@ -1,5 +1,4 @@
----
-title:"纯客户端 QR 码生成器：开箱即用的本地工作流"
+"纯客户端 QR 码生成器：开箱即用的本地工作流"
 updated: "2026-04-04"
 ---
 
@@ -29,13 +28,13 @@ Use it here: [ToolPort QR Code Tool](/tools/qr-code)
 3. Add logo if needed
 4. Export and test scan on two devices
 
-## 相关推荐 Long-tail Searches
+## Related Long-tail Searches
 
 - no-tracking qr code
 - offline qr code generator
 - static qr without expiration
 
-## 相关推荐 Reads
+## 相关阅读
 
 - [No-Tracking QR Code Generator Guide](/blog/no-tracking-qr-code-generator-guide)
 - [Offline QR Code Generator Guide](/blog/offline-qr-code-generator-guide)

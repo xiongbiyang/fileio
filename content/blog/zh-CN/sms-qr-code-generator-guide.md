@@ -1,5 +1,4 @@
----
-title:"短信 QR 码生成器：一扫即可发送短信"
+"短信 QR 码生成器：一扫即可发送短信"
 updated: "2026-04-04"
 ---
 
@@ -27,7 +26,7 @@ An **sms qr code generator** lets users open their messaging app with a prefille
 - Add a fallback visible phone number
 - Validate scan flow on different SMS apps
 
-## 相关推荐 Guides
+## 相关指南
 
 - For email workflows: [Email QR guide](/blog/email-qr-code-generator-guide)
 - For support forms: [Form QR guide](/blog/form-survey-qr-code-generator-guide)

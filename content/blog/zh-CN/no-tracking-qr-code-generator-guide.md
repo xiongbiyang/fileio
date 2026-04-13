@@ -1,5 +1,4 @@
----
-title:"无追踪 QR 码生成器：开箱即用的干净链接"
+"无追踪 QR 码生成器：开箱即用的干净链接"
 updated: "2026-04-04"
 ---
 
@@ -28,7 +27,7 @@ Generate here: [No-Tracking QR Workflow](/tools/qr-code)
 - Printed event QR that should open one clean page
 - Customer support QR with no retargeting noise
 
-## 相关推荐 Reads
+## 相关阅读
 
 - [Client-side QR Code Creator Guide](/blog/client-side-qr-code-creator-guide)
 - [Offline QR Code Generator Guide](/blog/offline-qr-code-generator-guide)

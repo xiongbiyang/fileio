@@ -1,5 +1,4 @@
----
-title:"永不过期的静态 QR 码：创建长期有效的二维码"
+"永不过期的静态 QR 码：创建长期有效的二维码"
 updated: "2026-04-04"
 ---
 
@@ -29,7 +28,7 @@ Start here: [Static QR Generator](/tools/qr-code)
 - Posters and offline campaigns
 - Long-term signage
 
-## 相关推荐 Reads
+## 相关阅读
 
 - [Client-side QR Code Creator Guide](/blog/client-side-qr-code-creator-guide)
 - [No-Tracking QR Code Generator Guide](/blog/no-tracking-qr-code-generator-guide)

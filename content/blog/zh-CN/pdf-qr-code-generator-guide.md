@@ -1,5 +1,4 @@
----
-title:"PDF QR 码生成器：快速分享菜单、宣传册和文档"
+"PDF QR 码生成器：快速分享菜单、宣传册和文档"
 updated: "2026-04-04"
 ---
 
@@ -27,12 +26,12 @@ A **pdf qr code generator** helps users open documents instantly without typing 
 - Use high-contrast colors for reliable scans
 - Add a short label like "Scan to open PDF"
 
-## PNG vs SVG for Print
+## PNG 与 SVG 对比 for Print
 
 - PNG: fast for social and chat sharing
 - SVG: better for posters, cards, and large-format print
 
-## 相关推荐 Guides
+## 相关指南
 
 - For menu workflows: [Menu QR setup guide](/blog/menu-qr-code-generator-for-restaurants)
 - For review collection: [Google Review QR guide](/blog/google-review-qr-code-generator-guide)

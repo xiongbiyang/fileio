@@ -1,5 +1,4 @@
----
-title:"免登录跨设备剪贴板：在设备间共享文本"
+"免登录跨设备剪贴板：在设备间共享文本"
 updated: "2026-04-04"
 ---
 
@@ -19,13 +18,13 @@ If you need a **cross device clipboard without login**, browser rooms are a prac
 3. Paste text or links in the room
 4. Copy from the target device
 
-## Security and Session Hygiene
+## 安全性 and Session Hygiene
 
 - Use non-trivial room IDs
 - Clear messages after use
 - Close room when task is complete
 
-## 相关推荐 Reads
+## 相关阅读
 
 - Step-by-step setup: [Clipboard sync between phone and PC](/guides/clipboard)
 - Link-heavy use case: [Copy link instantly guide](/blog/copy-link-from-phone-to-pc-instantly-guide)

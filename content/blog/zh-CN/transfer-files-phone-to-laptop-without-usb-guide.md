@@ -1,5 +1,4 @@
----
-title:"手机传文件到笔记本无需 USB：简单 QR 配对"
+"手机传文件到笔记本无需 USB：简单 QR 配对"
 updated: "2026-04-04"
 ---
 
@@ -19,18 +18,18 @@ If you want to **transfer files from phone to laptop without usb**, QR pairing i
 3. Select files and send
 4. Confirm transfer result on laptop
 
-## 为什么使用rs Prefer This Method
+## Why Users Prefer This Method
 
 - No install, no account
-- 跨平台 in browser
+- Cross-platform in browser
 - Fast for day-to-day transfers
 - Session-based privacy model
 
-## 相关推荐 Guides
+## 相关指南
 
 - Full setup details: [Phone to PC transfer guide](/guides/file-transfer)
 - iPhone + Windows scenario: [No-app transfer guide](/blog/iphone-to-windows-file-transfer-no-app-guide)
 
-## 立即试用
+## Try It Now
 
 Start with the free [wireless transfer tool](/tools/text-transfer).

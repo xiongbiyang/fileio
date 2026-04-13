@@ -1,5 +1,4 @@
----
-title:"手机发送大视频到电脑：无需数据线，无需等待上传"
+"手机发送大视频到电脑：无需数据线，无需等待上传"
 updated: "2026-04-04"
 ---
 
@@ -27,10 +26,10 @@ To **send large video from phone to pc** quickly, avoid email and cloud relays. 
 - Avoid switching networks mid-session
 - Transfer one very large file at a time
 
-## 相关推荐 Reads
+## 相关阅读
 
 - General phone-to-PC workflow: [How to transfer files wirelessly](/blog/how-to-transfer-files-phone-to-pc)
-- 跨平台 option list: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
+- Cross-platform option list: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
 
 ## Start Sending Large Files
 

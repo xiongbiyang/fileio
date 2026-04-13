@@ -1,5 +1,4 @@
----
-title:"临时共享剪贴板房间：快速一次性文本共享"
+"临时共享剪贴板房间：快速一次性文本共享"
 updated: "2026-04-04"
 ---
 
@@ -26,7 +25,7 @@ A **temporary shared clipboard room** is useful for short tasks where you only n
 - Do not reuse the same ID for long periods
 - Remove stale content before leaving
 
-## 相关推荐 Guides
+## 相关指南
 
 - Core walkthrough: [Sync clipboard between phone and PC](/guides/clipboard)
 - Link transfer scenario: [Copy link from phone to PC instantly](/blog/copy-link-from-phone-to-pc-instantly-guide)

@@ -1,5 +1,4 @@
----
-title:"邮件 QR 码生成器：让用户一扫即可联系你"
+"邮件 QR 码生成器：让用户一扫即可联系你"
 updated: "2026-04-04"
 ---
 
@@ -12,7 +11,7 @@ An **email qr code generator** opens a prefilled email draft after scan, which r
 - Event inquiry booths
 - Printed onboarding materials
 
-## How to Make an Email QR Code
+## 如何制作 an Email QR Code
 
 1. Prepare a `mailto:` link with recipient and subject
 2. Open [ToolPort QR Code Generator](/tools/qr-code?template=email)
@@ -26,7 +25,7 @@ An **email qr code generator** opens a prefilled email draft after scan, which r
 - URL-encode spaces and symbols in subject/body
 - Include fallback text email address below the code
 
-## 相关推荐 Reads
+## 相关阅读
 
 - For message-first contact: [SMS QR guide](/blog/sms-qr-code-generator-guide)
 - For lead collection: [Form QR guide](/blog/form-survey-qr-code-generator-guide)

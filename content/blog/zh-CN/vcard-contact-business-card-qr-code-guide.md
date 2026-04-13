@@ -1,11 +1,10 @@
----
-title:"vCard QR 码生成器：联系人和名片二维码设置"
+"vCard QR 码生成器：联系人和名片二维码设置"
 updated: "2026-04-04"
 ---
 
-Sharing contact details should be 一扫即可, not manual typing. A **vCard QR code generator** (also searched as **contact qr code generator** or **business card qr code**) helps you exchange profile info instantly.
+Sharing contact details should be one scan, not manual typing. A **vCard QR code generator** (also searched as **contact qr code generator** or **business card qr code**) helps you exchange profile info instantly.
 
-## 使用场景
+## Use Cases
 
 - Sales meetings
 - Conference badges
@@ -32,13 +31,13 @@ Sharing contact details should be 一扫即可, not manual typing. A **vCard QR 
 - Add small logo only if scan tests remain stable
 - Keep quiet zone (margin) around code
 
-## 相关推荐 Guides
+## 相关指南
 
 - For social profile links: [Social QR generator usage](/tools/qr-code?template=whatsapp)
 - For payment links: [Payment QR guide](/blog/payment-paypal-crypto-qr-code-generator-guide)
 - For location sharing: [Google Maps QR guide](/blog/google-maps-qr-code-generator-guide)
 - For Instagram growth cards: [Instagram QR guide](/blog/instagram-qr-code-generator-guide)
 
-## Try It
+## 立即试用
 
 Create a [vCard/contact QR code](/tools/qr-code?template=vcard) now.

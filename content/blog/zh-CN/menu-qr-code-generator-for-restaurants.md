@@ -1,5 +1,4 @@
----
-title:"餐厅菜单 QR 码生成器：快速设置指南"
+"餐厅菜单 QR 码生成器：快速设置指南"
 updated: "2026-04-04"
 ---
 
@@ -27,13 +26,13 @@ Menu QR codes are now standard for restaurants, cafes, and food trucks. A fast *
 - Avoid low contrast backgrounds
 - Test under low light before mass printing
 
-## 常见错误
+## Common Mistakes
 
 - Linking to a broken PDF URL
 - Using tiny QR size on crowded designs
 - Not adding fallback short URL text
 
-## 相关推荐 Guides
+## 相关指南
 
 - Need customer reviews too? [Google review QR guide](/blog/google-review-qr-code-generator-guide)
 - Need business card QR? [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)

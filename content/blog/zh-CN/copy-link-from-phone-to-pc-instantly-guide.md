@@ -1,5 +1,4 @@
----
-title:"手机即时复制链接到电脑：浏览器剪贴板工作流"
+"手机即时复制链接到电脑：浏览器剪贴板工作流"
 updated: "2026-04-04"
 ---
 
@@ -25,7 +24,7 @@ Need to **copy link from phone to pc instantly**? A shared browser clipboard roo
 - Clear room after finishing
 - Keep one tab pinned for frequent use
 
-## 相关推荐 Guides
+## 相关指南
 
 - Complete tutorial: [Clipboard sync guide](/guides/clipboard)
 - File-level sharing: [Phone-to-PC transfer tool](/tools/text-transfer)

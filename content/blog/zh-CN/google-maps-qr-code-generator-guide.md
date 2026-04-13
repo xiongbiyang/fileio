@@ -1,9 +1,8 @@
----
-title:"Google 地图 QR 码生成器：引导客户到你的位置"
+"Google 地图 QR 码生成器：引导客户到你的位置"
 updated: "2026-04-04"
 ---
 
-A **google maps qr code generator** helps users open navigation in 一扫即可. It works well for stores, clinics, offices, and event venues.
+A **google maps qr code generator** helps users open navigation in one scan. It works well for stores, clinics, offices, and event venues.
 
 ## 为什么使用 a Maps QR Code
 
@@ -12,7 +11,7 @@ A **google maps qr code generator** helps users open navigation in 一扫即可.
 - Avoid typos in manual address entry
 - Work from posters, counters, and packaging
 
-## How to Make a Google Maps QR Code
+## 如何制作 a Google Maps QR Code
 
 1. Copy your shared Google Maps location link
 2. Open [ToolPort QR Code Generator](/tools/qr-code?template=maps)
@@ -27,13 +26,13 @@ A **google maps qr code generator** helps users open navigation in 一扫即可.
 - Event posters and booth signage
 - Parking and wayfinding signs
 
-## 常见错误
+## Common Mistakes
 
 - Using an incorrect or outdated map URL
 - Low-contrast code colors
 - Printing too small for real-world scan distance
 
-## 相关推荐 Guides
+## 相关指南
 
 - For local reputation growth: [Google Review QR guide](/blog/google-review-qr-code-generator-guide)
 - For business profile sharing: [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)

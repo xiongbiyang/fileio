@@ -1,5 +1,4 @@
----
-title:"应用下载 QR 码生成器：一扫即可安装你的应用"
+"应用下载 QR 码生成器：一扫即可安装你的应用"
 updated: "2026-04-04"
 ---
 
@@ -27,7 +26,7 @@ An **app download qr code generator** is a simple way to send users from offline
 - Keep CTA text clear: "Scan to Download App"
 - Re-test after every app store link update
 
-## 相关推荐 Reads
+## 相关阅读
 
 - For profile traffic: [Instagram QR guide](/blog/instagram-qr-code-generator-guide)
 - For lead capture pages: [Form QR guide](/blog/form-survey-qr-code-generator-guide)

@@ -1,5 +1,4 @@
----
-title:"支付 QR 码生成器：PayPal 和加密货币链接二维码指南"
+"支付 QR 码生成器：PayPal 和加密货币链接二维码指南"
 updated: "2026-04-04"
 ---
 
@@ -20,7 +19,7 @@ Payment QR codes reduce checkout friction. A reliable **payment qr code generato
 4. Download in PNG/SVG
 5. Test scan before publishing
 
-## Security Checklist
+## 安全性 Checklist
 
 - Double-check wallet/address text
 - Use HTTPS payment URLs
@@ -33,7 +32,7 @@ Payment QR codes reduce checkout friction. A reliable **payment qr code generato
 - Use SVG for print signs and counter cards
 - Keep high contrast for fast scan
 
-## 相关推荐 Reads
+## 相关阅读
 
 - For profile/contact sharing: [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)
 - For menu and in-store usage: [Menu QR guide](/blog/menu-qr-code-generator-for-restaurants)
