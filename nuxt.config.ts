@@ -166,7 +166,8 @@ export default defineNuxtConfig({
     '/tools': { prerender: true },
     // text-transfer depends on ?r= query param for room joining — must NOT prerender
     '/tools/text-transfer': { prerender: false },
-    '/tools/clipboard': { prerender: true },
+    // clipboard depends on ?r= query param for room joining — must NOT prerender
+    '/tools/clipboard': { prerender: false },
     '/tools/qr-code': { prerender: true },
     '/about': { prerender: true },
     '/privacy': { prerender: true },

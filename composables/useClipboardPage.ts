@@ -253,9 +253,13 @@ export function useClipboardPage() {
     if (cloudPersistenceEnabled.value && auth.userId.value) {
       void hydrateRoomsFromCloud(auth.userId.value)
     }
-    const roomId = route.query.r
-    if (roomId) {
-      joinRoomId.value = (roomId as string).toUpperCase()
+    // Read room ID from multiple sources to survive redirects / hydration issues
+    const queryRoom = route.query.r as string | undefined
+    const searchRoom = new URLSearchParams(window.location.search).get('r') || undefined
+    const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1]
+    const joinId = (queryRoom || searchRoom || hashRoom || '').trim()
+    if (joinId) {
+      joinRoomId.value = joinId.toUpperCase()
       joinRoom()
     }
   })
