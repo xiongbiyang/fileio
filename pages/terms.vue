@@ -16,16 +16,29 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
+const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/terms'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 useHead({
-  title: 'Terms of Service',
+  title: () => t('seo.terms.title'),
   meta: [
-    { name: 'description', content: 'ToolPort terms of service: usage guidelines, intellectual property, disclaimers, and user responsibilities for our free online tools.' },
+    { name: 'description', content: () => t('seo.terms.desc') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Terms of Service - ToolPort',
-  ogDescription: 'ToolPort terms of service: usage guidelines, intellectual property, disclaimers, and user responsibilities for our free online tools.',
+  ogTitle: () => t('seo.terms.title'),
+  ogDescription: () => t('seo.terms.desc'),
   ogImage: 'https://toolport.dev/og-image.png',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: t('seo.terms.title'),
+  description: t('seo.terms.desc'),
+  url: 'https://toolport.dev/terms',
 })
 
 const sectionKeys = ['acceptance', 'description', 'responsibilities', 'privacy', 'ip', 'disclaimer', 'changes'] as const

@@ -83,22 +83,28 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'tool' })
+const { t } = useI18n()
+const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/contact'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 useHead({
-  title: 'Contact Us',
+  title: () => t('seo.contact.title'),
   meta: [
-    { name: 'description', content: 'Get in touch with the ToolPort team. Questions, feedback, or partnership inquiries about our free online tools.' },
+    { name: 'description', content: () => t('seo.contact.desc') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Contact Us - ToolPort',
-  ogDescription: 'Get in touch with the ToolPort team. Questions, feedback, or partnership inquiries about our free online tools.',
+  ogTitle: () => t('seo.contact.title'),
+  ogDescription: () => t('seo.contact.desc'),
   ogImage: 'https://toolport.dev/og-image.png',
 })
 
 const form = reactive({ name: '', email: '', message: '' })
 const isSubmitting = ref(false)
 const submitted = ref(false)
-const { t } = useI18n()
 const { notify } = useNotifier()
 
 async function handleSubmit() {

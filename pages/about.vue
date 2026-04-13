@@ -74,18 +74,37 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
+const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/about'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 
 useHead({
-  title: 'About ToolPort - Privacy-First Online Tools',
+  title: () => t('seo.about.title'),
   meta: [
-    { name: 'description', content: 'ToolPort builds privacy-first browser tools for accountless file transfer, ephemeral text share, and no-cloud workflows. Zero-knowledge architecture principles, no tracking, and end-to-end encryption.' },
-    { name: 'keywords', content: 'about ToolPort,privacy-first tools,accountless file transfer,ephemeral text share,no cloud tools,zero-knowledge file drop,browser-to-browser share' },
+    { name: 'description', content: () => t('seo.about.desc') },
+    { name: 'keywords', content: () => t('seo.about.keywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'About ToolPort - Privacy-First Online Tools',
-  ogDescription: 'Privacy-first browser tools for accountless transfer and ephemeral sharing, designed with zero-knowledge architecture principles.',
+  ogTitle: () => t('seo.about.title'),
+  ogDescription: () => t('seo.about.desc'),
   ogImage: 'https://toolport.dev/og-image.png',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: t('seo.about.title'),
+  description: t('seo.about.desc'),
+  url: 'https://toolport.dev/about',
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'ToolPort',
+    url: 'https://toolport.dev',
+    logo: 'https://toolport.dev/og-image.png',
+  },
 })
 
 const badges = computed(() => [

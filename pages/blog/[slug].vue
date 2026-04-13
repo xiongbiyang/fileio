@@ -125,28 +125,34 @@ const html = computed(() => {
 })
 const sanitizedHtml = computed(() => sanitizeBlogHtml(html.value))
 
+function isUnsafeUri(value: string): boolean {
+  // eslint-disable-next-line no-control-regex
+  const normalized = value.trim().toLowerCase().replace(/[\s\x00-\x1f]+/g, '')
+  return normalized.startsWith('javascript:')
+    || normalized.startsWith('vbscript:')
+    || normalized.startsWith('data:')
+}
+
 function sanitizeBlogHtml(raw: string) {
   if (!raw) return ''
   let safe = raw
-    // Strip active/content-bearing tags that can execute code.
-    .replace(/<\s*(script|style|iframe|object|embed|link|meta|base)\b[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi, '')
-    .replace(/<\s*(script|style|iframe|object|embed|link|meta|base)\b[^>]*\/?>/gi, '')
-    // Remove inline event handlers like onclick/onerror.
+    // Strip dangerous tags (including self-closing and content-bearing).
+    .replace(/<\s*(script|style|iframe|object|embed|link|meta|base|form|textarea|svg|math)\b[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi, '')
+    .replace(/<\s*(script|style|iframe|object|embed|link|meta|base|form|textarea|svg|math)\b[^>]*\/?>/gi, '')
+    // Remove inline event handlers (onclick, onerror, onload, etc.).
     .replace(/\son[a-z]+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, '')
+    // Remove style attributes (can be used for CSS-based attacks).
+    .replace(/\sstyle\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, '')
 
-  safe = safe.replace(/\s(href|src)\s*=\s*(['"])(.*?)\2/gi, (_m, attr: string, quote: string, value: string) => {
-    const normalized = value.trim().toLowerCase()
-    if (normalized.startsWith('javascript:') || normalized.startsWith('vbscript:') || normalized.startsWith('data:text/html')) {
-      return ` ${attr}=${quote}#${quote}`
-    }
+  // Sanitize href/src attributes (quoted)
+  safe = safe.replace(/\s(href|src|action|formaction|xlink:href)\s*=\s*(['"])(.*?)\2/gi, (_m, attr: string, quote: string, value: string) => {
+    if (isUnsafeUri(value)) return ` ${attr}=${quote}#${quote}`
     return ` ${attr}=${quote}${value}${quote}`
   })
 
-  safe = safe.replace(/\s(href|src)\s*=\s*([^\s>"']+)/gi, (_m, attr: string, value: string) => {
-    const normalized = value.trim().toLowerCase()
-    if (normalized.startsWith('javascript:') || normalized.startsWith('vbscript:') || normalized.startsWith('data:text/html')) {
-      return ` ${attr}="#"`
-    }
+  // Sanitize href/src attributes (unquoted)
+  safe = safe.replace(/\s(href|src|action|formaction|xlink:href)\s*=\s*([^\s>"']+)/gi, (_m, attr: string, value: string) => {
+    if (isUnsafeUri(value)) return ` ${attr}="#"`
     return ` ${attr}="${value}"`
   })
 

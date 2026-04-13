@@ -92,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
@@ -101,22 +102,22 @@ const canonicalUrl = computed(() =>
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'Frictionless No-Log WebRTC File Drop - Accountless P2P Transfer',
+  title: t('seo.toolA.title'),
   meta: [
-    { name: 'description', content: 'Frictionless, out-of-the-box browser-to-browser transfer between phone and PC. No-log design for transfer content, no cloud upload, no app, no signup, powered by WebRTC P2P.' },
-    { name: 'keywords', content: 'no-log webrtc file drop,frictionless file transfer,out-of-the-box file transfer,accountless file transfer,p2p web transfer,no cloud file transfer,browser-to-browser share,airdrop alternative for windows' },
+    { name: 'description', content: t('seo.toolA.desc') },
+    { name: 'keywords', content: t('seo.toolA.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'Frictionless No-Log WebRTC File Drop',
-  ogDescription: 'Out-of-the-box browser-to-browser file transfer with no cloud upload. WebRTC P2P, no app install, no signup.',
+  ogTitle: () => t('seo.toolA.ogTitle'),
+  ogDescription: () => t('seo.toolA.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'No-Log WebRTC File Drop for Phone and PC',
-  twitterDescription: 'Frictionless accountless transfer. No cloud upload, no app, no signup.',
+  twitterTitle: () => t('seo.toolA.ogTitle'),
+  twitterDescription: () => t('seo.toolA.ogDesc'),
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort file transfer interface preview',
   robots: 'index, follow',

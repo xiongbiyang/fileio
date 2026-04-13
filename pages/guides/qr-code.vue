@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
@@ -140,20 +140,20 @@ const c = computed(() => {
 })
 
 useHead(() => ({
-  title: 'Client-side QR Code Creator Guide - No-Tracking & Static QR',
+  title: t('seo.guideQr.title'),
   meta: [
-    { name: 'description', content: 'Learn how to use a client-side QR code creator: no-tracking QR code, offline-friendly generation, and static QR without expiration.' },
-    { name: 'keywords', content: 'client-side qr code creator,no-tracking qr code,offline qr code generator,static qr without expiration,never expire qr code,scan qr code from image' },
+    { name: 'description', content: t('seo.guideQr.desc') },
+    { name: 'keywords', content: t('seo.guideQr.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'Client-side QR Code Creator Guide - ToolPort',
-  ogDescription: 'No-tracking QR code workflow with local generation, offline-friendly usage, and static QR without expiration.',
+  ogTitle: () => t('seo.guideQr.ogTitle'),
+  ogDescription: () => t('seo.guideQr.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
-  twitterTitle: 'No-Tracking QR Code Guide',
-  twitterDescription: 'Client-side and static QR workflow, including offline-friendly generation tips.',
+  twitterTitle: () => t('seo.guideQr.ogTitle'),
+  twitterDescription: () => t('seo.guideQr.ogDesc'),
   robots: 'index, follow',
 })
 useJsonLd({

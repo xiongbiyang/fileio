@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const localePath = useLocalePath()
 const posts = useBlogPosts()
 const runtimeConfig = useRuntimeConfig()
@@ -76,20 +77,20 @@ const canonicalUrl = computed(() =>
 )
 
 useHead({
-  title: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
+  title: () => t('seo.blog.title'),
   meta: [
-    { name: 'description', content: 'Actionable tutorials for wireless file transfer phone to PC, free QR code generation and scanning, and online clipboard sync. Privacy-first guides with no-app workflows.' },
-    { name: 'keywords', content: 'file transfer guide phone to pc,airdrop alternative tutorial,free qr code generator tips,qr code scanner tutorial,online clipboard sync guide,copy paste across devices,privacy-first tools blog' },
+    { name: 'description', content: () => t('seo.blog.desc') },
+    { name: 'keywords', content: () => t('seo.blog.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Blog: File Transfer, QR Code, Clipboard & Privacy Guides',
-  ogDescription: 'Step-by-step tutorials for wireless file transfer, QR code generation/scanning, and cross-device clipboard sync.',
+  ogTitle: () => t('seo.blog.title'),
+  ogDescription: () => t('seo.blog.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
-  twitterTitle: 'ToolPort Blog: File Transfer, QR Code, Clipboard Guides',
-  twitterDescription: 'Learn no-app workflows for phone-to-PC transfer, QR code tasks, and clipboard sync.',
+  twitterTitle: () => t('seo.blog.title'),
+  twitterDescription: () => t('seo.blog.ogDesc'),
   robots: 'index, follow',
 })
 useJsonLd({

@@ -186,21 +186,26 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 
 useHead({
-  title: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
+  title: () => t('seo.home.title'),
   meta: [
-    { name: 'description', content: 'Frictionless, out-of-the-box privacy-first tools: no-log WebRTC file drop, client-side QR creation, and ephemeral browser-to-browser text sharing.' },
-    { name: 'keywords', content: 'no-log webrtc file drop,frictionless file transfer,out-of-the-box tools,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share,privacy-first tools' },
+    { name: 'description', content: () => t('seo.home.desc') },
+    { name: 'keywords', content: () => t('seo.home.keywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
-  ogDescription: 'Accountless no-cloud transfer, privacy-first QR tools, and ephemeral browser-to-browser text sharing.',
+  ogTitle: () => t('seo.home.title'),
+  ogDescription: () => t('seo.home.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: 'https://toolport.dev/',
-  twitterTitle: 'Free Online Tools for File Transfer, QR Code, and Clipboard',
-  twitterDescription: 'Accountless P2P web transfer, privacy-first QR, and ephemeral text share in your browser.',
+  twitterTitle: () => t('seo.home.title'),
+  twitterDescription: () => t('seo.home.ogDesc'),
   robots: 'index, follow',
 })
 useJsonLd({

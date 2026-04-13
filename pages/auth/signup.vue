@@ -133,7 +133,7 @@ async function handleSignUp() {
     emailError.value = t('auth.emailInvalid')
     return
   }
-  if (password.value.trim().length < 6) {
+  if (password.value.trim().length < 8) {
     passwordError.value = t('auth.passwordTooShort')
     return
   }

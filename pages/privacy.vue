@@ -77,17 +77,29 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/privacy'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 useHead({
-  title: 'Privacy Policy',
+  title: () => t('seo.privacy.title'),
   meta: [
-    { name: 'description', content: 'ToolPort privacy policy for no-cloud browser-to-browser sharing: accountless file transfer, ephemeral text share, and zero-knowledge architecture principles with end-to-end encryption.' },
-    { name: 'keywords', content: 'privacy policy,no cloud file transfer,accountless file transfer,ephemeral text share,browser-to-browser share,zero-knowledge file drop,webrtc p2p privacy' },
+    { name: 'description', content: () => t('seo.privacy.desc') },
+    { name: 'keywords', content: () => t('seo.privacy.keywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Privacy Policy - ToolPort',
-  ogDescription: 'No-cloud browser-to-browser privacy model with accountless transfer, ephemeral rooms, and zero-knowledge architecture principles.',
+  ogTitle: () => t('seo.privacy.title'),
+  ogDescription: () => t('seo.privacy.desc'),
   ogImage: 'https://toolport.dev/og-image.png',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: t('seo.privacy.title'),
+  description: t('seo.privacy.desc'),
+  url: 'https://toolport.dev/privacy',
 })
 
 const toolPrivacy = computed(() => [

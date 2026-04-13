@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
@@ -137,21 +137,21 @@ const c = computed(() => {
 })
 
 useHead(() => ({
-  title: 'Ephemeral Text Share Guide: Browser-to-Browser Clipboard Sync',
+  title: t('seo.guideClipboard.title'),
   meta: [
-    { name: 'description', content: 'Step-by-step ephemeral text share guide: browser-to-browser clipboard sync between phone and PC. Accountless, encrypted, no app install, and auto-expiring rooms.' },
-    { name: 'keywords', content: 'ephemeral text share,browser-to-browser share,accountless text share,online clipboard sync guide,copy paste between phone and pc,cross-device clipboard tutorial,clipboard sync without app' },
+    { name: 'description', content: t('seo.guideClipboard.desc') },
+    { name: 'keywords', content: t('seo.guideClipboard.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 
 useSeoMeta({
-  ogTitle: 'Ephemeral Text Share Guide for Phone and PC',
-  ogDescription: 'Accountless browser-to-browser clipboard sync with encrypted temporary rooms and instant cross-device copy/paste.',
+  ogTitle: () => t('seo.guideClipboard.ogTitle'),
+  ogDescription: () => t('seo.guideClipboard.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
-  twitterTitle: 'Ephemeral Text Share Guide',
-  twitterDescription: 'Sync text across devices with accountless browser-to-browser clipboard rooms.',
+  twitterTitle: () => t('seo.guideClipboard.ogTitle'),
+  twitterDescription: () => t('seo.guideClipboard.ogDesc'),
   robots: 'index, follow',
 })
 

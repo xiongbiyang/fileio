@@ -198,22 +198,22 @@ const toolClipboardUrl = computed(() =>
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'All Frictionless Tools: No-Log Transfer, Client-side QR, Ephemeral Share',
+  title: t('seo.toolsDir.title'),
   meta: [
-    { name: 'description', content: 'Out-of-the-box privacy-first tools: frictionless no-log WebRTC file drop, client-side no-tracking QR creation, and ephemeral browser-to-browser sharing.' },
-    { name: 'keywords', content: 'frictionless tools,no-log webrtc file drop,out-of-the-box transfer,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share' },
+    { name: 'description', content: t('seo.toolsDir.desc') },
+    { name: 'keywords', content: t('seo.toolsDir.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
-  ogDescription: 'Accountless no-cloud transfer, privacy-first QR workflows, and ephemeral browser-to-browser text sharing.',
+  ogTitle: () => t('seo.toolsDir.title'),
+  ogDescription: () => t('seo.toolsDir.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'All Free Online Tools: File Transfer, QR Code, Clipboard',
-  twitterDescription: 'Use ToolPort tools with no signup: accountless P2P transfer, privacy-first QR, and ephemeral text share.',
+  twitterTitle: () => t('seo.toolsDir.title'),
+  twitterDescription: () => t('seo.toolsDir.ogDesc'),
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort tools directory preview',
   robots: 'index, follow',

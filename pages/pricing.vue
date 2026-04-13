@@ -174,6 +174,10 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/pricing'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 const billingCycle = ref<'monthly' | 'yearly' | 'lifetime'>('lifetime')
 
 function waitlistPath(plan: 'monthly' | 'yearly' | 'lifetime') {
@@ -183,15 +187,16 @@ function waitlistPath(plan: 'monthly' | 'yearly' | 'lifetime') {
   }
 }
 useHead({
-  title: 'Pricing - Free & Pro Plans',
+  title: () => t('seo.pricing.title'),
   meta: [
-    { name: 'description', content: 'ToolPort pricing: Monthly $6.99, Yearly $69.9, and Lifetime $199.9. Lifetime includes all future tools at no extra cost.' },
-    { name: 'keywords', content: 'ToolPort pricing,free online tools,pro plan,file transfer pro,QR code pro,clipboard pro' },
+    { name: 'description', content: () => t('seo.pricing.desc') },
+    { name: 'keywords', content: () => t('seo.pricing.keywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Pricing - Free & Pro Plans',
-  ogDescription: 'Choose Monthly ($6.99), Yearly ($69.9), or Lifetime ($199.9). Lifetime members get free access to all future tools.',
+  ogTitle: () => t('seo.pricing.title'),
+  ogDescription: () => t('seo.pricing.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
 })
 useJsonLd({

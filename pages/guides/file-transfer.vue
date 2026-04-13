@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
@@ -113,21 +113,21 @@ const c = computed(() => {
 })
 
 useHead(() => ({
-  title: 'Accountless P2P Web Transfer Guide: Phone to PC Without Cloud',
+  title: t('seo.guideTransfer.title'),
   meta: [
-    { name: 'description', content: 'Step-by-step accountless file transfer guide: move files from iPhone or Android to PC with browser-to-browser WebRTC P2P. No cloud upload, no app, no USB.' },
-    { name: 'keywords', content: 'accountless file transfer,p2p web transfer,browser-to-browser share,no cloud file transfer,how to transfer files from phone to pc,airdrop alternative for windows guide,secure p2p file transfer,qr code file transfer' },
+    { name: 'description', content: t('seo.guideTransfer.desc') },
+    { name: 'keywords', content: t('seo.guideTransfer.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 
 useSeoMeta({
-  ogTitle: 'Accountless P2P Web Transfer Guide for Phone to PC',
-  ogDescription: 'Learn browser-to-browser no-cloud transfer from iPhone/Android to PC with WebRTC P2P encryption. No app install or signup.',
+  ogTitle: () => t('seo.guideTransfer.ogTitle'),
+  ogDescription: () => t('seo.guideTransfer.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
-  twitterTitle: 'No-Cloud P2P Web Transfer Guide',
-  twitterDescription: 'Accountless browser-to-browser transfer workflow for phone to PC.',
+  twitterTitle: () => t('seo.guideTransfer.ogTitle'),
+  twitterDescription: () => t('seo.guideTransfer.ogDesc'),
   robots: 'index, follow',
 })
 

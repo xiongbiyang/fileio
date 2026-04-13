@@ -174,8 +174,12 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/tool-request'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 
 useHead({
   title: t('toolRequest.seoTitle'),
@@ -183,6 +187,7 @@ useHead({
     { name: 'description', content: t('toolRequest.seoDesc') },
     { name: 'keywords', content: t('toolRequest.seoKeywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 
 useSeoMeta({
@@ -301,18 +306,32 @@ function toggleVote(key: string) {
   submitted.value = false
 }
 
-function submit() {
-  if (!canSubmit.value) return
-  const existing = JSON.parse(localStorage.getItem('tp_tool_requests') || '[]')
-  existing.push({
+const isSubmitting = ref(false)
+
+async function submit() {
+  if (!canSubmit.value || isSubmitting.value) return
+  isSubmitting.value = true
+
+  const payload = {
     votes: Array.from(voted.value),
     toolName: toolName.value.trim(),
     detail: toolDetail.value.trim(),
     email: email.value.trim(),
-    time: Date.now(),
-  })
-  localStorage.setItem('tp_tool_requests', JSON.stringify(existing))
+    locale: String(locale.value || 'en'),
+  }
+
+  try {
+    await $fetch('/api/tool-votes', { method: 'POST', body: payload })
+  }
+  catch {
+    // Fallback: save to localStorage if API unavailable
+    const existing = JSON.parse(localStorage.getItem('tp_tool_requests') || '[]')
+    existing.push({ ...payload, time: Date.now() })
+    localStorage.setItem('tp_tool_requests', JSON.stringify(existing))
+  }
+
   submitted.value = true
+  isSubmitting.value = false
   notify(t('toolRequest.thanks'))
 }
 </script>

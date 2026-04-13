@@ -78,6 +78,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
@@ -87,22 +88,22 @@ const canonicalUrl = computed(() =>
 
 definePageMeta({ layout: 'tool' })
 useHead(() => ({
-  title: 'Frictionless Ephemeral Text Share - Out-of-the-box Clipboard Sync',
+  title: t('seo.toolC.title'),
   meta: [
-    { name: 'description', content: 'Frictionless out-of-the-box ephemeral text sharing. Accountless browser-to-browser clipboard sync with encrypted rooms, no app, no signup, and 24-hour auto-delete.' },
-    { name: 'keywords', content: 'frictionless text share,out-of-the-box clipboard sync,ephemeral text share,browser-to-browser share,accountless text share,cross-device clipboard,no signup clipboard' },
+    { name: 'description', content: t('seo.toolC.desc') },
+    { name: 'keywords', content: t('seo.toolC.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 useSeoMeta({
-  ogTitle: 'Ephemeral Text Share - Accountless Online Clipboard',
-  ogDescription: 'Browser-to-browser clipboard sync for phone and PC. Encrypted ephemeral rooms, no app install, no signup, auto-delete in 24 hours.',
+  ogTitle: () => t('seo.toolC.ogTitle'),
+  ogDescription: () => t('seo.toolC.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Ephemeral Text Share Between Phone and PC',
-  twitterDescription: 'Accountless browser-to-browser clipboard sync with encrypted temporary rooms.',
+  twitterTitle: () => t('seo.toolC.ogTitle'),
+  twitterDescription: () => t('seo.toolC.ogDesc'),
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: 'ToolPort online clipboard interface preview',
   robots: 'index, follow',

@@ -841,34 +841,24 @@ const tr = (zh: string, en: string) => (isZhLocale.value ? zh : en)
 
 // Page metadata and SEO
 definePageMeta({ layout: 'tool' })
-const seoTitle = computed(() => tr(
-  'Frictionless Client-side QR Code Creator - No-Tracking, Static QR',
-  'Frictionless Client-side QR Code Creator - No-Tracking, Static QR',
-))
-const seoDescription = computed(() => tr(
-  'Frictionless, out-of-the-box QR workflow: client-side generation, no-tracking QR content, and static codes without expiration. Everything runs locally in your browser.',
-  'Frictionless, out-of-the-box QR workflow: client-side generation, no-tracking QR content, and static codes without expiration. Everything runs locally in your browser.',
-))
-const seoKeywords = 'frictionless qr code creator,client-side qr code creator,no-tracking qr code,out-of-the-box qr generator,offline qr code generator,static qr without expiration,never expire qr code'
-
 useHead(() => ({
-  title: seoTitle.value,
+  title: t('seo.toolB.title'),
   meta: [
-    { name: 'description', content: seoDescription.value },
-    { name: 'keywords', content: seoKeywords },
+    { name: 'description', content: t('seo.toolB.desc') },
+    { name: 'keywords', content: t('seo.toolB.keywords') },
   ],
   link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 
 useSeoMeta({
-  ogTitle: () => tr('Frictionless Client-side QR Code Creator | ToolPort', 'Frictionless Client-side QR Code Creator | ToolPort'),
-  ogDescription: () => seoDescription.value,
+  ogTitle: () => t('seo.toolB.ogTitle'),
+  ogDescription: () => t('seo.toolB.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: () => tr('No-Tracking Frictionless QR Generator | ToolPort', 'No-Tracking Frictionless QR Generator | ToolPort'),
-  twitterDescription: () => seoDescription.value,
+  twitterTitle: () => t('seo.toolB.ogTitle'),
+  twitterDescription: () => t('seo.toolB.ogDesc'),
   twitterImage: 'https://toolport.dev/og-image.png',
   twitterImageAlt: () => tr('ToolPort 二维码工具界面预览', 'ToolPort QR code tool preview'),
   robots: 'index, follow',
@@ -883,7 +873,7 @@ useJsonLd({
   operatingSystem: 'Web',
   inLanguage: isZhLocale.value ? 'zh-CN' : 'en',
   isAccessibleForFree: true,
-  description: seoDescription.value,
+  description: t('seo.toolB.desc'),
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   url: canonicalUrl.value,
 })
