@@ -309,7 +309,11 @@
     "step2Title": "Share the Code",
     "step2Desc": "Share the 6-character room ID with your other devices.",
     "step3Title": "Sync Instantly",
-    "step3Desc": "Type or paste content. It syncs in real-time across all connected devices."
+    "step3Desc": "Type or paste content. It syncs in real-time across all connected devices.",
+    "leaveTitle": "Leave this room?",
+    "leaveMessage": "You will disconnect from the shared clipboard session. Messages remain until the room expires.",
+    "leaveConfirm": "Leave Room",
+    "leaveCancel": "Stay"
   },
   "about": {
     "badge": "Our Manifesto",

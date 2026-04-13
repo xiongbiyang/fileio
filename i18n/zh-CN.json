@@ -309,7 +309,11 @@
     "step2Title": "分享房间码",
     "step2Desc": "将 6 位房间 ID 分享给你的其他设备。",
     "step3Title": "即时同步",
-    "step3Desc": "输入或粘贴内容，实时同步到所有已连接的设备。"
+    "step3Desc": "输入或粘贴内容，实时同步到所有已连接的设备。",
+    "leaveTitle": "离开房间？",
+    "leaveMessage": "将断开共享剪贴板会话。消息会保留到房间过期。",
+    "leaveConfirm": "离开房间",
+    "leaveCancel": "留下"
   },
   "about": {
     "badge": "我们的宣言",

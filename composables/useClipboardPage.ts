@@ -249,7 +249,29 @@ export function useClipboardPage() {
     }
   })
 
+  const { confirm: showConfirm } = useConfirmDialog()
+
+  // Exit protection — prevent accidental navigation while in a room
+  onBeforeRouteLeave(async () => {
+    if (view.value === 'room' && room.isConnected.value) {
+      return await showConfirm({
+        title: t('toolC.leaveTitle'),
+        message: t('toolC.leaveMessage'),
+        confirmText: t('toolC.leaveConfirm'),
+        cancelText: t('toolC.leaveCancel'),
+      })
+    }
+  })
+
+  function handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (view.value === 'room' && room.isConnected.value) {
+      event.preventDefault()
+      event.returnValue = ''
+    }
+  }
+
   onMounted(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload)
     if (cloudPersistenceEnabled.value && auth.userId.value) {
       void hydrateRoomsFromCloud(auth.userId.value)
     }
@@ -265,6 +287,7 @@ export function useClipboardPage() {
   })
 
   onUnmounted(() => {
+    window.removeEventListener('beforeunload', handleBeforeUnload)
     if (expiryInterval) clearInterval(expiryInterval)
     if (typingHideTimer) clearTimeout(typingHideTimer)
     if (cloudMessageSyncTimer) clearTimeout(cloudMessageSyncTimer)
@@ -640,7 +663,14 @@ export function useClipboardPage() {
     room.clearRoom()
   }
 
-  function leaveRoom() {
+  async function leaveRoom() {
+    const leave = await showConfirm({
+      title: t('toolC.leaveTitle'),
+      message: t('toolC.leaveMessage'),
+      confirmText: t('toolC.leaveConfirm'),
+      cancelText: t('toolC.leaveCancel'),
+    })
+    if (!leave) return
     if (expiryInterval) {
       clearInterval(expiryInterval)
       expiryInterval = null

@@ -309,7 +309,11 @@
     "step2Title": "分享房間碼",
     "step2Desc": "將 6 位房間 ID 分享給你的其他設備。",
     "step3Title": "即時同步",
-    "step3Desc": "輸入或粘貼內容，實時同步到所有已連接的設備。"
+    "step3Desc": "輸入或粘貼內容，實時同步到所有已連接的設備。",
+    "leaveTitle": "離開房間？",
+    "leaveMessage": "將中斷共享剪貼簿連線。訊息會保留至房間到期。",
+    "leaveConfirm": "離開房間",
+    "leaveCancel": "留下"
   },
   "about": {
     "badge": "我們的宣言",
