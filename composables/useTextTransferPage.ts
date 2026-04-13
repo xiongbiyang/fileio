@@ -243,8 +243,17 @@ export function useTextTransferPage() {
     loadPersistedState()
     window.addEventListener('beforeunload', handleBeforeUnload)
     document.addEventListener('visibilitychange', handleVisibilityChange)
-    if (route.query.r) {
-      roomId.value = (route.query.r as string).toLowerCase()
+
+    // Try query param first, then check URL hash as fallback
+    const queryRoom = route.query.r as string | undefined
+    const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1]
+    const joinRoom = (queryRoom || hashRoom || '').trim().toLowerCase()
+
+    console.log('[Init] URL:', window.location.href)
+    console.log('[Init] query.r:', queryRoom, 'hash.r:', hashRoom, 'joinRoom:', joinRoom)
+
+    if (joinRoom) {
+      roomId.value = joinRoom
       await initReceiverMode()
     }
     else {

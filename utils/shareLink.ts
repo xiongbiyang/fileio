@@ -4,5 +4,7 @@ export function buildRoomJoinUrl(origin: string, localizedPath: string, roomId: 
   const safeRoomId = String(roomId || '').trim()
   if (!safeOrigin || !safePath || !safeRoomId) return ''
   const separator = safePath.includes('?') ? '&' : '?'
-  return `${safeOrigin}${safePath}${separator}r=${encodeURIComponent(safeRoomId)}`
+  // Include room ID in both query param AND hash for redundancy
+  // Some redirects/scanners strip query params but preserve hash
+  return `${safeOrigin}${safePath}${separator}r=${encodeURIComponent(safeRoomId)}#r=${encodeURIComponent(safeRoomId)}`
 }
