@@ -264,6 +264,10 @@ export function useTextTransferPage() {
 
   function attachQrCanvas(element: HTMLCanvasElement | null) {
     qrCanvasTransfer.value = element ?? undefined
+    // Canvas might arrive after generateRoomQr() was called — re-render
+    if (element && roomId.value && !isReceiver.value) {
+      generateRoomQr()
+    }
   }
   function clearDisconnectTimer() {
     if (disconnectTimer) {
@@ -418,10 +422,14 @@ export function useTextTransferPage() {
   }
   async function generateRoomQr() {
     await nextTick()
-    if (!qrCanvasTransfer.value || !roomId.value) return
+    if (!qrCanvasTransfer.value || !roomId.value) {
+      console.log('[QR] Skipped: canvas=', !!qrCanvasTransfer.value, 'roomId=', roomId.value)
+      return
+    }
     try {
       const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
       if (!url) return
+      console.log('[QR] Rendering:', url)
       await renderQrCodeToCanvas(qrCanvasTransfer.value, url, { width: 220, margin: 2 })
     }
     catch {
