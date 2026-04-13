@@ -181,7 +181,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'cloudflare-pages',
     cloudflare: {
-      nodeCompat: true,
+      nodeCompat: false,
     },
     storage: {
       // Keep prerender cache in-memory to avoid Windows file:// cache-driver resolution warnings.
