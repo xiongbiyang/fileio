@@ -4,6 +4,7 @@
     <TextTransferWaiting
       v-if="state === 'waiting'"
       v-model:mobile-text-input="mobileTextInput"
+      v-model:desktop-text-input="desktopTextInput"
       :connected-device-name="connectedDeviceName"
       :doc-cards="docCards"
       :is-connected="isConnected"
@@ -12,6 +13,8 @@
       :received-messages="receivedMessages"
       :room-id="roomId"
       @copy-link="copyLink"
+      @desktop-file-select="handleDesktopFileSelect"
+      @desktop-send="desktopSend"
       @mobile-file-select="handleMobileFileSelect"
       @mobile-send="mobileSend"
       @qr-canvas-ready="attachQrCanvas"
@@ -213,10 +216,13 @@ const {
   connectedDeviceName,
   copyLink,
   currentFile,
+  desktopSend,
+  desktopTextInput,
   devices,
   denyPairing,
   docCards,
   goToWaitingState,
+  handleDesktopFileSelect,
   handleMobileFileSelect,
   historyFilter,
   historyStats,

@@ -628,7 +628,12 @@
     "connectedNode": "连接节点",
     "noMessagesYet": "暂无消息 — 在下方输入后发送",
     "askPcToRefresh": "连接失败，请让对方（电脑端）刷新二维码后重新扫码。",
-    "leaveWarning": "传输正在进行中，离开此页面将中断传输，确定要离开吗？"
+    "leaveWarning": "传输正在进行中，离开此页面将中断传输，确定要离开吗？",
+    "desktopMessages": "消息",
+    "desktopTextPlaceholder": "输入消息并按 Enter 发送...",
+    "desktopFileTransfer": "文件传输",
+    "desktopDropFiles": "拖放文件到此处",
+    "desktopOrClick": "或点击选择文件"
   },
   "auth": {
     "heroTitle": "提升你的数字工作体验",

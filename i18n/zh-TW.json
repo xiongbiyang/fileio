@@ -628,7 +628,12 @@
     "connectedNode": "連接節點",
     "noMessagesYet": "暫無消息 — 在下方輸入后發送",
     "askPcToRefresh": "連線失敗，請通知電腦端重新整理QR 碼後再掃描一次。",
-    "leaveWarning": "目前仍有傳輸進行中，若離開此頁面將會中斷傳輸。確定要離開嗎？"
+    "leaveWarning": "目前仍有傳輸進行中，若離開此頁面將會中斷傳輸。確定要離開嗎？",
+    "desktopMessages": "訊息",
+    "desktopTextPlaceholder": "輸入訊息並按 Enter 傳送...",
+    "desktopFileTransfer": "檔案傳輸",
+    "desktopDropFiles": "拖放檔案到此處",
+    "desktopOrClick": "或點擊選擇檔案"
   },
   "auth": {
     "heroTitle": "提升你的數字工作體驗",

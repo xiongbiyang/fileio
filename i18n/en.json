@@ -628,7 +628,12 @@
     "connectedNode": "Connected Node",
     "noMessagesYet": "No messages yet - type below to send",
     "askPcToRefresh": "Connection failed. Please ask the PC side to refresh the QR code and re-scan.",
-    "leaveWarning": "A transfer is in progress. If you leave, the transfer will be interrupted. Are you sure?"
+    "leaveWarning": "A transfer is in progress. If you leave, the transfer will be interrupted. Are you sure?",
+    "desktopMessages": "Messages",
+    "desktopTextPlaceholder": "Type a message and press Enter...",
+    "desktopFileTransfer": "File Transfer",
+    "desktopDropFiles": "Drag and drop files here",
+    "desktopOrClick": "or click to browse"
   },
   "auth": {
     "heroTitle": "Elevate your digital craftsmanship",

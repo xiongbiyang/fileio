@@ -44,6 +44,7 @@ export function useTextTransferPage() {
   const reconnectAttempt = ref(3)
   const receivedMessages = ref<Array<{ id: string, content: string, isSelf: boolean }>>([])
   const mobileTextInput = ref('')
+  const desktopTextInput = ref('')
   const isReceiver = ref(false)
   const qrCanvasTransfer = ref<HTMLCanvasElement>()
   const transferProgress = ref(0)
@@ -431,8 +432,9 @@ export function useTextTransferPage() {
       signaling.onOffer.value = null
       const answer = await webrtc.connect(offer)
       await signaling.sendSignal('answer', answer)
-      verificationDigits.value = generateVerificationCode()
-      state.value = 'pairing'
+      // WebRTC handshake completes in ~200ms, so onStateChange('connected')
+      // fires almost immediately and transitions to 'waiting' + isConnected.
+      // No need to flash the 'pairing' verification screen.
     }
     signaling.connect()
   }
@@ -561,6 +563,18 @@ export function useTextTransferPage() {
     receivedMessages.value.push({ id: crypto.randomUUID(), content: text, isSelf: true })
     mobileTextInput.value = ''
   }
+  function desktopSend() {
+    const text = desktopTextInput.value.trim()
+    if (!text || !isConnected.value) return
+    webrtc.sendText(text)
+    receivedMessages.value.push({ id: crypto.randomUUID(), content: text, isSelf: true })
+    desktopTextInput.value = ''
+  }
+  function handleDesktopFileSelect(files: File[]) {
+    if (!files.length || !isConnected.value) return
+    fileQueue.value = files
+    startTransfer()
+  }
   async function handleMobileFileSelect(event: Event) {
     const input = event.target as HTMLInputElement
     if (!input.files?.[0] || !isConnected.value) return
@@ -608,7 +622,7 @@ export function useTextTransferPage() {
 
   return {
     addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, confirmPairing, copyLink,
-    connectedDeviceName, currentFile, devices, denyPairing, docCards, goToWaitingState, handleMobileFileSelect,
+    connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, denyPairing, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
     historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
     mobileSend, mobileTextInput, qrExpired, queuedFiles, receivedMessages, reconnectAttempt,
     refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
@@ -616,7 +630,7 @@ export function useTextTransferPage() {
   }
 }
 
-function generateVerificationCode(): string[] {
+function _generateVerificationCode(): string[] {
   return Array.from({ length: 4 }, () => Math.floor(Math.random() * 10).toString())
 }
 
