@@ -641,7 +641,7 @@
     "passwordPlaceholder": "請輸入密碼",
     "signInBtn": "登錄工作區",
     "emailInvalid": "請輸入有效的郵箱地址。",
-    "passwordTooShort": "密碼至少需要 6 個字元。",
+    "passwordTooShort": "密碼至少需要 8 個字元。",
     "signInSuccess": "登錄成功。",
     "oauthComingSoon": "{provider} 登錄功能即將上線。",
     "oauthDisabled": "OAuth 登錄當前未啟用。",
@@ -718,6 +718,7 @@
     "joinedBtn": "已加入！",
     "successMsg": "你已加入名單！Pro 上線時我們會第一時間通知你。",
     "successMsgWithPlan": "你已加入「{plan}」候補名單，上線後我們會第一時間通知你。",
+    "joinFailed": "暫時無法加入候補名單，請稍後再試。",
     "socialProof": "已有 2,400+ 專業人士加入等候名單。",
     "planIntentLabel": "目前意向",
     "planMonthly": "月費方案",
@@ -936,5 +937,97 @@
     "retry": "重試會話",
     "returnDashboard": "返回儀表板",
     "contactSupport": "聯系技術支持"
+  },
+  "seo": {
+    "home": {
+      "title": "免費線上工具 - 檔案傳輸、QR Code 產生器、線上剪貼簿 | ToolPort",
+      "desc": "隱私優先的免費瀏覽器工具：無日誌 WebRTC P2P 檔案傳輸、本機 QR Code 產生器、臨時加密剪貼簿同步。免註冊、免下載，開啟即用。",
+      "keywords": "免費線上工具,檔案傳輸工具,手機傳檔案到電腦,QR Code產生器,線上剪貼簿,跨裝置傳輸,P2P檔案傳輸,隱私工具",
+      "ogDesc": "隱私優先的瀏覽器工具：免註冊 P2P 檔案傳輸、本機 QR Code 產生、臨時剪貼簿同步。"
+    },
+    "about": {
+      "title": "關於 ToolPort - 隱私優先的線上工具",
+      "desc": "ToolPort 打造隱私優先的瀏覽器工具：免帳號檔案傳輸、臨時文字分享、零雲端上傳。採用零知識架構，端對端加密，無追蹤。",
+      "keywords": "關於ToolPort,隱私優先工具,免帳號檔案傳輸,臨時文字分享,零雲端工具,端對端加密,瀏覽器工具"
+    },
+    "contact": {
+      "title": "聯絡我們 - ToolPort",
+      "desc": "聯絡 ToolPort 團隊。關於免費線上工具的問題、回饋或合作洽詢，我們隨時傾聽。"
+    },
+    "pricing": {
+      "title": "定價方案 - 免費版與 Pro 版 | ToolPort",
+      "desc": "ToolPort 定價：月付 $6.99、年付 $69.9、終身 $199.9。終身會員免費享受所有未來工具。",
+      "keywords": "ToolPort定價,免費線上工具,Pro會員,檔案傳輸Pro,QR Code Pro,剪貼簿Pro,終身會員",
+      "ogDesc": "月付 $6.99、年付 $69.9 或終身 $199.9。終身會員免費使用所有未來新增工具。"
+    },
+    "privacy": {
+      "title": "隱私政策 - ToolPort",
+      "desc": "ToolPort 隱私政策：零雲端瀏覽器間傳輸、免帳號檔案傳輸、臨時文字分享，採用零知識架構和端對端加密。",
+      "keywords": "隱私政策,零雲端檔案傳輸,免帳號傳輸,臨時文字分享,瀏覽器間傳輸,端對端加密,WebRTC隱私"
+    },
+    "terms": {
+      "title": "服務條款 - ToolPort",
+      "desc": "ToolPort 服務條款：免費線上工具的使用指南、智慧財產權、免責聲明及使用者責任。"
+    },
+    "waitlist": {
+      "title": "Pro 候補名單 - 解鎖 1GB 傳輸及更多功能 | ToolPort",
+      "desc": "加入 ToolPort Pro 候補名單，取得 1GB 檔案傳輸、30天歷史紀錄、永久剪貼簿房間、自訂房間 ID、批次 QR Code 產生，零廣告體驗。",
+      "keywords": "ToolPort Pro,Pro候補名單,1GB檔案傳輸,永久剪貼簿,自訂房間ID,批次QR Code",
+      "ogDesc": "加入 ToolPort Pro 候補名單，享受 1GB 傳輸、30天歷史、永久房間、自訂 ID，零廣告。"
+    },
+    "toolsDir": {
+      "title": "全部免費線上工具：檔案傳輸、QR Code、剪貼簿 | ToolPort",
+      "desc": "隱私優先的開箱即用工具：無日誌 WebRTC 檔案傳輸、本機無追蹤 QR Code 產生、臨時瀏覽器間文字分享。",
+      "keywords": "免費線上工具,無日誌檔案傳輸,本機QR Code產生器,臨時文字分享,瀏覽器間傳輸,隱私工具,開箱即用",
+      "ogDesc": "免註冊的零雲端傳輸、隱私優先 QR Code 工具、臨時瀏覽器間文字分享。"
+    },
+    "toolA": {
+      "title": "手機電腦互傳檔案 - 免註冊 P2P 加密傳輸 | ToolPort",
+      "desc": "開箱即用的瀏覽器間檔案傳輸：手機和電腦直連互傳，無日誌、零雲端上傳、免安裝 App、免註冊，WebRTC P2P 加密傳輸。",
+      "keywords": "手機傳檔案到電腦,電腦傳檔案到手機,P2P檔案傳輸,WebRTC傳輸,免註冊傳檔案,瀏覽器傳輸,AirDrop替代,跨裝置傳輸,免安裝App傳檔案",
+      "ogTitle": "手機電腦互傳檔案 - 免註冊 P2P 加密傳輸",
+      "ogDesc": "瀏覽器間直接傳輸檔案，零雲端上傳。WebRTC P2P 加密，免安裝 App，免註冊。"
+    },
+    "toolB": {
+      "title": "免費 QR Code 產生器 - 本機產生、無追蹤、永不過期 | ToolPort",
+      "desc": "開箱即用的 QR Code 工具：本機產生無追蹤 QR Code、離線可用、靜態碼永不過期。所有操作在瀏覽器本機完成，資料不上傳。",
+      "keywords": "免費QR Code產生器,線上QR Code產生,本機QR Code產生器,無追蹤QR Code,離線QR Code,靜態QR Code,永不過期QR Code,QR Code掃描",
+      "ogTitle": "免費 QR Code 產生器 - 本機產生、無追蹤 | ToolPort",
+      "ogDesc": "無追蹤 QR Code 工具：本機產生、離線可用、靜態碼永不過期。"
+    },
+    "toolC": {
+      "title": "線上剪貼簿 - 跨裝置文字同步、臨時加密分享 | ToolPort",
+      "desc": "開箱即用的臨時文字分享：瀏覽器間剪貼簿同步、加密房間、免註冊、免安裝 App、24小時自動刪除。",
+      "keywords": "線上剪貼簿,跨裝置剪貼簿,臨時文字分享,瀏覽器間同步,加密剪貼簿,手機電腦同步,免註冊剪貼簿",
+      "ogTitle": "線上剪貼簿 - 跨裝置臨時文字同步",
+      "ogDesc": "瀏覽器間剪貼簿同步：加密臨時房間，免安裝 App，免註冊，24小時自動刪除。"
+    },
+    "blog": {
+      "title": "部落格：檔案傳輸、QR Code、剪貼簿使用教學 | ToolPort",
+      "desc": "實用教學：手機傳檔案到電腦、免費 QR Code 產生與掃描、線上剪貼簿跨裝置同步。隱私優先，免安裝 App。",
+      "keywords": "檔案傳輸教學,手機傳檔案到電腦,QR Code產生器教學,QR Code掃描教學,線上剪貼簿教學,跨裝置同步,隱私工具部落格",
+      "ogDesc": "手機傳檔案到電腦、QR Code 產生掃描、跨裝置剪貼簿同步的詳細教學。"
+    },
+    "guideTransfer": {
+      "title": "手機傳檔案到電腦教學 - 免雲端 P2P 傳輸指南",
+      "desc": "詳細教學：透過瀏覽器將 iPhone 或 Android 手機的檔案傳輸到電腦，WebRTC P2P 直連，免雲端上傳、免安裝 App、免傳輸線。",
+      "keywords": "手機傳檔案到電腦,iPhone傳檔案到電腦,Android傳檔案到電腦,P2P傳輸教學,瀏覽器傳輸,免雲端傳輸,AirDrop替代教學",
+      "ogTitle": "手機傳檔案到電腦 - P2P 傳輸教學",
+      "ogDesc": "透過瀏覽器將手機檔案直傳電腦，WebRTC P2P 加密傳輸，免安裝 App 或註冊。"
+    },
+    "guideQr": {
+      "title": "QR Code 產生器使用指南 - 本機產生、無追蹤、永不過期",
+      "desc": "詳細指南：使用本機 QR Code 產生器建立無追蹤 QR Code，支援離線產生，靜態碼永不過期。",
+      "keywords": "QR Code產生器教學,本機QR Code產生,無追蹤QR Code,離線QR Code產生,靜態QR Code,永不過期QR Code,QR Code掃描教學",
+      "ogTitle": "QR Code 產生器使用指南 - ToolPort",
+      "ogDesc": "無追蹤 QR Code 工具使用指南：本機產生、離線可用、靜態碼永不過期。"
+    },
+    "guideClipboard": {
+      "title": "線上剪貼簿使用指南 - 跨裝置臨時文字同步",
+      "desc": "詳細指南：瀏覽器間剪貼簿同步，手機和電腦即時複製貼上。免帳號、加密房間、自動過期。",
+      "keywords": "線上剪貼簿教學,跨裝置剪貼簿同步,臨時文字分享,手機電腦同步教學,瀏覽器剪貼簿,免安裝App",
+      "ogTitle": "線上剪貼簿使用指南 - 跨裝置同步",
+      "ogDesc": "瀏覽器間剪貼簿同步教學：加密臨時房間，手機電腦即時複製貼上。"
+    }
   }
 }

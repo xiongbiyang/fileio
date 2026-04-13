@@ -7,13 +7,15 @@
 ```bash
 npm ci
 npm run lint
+npm run lint:i18n
 npm run test -- --run
+npx nuxi typecheck
 npm run build
 ```
 
-构建成功后应生成 `dist/`，且可看到提示：
-- `npx wrangler pages dev dist`
-- `npx wrangler pages deploy dist`
+全部通过后应生成 `dist/`，且可看到提示：
+- `npx wrangler pages dev dist`（本地预览）
+- `npx wrangler pages deploy dist`（部署到线上）
 
 ## 2. Cloudflare Pages 项目
 
@@ -74,20 +76,30 @@ npm run party:deploy
 部署后把生成的 PartyKit 域名填回 Pages 环境变量：
 - `NUXT_PUBLIC_PARTYKIT_HOST`
 
-## 5. D1 数据库（可选但强烈建议）
+## 5. D1 数据库（强烈建议）
 
-当前与 D1 相关：
-- 迁移文件：`db/migrations/0001_clipboard.sql`、`0002_auth.sql`、`0003_waitlist.sql`
-- 接口在未配置 D1 时会降级返回 `*_NOT_CONFIGURED`，但登录/云剪贴板/候补名单将不可用。
+D1 存储以下数据：候补名单、工具投票、联系表单、云剪贴板、用户账号。
+未配置 D1 时这些接口会降级返回 `*_NOT_CONFIGURED`，数据不会被保存。
 
-示例步骤：
-1. 创建 D1 数据库（Cloudflare 控制台或 CLI）
-2. 在 `wrangler.toml` 中启用 `[[d1_databases]]` 绑定 `DB`
-3. 依次执行迁移：
+**一键设置（推荐）：**
 
 ```bash
-npx wrangler d1 migrations apply <YOUR_DB_NAME> --remote
+bash scripts/setup-d1.sh
 ```
+
+脚本会自动：创建数据库 → 更新 wrangler.toml → 执行全部迁移（4 个文件）。
+
+**手动设置：**
+
+1. 创建数据库：`npx wrangler d1 create toolport-db`
+2. 将输出的 `database_id` 填入 `wrangler.toml` 的 `[[d1_databases]]` 段并取消注释
+3. 执行迁移：`npx wrangler d1 migrations apply toolport-db --remote`
+
+**迁移文件：**
+- `0001_clipboard.sql` — 云剪贴板房间和消息
+- `0002_auth.sql` — 用户账号
+- `0003_waitlist.sql` — Pro 候补名单
+- `0004_tool_votes.sql` — 工具投票 + 联系表单
 
 ## 6. OAuth 回调地址（仅开启 OAuth 时）
 
@@ -99,12 +111,19 @@ npx wrangler d1 migrations apply <YOUR_DB_NAME> --remote
 
 ## 7. 上线后验收清单
 
+**核心功能：**
 1. 站点可访问：`/`、`/tools/qr-code`、`/tools/text-transfer`、`/tools/clipboard`
-2. SEO 文件可访问：`/robots.txt`、`/sitemap_index.xml`
-3. 博客页检查：canonical 与当前语言路径一致
-4. 若启用 OAuth：`/auth/signin` 可正常跳转第三方并回调
-5. 若启用 D1：注册/登录、云剪贴板房间、waitlist 提交正常
-6. 若启用 PartyKit：跨设备连接与传输正常
+2. 中文站点可访问：`/zh-CN/`、`/zh-TW/`，页面标题为中文
+
+**SEO：**
+3. SEO 文件可访问：`/robots.txt`、`/sitemap_index.xml`
+4. Sitemap 包含所有语言版本（检查 `/__sitemap__/en-US.xml`、`zh-CN.xml`、`zh-TW.xml`）
+5. 博客页检查：canonical 与当前语言路径一致
+
+**可选功能：**
+6. 若启用 OAuth：`/auth/signin` 可正常跳转第三方并回调
+7. 若启用 D1：注册/登录、云剪贴板房间、waitlist 提交正常
+8. 若启用 PartyKit：跨设备连接与传输正常
 
 ## 8. 常见故障
 

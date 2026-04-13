@@ -124,7 +124,7 @@ async function handleSignIn() {
     emailError.value = t('auth.emailInvalid')
     return
   }
-  if (password.value.trim().length < 6) {
+  if (password.value.trim().length < 8) {
     passwordError.value = t('auth.passwordTooShort')
     return
   }
@@ -190,9 +190,8 @@ async function handleOauth(provider: 'google' | 'github') {
     if (!response.url) throw new Error('Missing auth URL')
     await navigateTo(response.url, { external: true })
   }
-  catch (error) {
-    console.error(error)
-    notify(t('auth.oauthStartFailed'))
+  catch {
+    notify(t('auth.oauthStartFailed'), 'error')
   }
   finally {
     oauthProviderLoading.value = ''

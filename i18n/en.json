@@ -641,7 +641,7 @@
     "passwordPlaceholder": "Enter your password",
     "signInBtn": "Sign In to Atelier",
     "emailInvalid": "Please enter a valid email address.",
-    "passwordTooShort": "Password must be at least 6 characters.",
+    "passwordTooShort": "Password must be at least 8 characters.",
     "signInSuccess": "Signed in successfully.",
     "oauthComingSoon": "{provider} login is coming soon.",
     "oauthDisabled": "OAuth login is currently disabled.",
@@ -718,6 +718,7 @@
     "joinedBtn": "You're In!",
     "successMsg": "You're on the list! We'll notify you when Pro launches.",
     "successMsgWithPlan": "You're on the {plan} waitlist! We'll notify you when it launches.",
+    "joinFailed": "Could not join the waitlist right now. Please try again.",
     "socialProof": "2,400+ professionals already on the waitlist.",
     "planIntentLabel": "Selected Plan",
     "planMonthly": "Monthly",
@@ -936,5 +937,97 @@
     "retry": "Retry Session",
     "returnDashboard": "Return to Dashboard",
     "contactSupport": "Contact technical support"
+  },
+  "seo": {
+    "home": {
+      "title": "Free Online Tools for File Transfer, QR Code, and Clipboard",
+      "desc": "Frictionless, out-of-the-box privacy-first tools: no-log WebRTC file drop, client-side QR creation, and ephemeral browser-to-browser text sharing.",
+      "keywords": "no-log webrtc file drop,frictionless file transfer,out-of-the-box tools,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share,privacy-first tools",
+      "ogDesc": "Accountless no-cloud transfer, privacy-first QR tools, and ephemeral browser-to-browser text sharing."
+    },
+    "about": {
+      "title": "About ToolPort - Privacy-First Online Tools",
+      "desc": "ToolPort builds privacy-first browser tools for accountless file transfer, ephemeral text share, and no-cloud workflows. Zero-knowledge architecture principles, no tracking, and end-to-end encryption.",
+      "keywords": "about ToolPort,privacy-first tools,accountless file transfer,ephemeral text share,no cloud tools,zero-knowledge file drop,browser-to-browser share"
+    },
+    "contact": {
+      "title": "Contact Us - ToolPort",
+      "desc": "Get in touch with the ToolPort team. Questions, feedback, or partnership inquiries about our free online tools."
+    },
+    "pricing": {
+      "title": "Pricing - Free & Pro Plans",
+      "desc": "ToolPort pricing: Monthly $6.99, Yearly $69.9, and Lifetime $199.9. Lifetime includes all future tools at no extra cost.",
+      "keywords": "ToolPort pricing,free online tools,pro plan,file transfer pro,QR code pro,clipboard pro",
+      "ogDesc": "Choose Monthly ($6.99), Yearly ($69.9), or Lifetime ($199.9). Lifetime members get free access to all future tools."
+    },
+    "privacy": {
+      "title": "Privacy Policy - ToolPort",
+      "desc": "ToolPort privacy policy for no-cloud browser-to-browser sharing: accountless file transfer, ephemeral text share, and zero-knowledge architecture principles with end-to-end encryption.",
+      "keywords": "privacy policy,no cloud file transfer,accountless file transfer,ephemeral text share,browser-to-browser share,zero-knowledge file drop,webrtc p2p privacy"
+    },
+    "terms": {
+      "title": "Terms of Service - ToolPort",
+      "desc": "ToolPort terms of service: usage guidelines, intellectual property, disclaimers, and user responsibilities for our free online tools."
+    },
+    "waitlist": {
+      "title": "Pro Waitlist - Unlock 1GB Transfers & More",
+      "desc": "Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent clipboard rooms, custom room IDs, batch QR generation, and zero ads.",
+      "keywords": "ToolPort Pro,pro waitlist,1GB file transfer,permanent clipboard,custom room ID,batch QR code",
+      "ogDesc": "Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent rooms, custom room IDs, and zero ads."
+    },
+    "toolsDir": {
+      "title": "All Free Online Tools: File Transfer, QR Code, Clipboard",
+      "desc": "Out-of-the-box privacy-first tools: frictionless no-log WebRTC file drop, client-side no-tracking QR creation, and ephemeral browser-to-browser sharing.",
+      "keywords": "frictionless tools,no-log webrtc file drop,out-of-the-box transfer,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share",
+      "ogDesc": "Accountless no-cloud transfer, privacy-first QR workflows, and ephemeral browser-to-browser text sharing."
+    },
+    "toolA": {
+      "title": "Frictionless No-Log WebRTC File Drop - Accountless P2P Transfer",
+      "desc": "Frictionless, out-of-the-box browser-to-browser transfer between phone and PC. No-log design for transfer content, no cloud upload, no app, no signup, powered by WebRTC P2P.",
+      "keywords": "no-log webrtc file drop,frictionless file transfer,out-of-the-box file transfer,accountless file transfer,p2p web transfer,no cloud file transfer,browser-to-browser share,airdrop alternative for windows",
+      "ogTitle": "Frictionless No-Log WebRTC File Drop",
+      "ogDesc": "Out-of-the-box browser-to-browser file transfer with no cloud upload. WebRTC P2P, no app install, no signup."
+    },
+    "toolB": {
+      "title": "Frictionless Client-side QR Code Creator - No-Tracking, Static QR",
+      "desc": "Frictionless, out-of-the-box QR workflow: client-side generation, no-tracking QR content, and static codes without expiration. Everything runs locally in your browser.",
+      "keywords": "frictionless qr code creator,client-side qr code creator,no-tracking qr code,out-of-the-box qr generator,offline qr code generator,static qr without expiration,never expire qr code",
+      "ogTitle": "Frictionless Client-side QR Code Creator | ToolPort",
+      "ogDesc": "No-tracking QR code workflow with local generation, offline-friendly usage, and static QR without expiration."
+    },
+    "toolC": {
+      "title": "Frictionless Ephemeral Text Share - Out-of-the-box Clipboard Sync",
+      "desc": "Frictionless out-of-the-box ephemeral text sharing. Accountless browser-to-browser clipboard sync with encrypted rooms, no app, no signup, and 24-hour auto-delete.",
+      "keywords": "frictionless text share,out-of-the-box clipboard sync,ephemeral text share,browser-to-browser share,accountless text share,cross-device clipboard,no signup clipboard",
+      "ogTitle": "Ephemeral Text Share - Accountless Online Clipboard",
+      "ogDesc": "Browser-to-browser clipboard sync for phone and PC. Encrypted ephemeral rooms, no app install, no signup, auto-delete in 24 hours."
+    },
+    "blog": {
+      "title": "Blog: File Transfer, QR Code, Clipboard & Privacy Guides",
+      "desc": "Actionable tutorials for wireless file transfer phone to PC, free QR code generation and scanning, and online clipboard sync. Privacy-first guides with no-app workflows.",
+      "keywords": "file transfer guide phone to pc,airdrop alternative tutorial,free qr code generator tips,qr code scanner tutorial,online clipboard sync guide,copy paste across devices,privacy-first tools blog",
+      "ogDesc": "Step-by-step tutorials for wireless file transfer, QR code generation/scanning, and cross-device clipboard sync."
+    },
+    "guideTransfer": {
+      "title": "Accountless P2P Web Transfer Guide: Phone to PC Without Cloud",
+      "desc": "Step-by-step accountless file transfer guide: move files from iPhone or Android to PC with browser-to-browser WebRTC P2P. No cloud upload, no app, no USB.",
+      "keywords": "accountless file transfer,p2p web transfer,browser-to-browser share,no cloud file transfer,how to transfer files from phone to pc,airdrop alternative for windows guide,secure p2p file transfer,qr code file transfer",
+      "ogTitle": "Accountless P2P Web Transfer Guide for Phone to PC",
+      "ogDesc": "Learn browser-to-browser no-cloud transfer from iPhone/Android to PC with WebRTC P2P encryption. No app install or signup."
+    },
+    "guideQr": {
+      "title": "Client-side QR Code Creator Guide - No-Tracking & Static QR",
+      "desc": "Learn how to use a client-side QR code creator: no-tracking QR code, offline-friendly generation, and static QR without expiration.",
+      "keywords": "client-side qr code creator,no-tracking qr code,offline qr code generator,static qr without expiration,never expire qr code,scan qr code from image",
+      "ogTitle": "Client-side QR Code Creator Guide - ToolPort",
+      "ogDesc": "No-tracking QR code workflow with local generation, offline-friendly usage, and static QR without expiration."
+    },
+    "guideClipboard": {
+      "title": "Ephemeral Text Share Guide: Browser-to-Browser Clipboard Sync",
+      "desc": "Step-by-step ephemeral text share guide: browser-to-browser clipboard sync between phone and PC. Accountless, encrypted, no app install, and auto-expiring rooms.",
+      "keywords": "ephemeral text share,browser-to-browser share,accountless text share,online clipboard sync guide,copy paste between phone and pc,cross-device clipboard tutorial,clipboard sync without app",
+      "ogTitle": "Ephemeral Text Share Guide for Phone and PC",
+      "ogDesc": "Accountless browser-to-browser clipboard sync with encrypted temporary rooms and instant cross-device copy/paste."
+    }
   }
 }

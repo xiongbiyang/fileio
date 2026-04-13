@@ -202,17 +202,31 @@
 <script setup lang="ts">
 const { t, locale } = useI18n()
 const route = useRoute()
+const { notify } = useNotifier()
+const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const canonicalUrl = computed(() =>
+  new URL(localePath('/pro-waitlist'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+)
 useHead({
-  title: 'Pro Waitlist - Unlock 1GB Transfers & More',
+  title: () => t('seo.waitlist.title'),
   meta: [
-    { name: 'description', content: 'Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent clipboard rooms, custom room IDs, batch QR generation, and zero ads.' },
-    { name: 'keywords', content: 'ToolPort Pro,pro waitlist,1GB file transfer,permanent clipboard,custom room ID,batch QR code' },
+    { name: 'description', content: () => t('seo.waitlist.desc') },
+    { name: 'keywords', content: () => t('seo.waitlist.keywords') },
   ],
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
 })
 useSeoMeta({
-  ogTitle: 'Pro Waitlist - Unlock 1GB Transfers & More',
-  ogDescription: 'Join the ToolPort Pro waitlist. Get 1GB file transfers, 30-day history, permanent rooms, custom room IDs, and zero ads.',
+  ogTitle: () => t('seo.waitlist.title'),
+  ogDescription: () => t('seo.waitlist.ogDesc'),
   ogImage: 'https://toolport.dev/og-image.png',
+})
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: t('seo.waitlist.title'),
+  description: t('seo.waitlist.desc'),
+  url: 'https://toolport.dev/pro-waitlist',
 })
 
 const email = ref('')
@@ -252,8 +266,8 @@ async function joinWaitlist() {
       },
     })
   }
-  catch (error) {
-    console.error(error)
+  catch {
+    notify(t('waitlist.joinFailed'), 'error')
   }
   joined.value = true
   email.value = ''
