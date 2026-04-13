@@ -1,44 +1,42 @@
-"支付 QR 码生成器：PayPal 和加密货币链接二维码指南"
+---
+title: "支付 QR 码生成器：PayPal 和加密货币链接二维码指南"
 updated: "2026-04-04"
 ---
 
-Payment QR codes reduce checkout friction. A reliable **payment qr code generator** for **paypal qr code generator** and **crypto qr code generator** workflows lets users scan and pay instantly.
+学习为 PayPal 链接、加密钱包地址和发票 URL 创建**支付 QR 码**，包含 PNG/SVG 导出和扫码安全最佳实践。
 
-## Supported Payment Scenarios
+## 支付 QR 使用场景
 
-- PayPal payment links
-- Crypto wallet addresses
-- Invoice payment URLs
-- Donation links
+- 线下商家收款
+- 自由职业者发票
+- 加密货币捐赠
+- 活动门票和报名费
 
-## 如何创建 a Payment QR Code
+## 如何创建支付 QR 码
 
-1. Copy your payment URL or wallet address
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=payment)
-3. Paste and generate
-4. Download in PNG/SVG
-5. Test scan before publishing
+1. 准备 PayPal.me 链接、加密钱包地址或发票 URL
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=payment)
+3. 粘贴链接并生成
+4. 自定义颜色和添加品牌 Logo
+5. 下载并展示在收银台或发票上
 
-## 安全性 Checklist
+## 安全最佳实践
 
-- Double-check wallet/address text
-- Use HTTPS payment URLs
-- Add a short human-readable fallback
-- Regenerate immediately if details change
+- 验证生成的 QR 码指向正确的支付链接
+- 打印前多次测试扫码结果
+- 加密货币地址务必仔细核对
+- 定期更新过期的支付链接
 
-## Format Advice
+## PNG 与 SVG 对比
 
-- Use PNG for online sharing
-- Use SVG for print signs and counter cards
-- Keep high contrast for fast scan
+- PNG：适合在线分享和电子发票
+- SVG：适合打印收据和店内展示
 
-## 相关阅读
+## 相关使用场景
 
-- For profile/contact sharing: [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)
-- For menu and in-store usage: [Menu QR guide](/blog/menu-qr-code-generator-for-restaurants)
-- For support contact flow: [Email QR guide](/blog/email-qr-code-generator-guide)
-- For quick text checkout support: [SMS QR guide](/blog/sms-qr-code-generator-guide)
+- 联系方式分享：[vCard QR 指南](/blog/vcard-contact-business-card-qr-code-guide)
+- 应用下载引导：[应用下载 QR 指南](/blog/app-download-qr-code-generator-guide)
 
-## Create Your Payment QR
+## 立即生成
 
-Start with the free [payment QR code generator](/tools/qr-code?template=payment).
+使用免费的[支付 QR 码生成器](/tools/qr-code?template=payment)。

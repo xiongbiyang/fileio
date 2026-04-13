@@ -1,41 +1,38 @@
-"Google 评价 QR 码生成器：从线下客户获取更多评价"
+---
+title: "Google 评价 QR 码生成器：从线下客户获取更多评价"
 updated: "2026-04-04"
 ---
 
-If customers must search your business manually, most of them never leave a review. A **google review qr code generator** removes friction and improves review completion from offline touchpoints.
+将 Google 评价链接转为 QR 码，放在收据、桌面和柜台上以提高评价转化率。
 
-## What Is a Google Review QR Code
+## Google 评价 QR 使用场景
 
-It is a QR code that points directly to your Google review page. Users scan, open, and submit feedback in a few taps.
+- 餐厅桌面和收银台
+- 美容院和诊所前台
+- 酒店退房时
+- 外卖包装和收据
 
-## 如何制作 One
+## 如何创建 Google 评价 QR 码
 
-1. Copy your Google review link
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=review)
-3. Paste the review URL
-4. Add your brand color or logo
-5. Download and place on receipts, tables, or checkout desk
+1. 在 Google 商家资料中获取评价链接
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=review)
+3. 粘贴链接并生成
+4. 自定义颜色和 Logo
+5. 打印并放置在客户可见的位置
 
-## Placement Ideas That Work
+## 最佳实践
 
-- Table tent cards
-- Counter stand near cashier
-- Product packaging inserts
-- Invoice footer
+- 在二维码旁添加"扫码给我们好评"引导语
+- 选择高对比度颜色确保可读性
+- 放置在客户满意度最高的时刻（如用餐后）
+- 定期检查链接是否仍然有效
 
-## 设计技巧
+## 相关使用场景
 
-- Add short CTA text: "Scan to review us"
-- Keep enough white margin around the QR code
-- Use SVG for print to keep sharp quality
+- 位置导航：[Google 地图 QR 指南](/blog/google-maps-qr-code-generator-guide)
+- WiFi 接入：[WiFi QR 指南](/blog/wifi-qr-code-generator-guide)
+- 菜单分享：[菜单 QR 指南](/blog/menu-qr-code-generator-for-restaurants)
 
-## Related Workflows
+## 立即生成
 
-- Need menu links too? [Menu QR generator guide](/blog/menu-qr-code-generator-for-restaurants)
-- Need social links? [Instagram/WhatsApp/Facebook QR usage](/tools/qr-code?template=whatsapp)
-- Need on-site navigation? [Google Maps QR guide](/blog/google-maps-qr-code-generator-guide)
-- Need survey feedback loop? [Form QR guide](/blog/form-survey-qr-code-generator-guide)
-
-## 从这里开始
-
-Create your [Google Review QR Code](/tools/qr-code?template=review) for free.
+使用免费的 [Google 评价 QR 码生成器](/tools/qr-code?template=review)。

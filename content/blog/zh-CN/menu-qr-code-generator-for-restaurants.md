@@ -1,44 +1,45 @@
-"餐厅菜单 QR 码生成器：快速设置指南"
+---
+title: "餐厅菜单 QR 码生成器：快速设置指南"
 updated: "2026-04-04"
 ---
 
-Menu QR codes are now standard for restaurants, cafes, and food trucks. A fast **menu qr code generator** should prioritize scan speed, readability, and easy updates.
+创建扫码快、打印清晰的**餐厅菜单 QR 码**，包含咖啡馆和餐饮商家的摆放和设计技巧。
 
-## Why Menu QR Codes Matter
+## 菜单 QR 使用场景
 
-- Faster table ordering flow
-- Less paper reprint cost
-- Better hygiene and cleaner UX
-- Easy updates for seasonal items
+- 餐厅桌面立牌
+- 外卖包装
+- 橱窗展示
+- 外带菜单
 
-## 如何创建 a Menu QR Code
+## 如何创建菜单 QR 码
 
-1. Prepare your menu URL (website, PDF, or ordering page)
-2. Go to [ToolPort QR Code Generator](/tools/qr-code?template=menu)
-3. Paste your menu link
-4. Customize with brand colors/logo
-5. Download PNG/SVG and print
+1. 将菜单上传为 PDF 或在线页面
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=menu)
+3. 粘贴菜单链接并生成
+4. 自定义颜色匹配餐厅品牌
+5. 下载 SVG 用于高质量打印
 
-## Print Recommendations
+## 最佳实践
 
-- Use SVG for table cards and posters
-- Keep code width at least 3 cm
-- Avoid low contrast backgrounds
-- Test under low light before mass printing
+- 菜单页面应适配移动端
+- 使用 SVG 格式确保打印清晰
+- 在二维码旁注明"扫码看菜单"
+- 菜单更新后不需要换二维码（链接不变）
 
-## Common Mistakes
+## 放置建议
 
-- Linking to a broken PDF URL
-- Using tiny QR size on crowded designs
-- Not adding fallback short URL text
+- 每张桌面一个立牌
+- 入口处的大幅海报
+- 外卖袋和包装上
+- 收银台旁
 
-## 相关指南
+## 相关使用场景
 
-- Need customer reviews too? [Google review QR guide](/blog/google-review-qr-code-generator-guide)
-- Need business card QR? [vCard QR guide](/blog/vcard-contact-business-card-qr-code-guide)
-- Need printable file menus? [PDF QR guide](/blog/pdf-qr-code-generator-guide)
-- Need order app installs? [App Download QR guide](/blog/app-download-qr-code-generator-guide)
+- WiFi 分享：[WiFi QR 指南](/blog/wifi-qr-code-generator-guide)
+- 支付引导：[支付 QR 指南](/blog/payment-paypal-crypto-qr-code-generator-guide)
+- 客户评价：[Google 评价 QR 指南](/blog/google-review-qr-code-generator-guide)
 
-## Build Your Menu QR Now
+## 立即生成
 
-Create a [menu QR code](/tools/qr-code?template=menu) in minutes.
+使用免费的[菜单 QR 码生成器](/tools/qr-code?template=menu)。

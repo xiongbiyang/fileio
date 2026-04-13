@@ -1,36 +1,36 @@
-"短信 QR 码生成器：一扫即可发送短信"
+---
+title: "短信 QR 码生成器：一扫即可发送短信"
 updated: "2026-04-04"
 ---
 
-An **sms qr code generator** lets users open their messaging app with a prefilled number and message. It is useful for bookings, quick support, and offline campaigns.
+**短信 QR 码生成器**可创建预填号码和内容的短信 QR 码，适用于预约确认、客服咨询和营销互动，支持 iOS 和 Android。
 
-## SMS QR Code Use Cases
+## 短信 QR 使用场景
 
-- Appointment booking by text
-- Quick customer support entry
-- Event RSVP and registration
-- Campaign short-code engagement
+- 预约和预订确认
+- 客服快速通道
+- 营销活动互动
+- 反馈和回复收集
 
-## 如何创建 an SMS QR Code
+## 如何创建短信 QR 码
 
-1. Prepare your `sms:` link with number and message
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=sms)
-3. Paste and generate
-4. Download for web or print
-5. Test on both iPhone and Android
+1. 准备 `sms:` 格式的链接（含号码和预填内容）
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=sms)
+3. 粘贴并生成
+4. 下载 PNG 或 SVG
+5. 在 iOS 和 Android 上测试
 
-## SMS QR Best Practices
+## 最佳实践
 
-- Include country code in phone number
-- Keep prefilled message short and clear
-- Add a fallback visible phone number
-- Validate scan flow on different SMS apps
+- 保持预填消息简短明了
+- 在二维码旁注明用途
+- 测试不同手机系统的兼容性
 
-## 相关指南
+## 相关阅读
 
-- For email workflows: [Email QR guide](/blog/email-qr-code-generator-guide)
-- For support forms: [Form QR guide](/blog/form-survey-qr-code-generator-guide)
+- 邮件联系方式：[邮件 QR 指南](/blog/email-qr-code-generator-guide)
+- 反馈收集：[表单 QR 指南](/blog/form-survey-qr-code-generator-guide)
 
-## Create Your SMS QR
+## 立即生成
 
-Start with the free [SMS QR code generator](/tools/qr-code?template=sms).
+使用免费的[短信 QR 码生成器](/tools/qr-code?template=sms)。

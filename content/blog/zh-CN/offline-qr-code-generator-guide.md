@@ -1,37 +1,37 @@
-"离线 QR 码生成器：开箱即用的本地优先工作流"
+---
+title: "离线 QR 码生成器：开箱即用的本地优先工作流"
 updated: "2026-04-04"
 ---
 
-An **out-of-the-box offline QR code generator** is useful when your network is unstable or restricted.
+在网络不稳定时使用**本地优先的 QR 工作流**，以最少的云依赖生成 QR 码。
 
-ToolPort QR generation is client-side. After the page is loaded, generation can continue locally in many practical cases.
+## 为什么需要离线 QR 生成
 
-## Offline-friendly Advantages
+- 网络不稳定的环境（展会、偏远地区）
+- 飞行模式下的紧急需求
+- 不想依赖云服务的合规场景
+- 批量生成时减少网络瓶颈
 
-- Keep working in poor connectivity environments
-- Avoid upload delay for each QR
-- Better privacy posture for sensitive content
+## 如何离线使用
 
-## Recommended Workflow
+1. 在有网时打开 [ToolPort QR 码生成器](/tools/qr-code)
+2. 页面加载后，QR 生成不再需要网络
+3. 输入内容并生成 — 全部本地处理
+4. 下载 PNG 或 SVG 到本地
 
-1. Open [ToolPort QR Code Tool](/tools/qr-code) while connected
-2. Keep the page open
-3. Generate and export required static QR codes locally
-4. Validate scan readability before printing
+## 离线 vs 在线 QR 生成
 
-## Good Fits
-
-- On-site event setup
-- Pop-up stores with unstable Wi-Fi
-- Field teams preparing QR assets quickly
-
-## Note
-
-Offline capability depends on browser cache state and environment, but QR generation logic itself is local-first.
+| 方面 | ToolPort（本地优先） | 在线生成器 |
+| --- | --- | --- |
+| 离线可用 | 页面加载后可用 | 不可用 |
+| 速度 | 即时 | 依赖网络 |
+| 隐私 | 数据不离开浏览器 | 数据上传服务器 |
 
 ## 相关阅读
 
-- [Client-side QR Code Creator Guide](/blog/client-side-qr-code-creator-guide)
-- [No-Tracking QR Code Generator Guide](/blog/no-tracking-qr-code-generator-guide)
-- [Static QR without Expiration Guide](/blog/static-qr-without-expiration-guide)
-- [Try the QR Tool](/tools/qr-code)
+- 纯客户端方案：[客户端 QR 码指南](/blog/client-side-qr-code-creator-guide)
+- 无追踪方案：[无追踪 QR 码指南](/blog/no-tracking-qr-code-generator-guide)
+
+## 立即试用
+
+打开 [ToolPort QR 码生成器](/tools/qr-code) — 加载后可离线使用。

@@ -1,36 +1,37 @@
-"临时共享剪贴板房间：快速一次性文本共享"
+---
+title: "临时共享剪贴板房间：快速一次性文本共享"
 updated: "2026-04-04"
 ---
 
-A **temporary shared clipboard room** is useful for short tasks where you only need to pass text, links, or snippets between devices for a few minutes.
+**临时共享剪贴板房间**适用于只需要在设备间传递几分钟文本、链接或片段的短期任务。
 
-## When Temporary Rooms Work Best
+## 临时房间最适合的场景
 
-- Pairing phone and PC during focused work
-- Moving short data between personal devices
-- Sharing setup links during meetings
-- Passing verification text quickly
+- 专注工作时配对手机和电脑
+- 在个人设备间传递少量数据
+- 会议期间分享设置链接
+- 快速传递验证码文本
 
-## How to Run a Temporary Clipboard Session
+## 如何运行临时剪贴板会话
 
-1. Open [ToolPort Clipboard](/tools/clipboard)
-2. Create a room and share the ID
-3. Join from the second device
-4. Exchange text and links
-5. Clear the room when finished
+1. 打开 [ToolPort 剪贴板](/tools/clipboard)
+2. 创建房间并分享房间号
+3. 从第二台设备加入
+4. 交换文本和链接
+5. 完成后清理房间
 
 ## 最佳实践
 
-- Treat room IDs like temporary access keys
-- Do not reuse the same ID for long periods
-- Remove stale content before leaving
+- 将房间号视为临时访问密钥
+- 不要长期重复使用同一个房间号
+- 离开前删除过期内容
 
 ## 相关指南
 
-- Core walkthrough: [Sync clipboard between phone and PC](/guides/clipboard)
-- Link transfer scenario: [Copy link from phone to PC instantly](/blog/copy-link-from-phone-to-pc-instantly-guide)
-- Persistent no-login workflow: [Cross-device clipboard without login](/blog/cross-device-clipboard-without-login-guide)
+- 核心教程：[在手机和电脑间同步剪贴板](/guides/clipboard)
+- 链接传输场景：[即时从手机复制链接到电脑](/blog/copy-link-from-phone-to-pc-instantly-guide)
+- 持久化免登录工作流：[免登录跨设备剪贴板](/blog/cross-device-clipboard-without-login-guide)
 
-## Start a Temporary Room
+## 创建临时房间
 
-Try the free [shared clipboard room tool](/tools/clipboard).
+试试免费的[共享剪贴板房间工具](/tools/clipboard)。

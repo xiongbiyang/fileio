@@ -1,36 +1,37 @@
-"手机发送大视频到电脑：无需数据线，无需等待上传"
+---
+title: "手机发送大视频到电脑：无需数据线，无需等待上传"
 updated: "2026-04-04"
 ---
 
-To **send large video from phone to pc** quickly, avoid email and cloud relays. A browser-based direct transfer path is usually faster and removes upload waiting time.
+要快速**从手机发送大视频到电脑**，应避免使用电子邮件和云中转。基于浏览器的直接传输通常更快，省去了上传等待时间。
 
-## Why Large Videos Fail in Traditional Methods
+## 为什么传统方式传大视频会失败
 
-- Email size limits
-- Cloud upload then download delay
-- Compression and quality loss in chat apps
-- Repeated login and permission prompts
+- 电子邮件有大小限制
+- 云存储需要先上传再下载，耗时很长
+- 聊天应用会压缩画质
+- 反复登录和权限确认
 
-## Fast Workflow for Large Video Transfer
+## 大视频传输的快速工作流
 
-1. Open [ToolPort File Transfer](/tools/text-transfer) on PC
-2. Scan the pairing QR code with your phone
-3. Choose the original video file
-4. Keep both devices active until completion
-5. Verify file size and playback on PC
+1. 在电脑上打开 [ToolPort 文件传输](/tools/text-transfer)
+2. 用手机扫描配对 QR 码
+3. 选择原始视频文件
+4. 传输完成前保持两台设备活跃
+5. 在电脑上验证文件大小和播放效果
 
-## Performance Tips
+## 性能优化技巧
 
-- Use stable Wi-Fi for multi-GB files
-- Keep battery saver off during transfer
-- Avoid switching networks mid-session
-- Transfer one very large file at a time
+- 传输几 GB 的文件时使用稳定的 WiFi
+- 传输期间关闭省电模式
+- 避免在传输中途切换网络
+- 一次传输一个超大文件
 
 ## 相关阅读
 
-- General phone-to-PC workflow: [How to transfer files wirelessly](/blog/how-to-transfer-files-phone-to-pc)
-- Cross-platform option list: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
+- 通用手机传电脑工作流：[如何无线传输文件](/blog/how-to-transfer-files-phone-to-pc)
+- 跨平台选项列表：[Windows AirDrop 替代方案](/blog/best-airdrop-alternative-for-windows-2026)
 
-## Start Sending Large Files
+## 开始发送大文件
 
-Open the free [phone-to-PC transfer tool](/tools/text-transfer).
+打开免费的[手机传电脑工具](/tools/text-transfer)。

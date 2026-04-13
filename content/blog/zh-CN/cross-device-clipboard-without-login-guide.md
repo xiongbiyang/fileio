@@ -1,35 +1,36 @@
-"免登录跨设备剪贴板：在设备间共享文本"
+---
+title: "免登录跨设备剪贴板：在设备间共享文本"
 updated: "2026-04-04"
 ---
 
-If you need a **cross device clipboard without login**, browser rooms are a practical approach. You can sync text and links between phone, tablet, and PC instantly.
+如果你需要**免登录的跨设备剪贴板**，浏览器房间是一种实用的方式。你可以在手机、平板和电脑之间即时同步文本和链接。
 
-## What You Can Do
+## 你可以做什么
 
-- Copy notes from phone to desktop
-- Send one-time links between devices
-- Share snippets in temporary sessions
-- Avoid account-based sync setup
+- 将笔记从手机复制到桌面
+- 在设备间发送一次性链接
+- 在临时会话中分享文本片段
+- 避免基于账号的同步设置
 
-## How to Use Clipboard Sync Without Login
+## 如何免登录使用剪贴板同步
 
-1. Open [ToolPort Clipboard](/tools/clipboard) on each device
-2. Create or join the same room ID
-3. Paste text or links in the room
-4. Copy from the target device
+1. 在每台设备上打开 [ToolPort 剪贴板](/tools/clipboard)
+2. 创建或加入同一个房间号
+3. 在房间中粘贴文本或链接
+4. 从目标设备上复制
 
-## 安全性 and Session Hygiene
+## 安全和会话管理
 
-- Use non-trivial room IDs
-- Clear messages after use
-- Close room when task is complete
+- 使用不易猜测的房间号
+- 使用后清除消息
+- 任务完成后关闭房间
 
 ## 相关阅读
 
-- Step-by-step setup: [Clipboard sync between phone and PC](/guides/clipboard)
-- Link-heavy use case: [Copy link instantly guide](/blog/copy-link-from-phone-to-pc-instantly-guide)
-- One-off sharing pattern: [Temporary shared clipboard room guide](/blog/temporary-shared-clipboard-room-guide)
+- 操作步骤：[手机和电脑间的剪贴板同步](/guides/clipboard)
+- 链接密集型场景：[即时复制链接指南](/blog/copy-link-from-phone-to-pc-instantly-guide)
+- 一次性分享模式：[临时共享剪贴板房间指南](/blog/temporary-shared-clipboard-room-guide)
 
-## Try No-Login Clipboard
+## 试试免登录剪贴板
 
-Open the free [online clipboard tool](/tools/clipboard).
+打开免费的[在线剪贴板工具](/tools/clipboard)。

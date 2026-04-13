@@ -1,35 +1,36 @@
-"手机传文件到笔记本无需 USB：简单 QR 配对"
+---
+title: "手机传文件到笔记本无需 USB：简单 QR 配对"
 updated: "2026-04-04"
 ---
 
-If you want to **transfer files from phone to laptop without usb**, QR pairing in the browser is a clean alternative. It removes cable friction and works across iPhone, Android, Windows, and Mac.
+如果你想**不用 USB 从手机传文件到笔记本**，浏览器中的 QR 配对是一个干净的替代方案。它消除了数据线的麻烦，支持 iPhone、Android、Windows 和 Mac。
 
-## Common Use Cases
+## 常见使用场景
 
-- Move photos from phone to laptop
-- Share docs during meetings
-- Send screenshots and recordings quickly
-- Transfer files when no cable is available
+- 将照片从手机传到笔记本
+- 会议期间分享文档
+- 快速发送截图和录屏
+- 没有数据线时传输文件
 
-## How to Transfer Without USB
+## 如何免 USB 传输
 
-1. Open [ToolPort File Transfer](/tools/text-transfer) on laptop
-2. Scan QR with phone camera
-3. Select files and send
-4. Confirm transfer result on laptop
+1. 在笔记本上打开 [ToolPort 文件传输](/tools/text-transfer)
+2. 用手机相机扫描 QR 码
+3. 选择文件并发送
+4. 在笔记本上确认传输结果
 
-## Why Users Prefer This Method
+## 为什么用户更喜欢这种方式
 
-- No install, no account
-- Cross-platform in browser
-- Fast for day-to-day transfers
-- Session-based privacy model
+- 无需安装，无需账号
+- 浏览器中跨平台使用
+- 日常传输速度快
+- 基于会话的隐私模型
 
 ## 相关指南
 
-- Full setup details: [Phone to PC transfer guide](/guides/file-transfer)
-- iPhone + Windows scenario: [No-app transfer guide](/blog/iphone-to-windows-file-transfer-no-app-guide)
+- 完整设置详情：[手机传电脑指南](/guides/file-transfer)
+- iPhone + Windows 场景：[免安装传输指南](/blog/iphone-to-windows-file-transfer-no-app-guide)
 
-## Try It Now
+## 立即试用
 
-Start with the free [wireless transfer tool](/tools/text-transfer).
+从免费的[无线传输工具](/tools/text-transfer)开始。

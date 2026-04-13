@@ -1,36 +1,37 @@
-"应用下载 QR 码生成器：一扫即可安装你的应用"
+---
+title: "应用下载 QR 码生成器：一扫即可安装你的应用"
 updated: "2026-04-04"
 ---
 
-An **app download qr code generator** is a simple way to send users from offline channels to your app install page. It is ideal for campaigns, product packaging, and in-store displays.
+为包装、营销活动和店内推广创建**应用下载 QR 码**，一扫即可跳转 iOS 和 Android 安装页面。
 
-## App Download QR Use Cases
+## 应用下载 QR 使用场景
 
-- Product packaging and inserts
-- Event booths and demo stations
-- Retail counters and checkout pages
-- Creator profile cards and posters
+- 产品包装上的应用引导
+- 线下广告和海报
+- 活动现场推广
+- 传单和宣传册
 
-## 如何创建 an App Download QR Code
+## 如何创建应用下载 QR 码
 
-1. Prepare your app landing URL (with iOS and Android options)
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=app)
-3. Paste the landing URL and generate
-4. Download SVG for print-ready quality
-5. Test install flow on iPhone and Android
+1. 准备 App Store 或 Google Play 链接
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=app)
+3. 粘贴链接并生成
+4. 自定义颜色和添加应用 Logo
+5. 下载并放置在推广材料上
 
-## Optimization Tips
+## 最佳实践
 
-- Use a short, clean landing page URL
-- Add UTM parameters for campaign tracking
-- Keep CTA text clear: "Scan to Download App"
-- Re-test after every app store link update
+- 使用通用链接或智能链接自动跳转对应商店
+- 在二维码旁展示应用截图或图标
+- 测试 iOS 和 Android 的跳转是否正常
+- 追踪扫码量以评估推广效果
 
-## 相关阅读
+## 相关使用场景
 
-- For profile traffic: [Instagram QR guide](/blog/instagram-qr-code-generator-guide)
-- For lead capture pages: [Form QR guide](/blog/form-survey-qr-code-generator-guide)
+- 支付引导：[支付 QR 指南](/blog/payment-paypal-crypto-qr-code-generator-guide)
+- 社交媒体引流：[Instagram QR 指南](/blog/instagram-qr-code-generator-guide)
 
-## Create Your App Download QR
+## 立即生成
 
-Use the free [app download QR generator](/tools/qr-code?template=app).
+使用免费的[应用下载 QR 码生成器](/tools/qr-code?template=app)。

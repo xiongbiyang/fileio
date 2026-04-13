@@ -1,36 +1,37 @@
-"表单和问卷 QR 码生成器：更快收集反馈"
+---
+title: "表单和问卷 QR 码生成器：更快收集反馈"
 updated: "2026-04-04"
 ---
 
-A **form qr code generator** or **survey qr code generator** helps users open your form in one scan, reducing drop-off compared with manual URL entry.
+为反馈、注册和获客创建**表单和问卷 QR 码**，直接跳转移动端表单以提高完成率。
 
-## Best Form QR Use Cases
+## 表单 QR 使用场景
 
-- Customer feedback at checkout
-- Event registration and lead capture
-- NPS and post-service satisfaction surveys
-- Internal team polling and signups
+- 客户满意度调查
+- 活动签到和报名
+- 产品反馈收集
+- 销售线索获取
 
-## 如何创建 a Form QR Code
+## 如何创建表单 QR 码
 
-1. Copy your form URL (Google Forms, Typeform, etc.)
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=form)
-3. Paste and generate
-4. Download and place near the action point
-5. Test the full submit flow on mobile
+1. 准备表单链接（Google Forms、Typeform 等）
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=form)
+3. 粘贴链接并生成
+4. 下载 PNG 或 SVG
+5. 放置在收银台、桌面或传单上
 
-## Conversion Tips for Survey QR Codes
+## 最佳实践
 
-- Keep form short (3 to 6 fields for higher completion)
-- Add clear incentive next to the code
-- Use CTA text like "Scan to Give Feedback"
-- Verify mobile readability before printing
+- 确保表单在移动端易于填写
+- 保持表单简短以提高完成率
+- 在二维码旁说明扫码后会看到什么
+- 定期检查链接是否仍然有效
 
 ## 相关阅读
 
-- For review collection: [Google Review QR guide](/blog/google-review-qr-code-generator-guide)
-- For app campaign funnels: [App Download QR guide](/blog/app-download-qr-code-generator-guide)
+- 邮件联系方式：[邮件 QR 指南](/blog/email-qr-code-generator-guide)
+- 评价收集：[Google 评价 QR 指南](/blog/google-review-qr-code-generator-guide)
 
-## Create Your Form QR
+## 立即生成
 
-Start with the free [form and survey QR code generator](/tools/qr-code?template=form).
+使用免费的[表单 QR 码生成器](/tools/qr-code?template=form)。

@@ -1,41 +1,38 @@
-"PDF QR 码生成器：快速分享菜单、宣传册和文档"
+---
+title: "PDF QR 码生成器：快速分享菜单、宣传册和文档"
 updated: "2026-04-04"
 ---
 
-A **pdf qr code generator** helps users open documents instantly without typing long links. It is useful for menus, brochures, manuals, and event handouts.
+为菜单、宣传册和文档创建 **PDF QR 码**，包含扫码优化技巧、PNG/SVG 导出指南和印刷最佳实践。
 
-## Best Use Cases for PDF QR Codes
+## PDF QR 使用场景
 
-- Restaurant and cafe menus
-- Product brochures and catalogs
-- User manuals and setup guides
-- Event schedules and downloadable materials
+- 餐厅电子菜单
+- 产品说明书和手册
+- 活动议程和日程
+- 宣传册和目录
 
-## 如何创建 a PDF QR Code
+## 如何创建 PDF QR 码
 
-1. Upload your PDF to a public HTTPS URL
-2. Open [ToolPort QR Code Generator](/tools/qr-code?template=pdf)
-3. Paste the PDF link and generate
-4. Download PNG or SVG
-5. Scan-test on both iOS and Android
+1. 将 PDF 上传到可公开访问的链接（Google Drive、Dropbox 等）
+2. 打开 [ToolPort QR 码生成器](/tools/qr-code?template=pdf)
+3. 粘贴 PDF 链接并生成
+4. 下载 PNG 或 SVG
+5. 放置在印刷材料上
 
-## PDF QR Code Best Practices
+## 最佳实践
 
-- Keep file size reasonable for fast mobile load
-- Avoid changing the URL after printing
-- Use high-contrast colors for reliable scans
-- Add a short label like "Scan to open PDF"
+- 确保 PDF 链接永久有效且可公开访问
+- PDF 文件大小控制在 5MB 以内以确保快速加载
+- 使用高纠错等级（Q 或 H）应对印刷磨损
+- 在二维码旁注明文档名称
 
-## PNG 与 SVG 对比 for Print
+## 相关使用场景
 
-- PNG: fast for social and chat sharing
-- SVG: better for posters, cards, and large-format print
+- 餐厅菜单：[菜单 QR 指南](/blog/menu-qr-code-generator-for-restaurants)
+- 活动信息：[活动 QR 指南](/blog/event-qr-code-generator-guide)
+- 通用 QR 生成：[免费 QR 码生成器](/blog/free-online-qr-code-generator)
 
-## 相关指南
+## 立即生成
 
-- For menu workflows: [Menu QR setup guide](/blog/menu-qr-code-generator-for-restaurants)
-- For review collection: [Google Review QR guide](/blog/google-review-qr-code-generator-guide)
-
-## Create Your PDF QR
-
-Use the free [PDF QR code generator](/tools/qr-code?template=pdf).
+使用免费的 [PDF QR 码生成器](/tools/qr-code?template=pdf)。
