@@ -29,6 +29,12 @@
 /* ── Material Symbols config ── */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  /* Prevent icon name text flash (e.g. "arrow_forward") while font loads */
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* ── Premium gradient ── */
