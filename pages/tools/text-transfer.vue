@@ -8,6 +8,7 @@
       :connected-device-name="connectedDeviceName"
       :doc-cards="docCards"
       :is-connected="isConnected"
+      :is-receiver="isReceiver"
       :mobile-recent-transfers="mobileRecentTransfers"
       :qr-expired="qrExpired"
       :received-messages="receivedMessages"

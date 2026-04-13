@@ -62,8 +62,8 @@
         </div>
       </template>
 
-      <!-- Mobile: Not connected — connecting / waiting view -->
-      <template v-else>
+      <!-- Mobile: Not connected — receiver: connecting spinner -->
+      <template v-else-if="isReceiver">
         <div class="flex flex-col items-center justify-center py-16 gap-6">
           <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
             <span class="material-symbols-outlined text-primary text-4xl animate-pulse">sync</span>
@@ -75,6 +75,40 @@
           <div class="bg-surface-container-low dark:bg-surface-container rounded-xl px-6 py-3">
             <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{{ $t('toolA.roomId') }}</span>
             <span class="ml-2 text-lg font-extrabold text-primary font-headline">{{ roomId }}</span>
+          </div>
+        </div>
+      </template>
+
+      <!-- Mobile: Not connected — sender: show QR code for other device to scan -->
+      <template v-else>
+        <div class="flex flex-col items-center gap-6 py-4">
+          <div class="p-4 bg-surface-container-lowest dark:bg-surface-container-high rounded-2xl shadow-ambient">
+            <div class="w-52 h-52 bg-surface-container dark:bg-surface-container rounded-lg flex items-center justify-center relative">
+              <canvas ref="mobileQrCanvas" class="w-44 h-44" />
+              <div v-if="qrExpired" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-container-lowest/40 dark:bg-on-surface/40 backdrop-blur-md rounded-lg p-4 text-center">
+                <button class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg mb-2 active:rotate-180 transition-transform duration-500" @click="$emit('refreshQr')">
+                  <span class="material-symbols-outlined text-xl">refresh</span>
+                </button>
+                <span class="text-xs font-headline font-bold text-on-surface dark:text-surface">{{ $t('toolA.qrExpired') }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center space-y-2">
+            <p class="text-sm text-on-surface-variant">{{ $t('toolA.scanQr') }}</p>
+            <div class="bg-surface-container-low dark:bg-surface-container rounded-xl px-5 py-2.5 inline-flex items-center gap-2">
+              <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{{ $t('toolA.roomId') }}</span>
+              <span class="text-lg font-extrabold text-primary font-headline">{{ roomId }}</span>
+            </div>
+          </div>
+          <div class="w-full space-y-3 px-2">
+            <button class="w-full py-3 primary-gradient text-on-primary rounded-xl font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform" @click="$emit('copyLink')">
+              <span class="material-symbols-outlined text-lg">content_copy</span>
+              {{ $t('common.copyLink') }}
+            </button>
+            <button class="w-full py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform" @click="$emit('refreshQr')">
+              <span class="material-symbols-outlined text-lg">refresh</span>
+              {{ $t('toolA.refreshQr') }}
+            </button>
           </div>
         </div>
       </template>
@@ -274,6 +308,7 @@ const localePath = useLocalePath()
 const mobileFileInput = ref<HTMLInputElement | null>(null)
 const desktopFileInput = ref<HTMLInputElement | null>(null)
 const qrCanvas = ref<HTMLCanvasElement | null>(null)
+const mobileQrCanvas = ref<HTMLCanvasElement | null>(null)
 const isDragOver = ref(false)
 
 function triggerMobileFileInput() {
@@ -295,6 +330,7 @@ function handleDesktopFileChange(event: Event) {
 
 const props = defineProps<{
   isConnected: boolean
+  isReceiver: boolean
   connectedDeviceName: string
   receivedMessages: WaitingMessage[]
   mobileRecentTransfers: RecentTransferItem[]
@@ -303,14 +339,15 @@ const props = defineProps<{
   docCards: DocCard[]
 }>()
 
-onMounted(() => {
-  emit('qrCanvasReady', qrCanvas.value)
-})
+function emitQrCanvas() {
+  // Desktop and mobile have separate canvases — send whichever is available
+  emit('qrCanvasReady', qrCanvas.value || mobileQrCanvas.value)
+}
 
-// When disconnected, the QR canvas re-enters the DOM — re-emit the ref
-watch(() => props.isConnected, (connected) => {
-  if (!connected) {
-    nextTick(() => emit('qrCanvasReady', qrCanvas.value))
-  }
+onMounted(() => emitQrCanvas())
+
+// When view switches (connected ↔ disconnected), canvas DOM changes — re-emit
+watch([() => props.isConnected, () => props.isReceiver], () => {
+  nextTick(() => emitQrCanvas())
 })
 </script>
