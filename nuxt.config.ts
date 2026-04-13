@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   debug: false,
   devtools: { enabled: process.env.NODE_ENV === 'development' },
-  buildDir: process.env.NUXT_BUILD_DIR || (process.env.NODE_ENV === 'production' ? '.nuxt-build' : '.nuxt'),
+  buildDir: '.nuxt-build',
 
   runtimeConfig: {
     // Server-only (never exposed to client)
