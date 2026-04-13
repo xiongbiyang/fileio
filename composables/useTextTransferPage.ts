@@ -429,6 +429,7 @@ export function useTextTransferPage() {
   }
   function setupTrickleIce() {
     // Send local ICE candidates to remote peer via signaling
+    // Must be called BEFORE webrtc.connect() to avoid losing early candidates
     webrtc.onIceCandidateEmit((candidate) => {
       signaling.sendSignal('candidate', candidate)
     })
@@ -440,8 +441,8 @@ export function useTextTransferPage() {
   function startSenderSignaling() {
     signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
-      const answer = await webrtc.connect(offer)
       setupTrickleIce()
+      const answer = await webrtc.connect(offer)
       signaling.sendSignal('answer', answer)
     }
     signaling.connect()
@@ -452,9 +453,9 @@ export function useTextTransferPage() {
       signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
         await webrtc.setRemoteDescription(answer)
       }
+      setupTrickleIce()
       signaling.connect()
       const offer = await webrtc.connect()
-      setupTrickleIce()
       signaling.sendSignal('offer', offer)
     }
     catch {
