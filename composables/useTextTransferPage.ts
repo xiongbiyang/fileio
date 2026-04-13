@@ -439,9 +439,9 @@ export function useTextTransferPage() {
     }
   }
   function startSenderSignaling() {
+    setupTrickleIce()
     signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
-      setupTrickleIce()
       const answer = await webrtc.connect(offer)
       signaling.sendSignal('answer', answer)
     }

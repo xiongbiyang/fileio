@@ -49,6 +49,7 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
   let sendCancelFlag = false
 
   let onIceCandidate: ((candidate: RTCIceCandidateInit) => void) | null = null
+  const pendingRemoteCandidates: RTCIceCandidateInit[] = []
 
   function initPeerConnection(iceServers: RTCIceServer[]) {
     pc = new RTCPeerConnection({ iceServers })
@@ -118,6 +119,11 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     if (offer) {
       // Answerer path — Trickle ICE: send answer immediately, candidates follow
       await pc.setRemoteDescription(offer)
+      // Flush any candidates that arrived before PeerConnection was ready
+      for (const c of pendingRemoteCandidates) {
+        await pc.addIceCandidate(new RTCIceCandidate(c))
+      }
+      pendingRemoteCandidates.length = 0
       const answer = await pc.createAnswer()
       await pc.setLocalDescription(answer)
       return pc.localDescription as RTCSessionDescriptionInit
@@ -132,11 +138,22 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
   }
 
   async function setRemoteDescription(desc: RTCSessionDescriptionInit) {
-    if (pc) await pc.setRemoteDescription(desc)
+    if (!pc) return
+    await pc.setRemoteDescription(desc)
+    // Flush buffered candidates now that remote description is set
+    for (const c of pendingRemoteCandidates) {
+      await pc.addIceCandidate(new RTCIceCandidate(c))
+    }
+    pendingRemoteCandidates.length = 0
   }
 
   async function addIceCandidate(candidate: RTCIceCandidateInit) {
-    if (pc) await pc.addIceCandidate(new RTCIceCandidate(candidate))
+    if (pc && pc.remoteDescription) {
+      await pc.addIceCandidate(new RTCIceCandidate(candidate))
+    } else {
+      // Buffer until PeerConnection + remoteDescription are ready
+      pendingRemoteCandidates.push(candidate)
+    }
   }
 
   /**
@@ -243,6 +260,7 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     pc?.close()
     pc = null
     dataChannel = null
+    pendingRemoteCandidates.length = 0
     connectionState.value = 'closed'
   }
 
