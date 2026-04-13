@@ -629,6 +629,8 @@
     "noMessagesYet": "暂无消息 — 在下方输入后发送",
     "askPcToRefresh": "连接失败，请让对方（电脑端）刷新二维码后重新扫码。",
     "leaveWarning": "传输正在进行中，离开此页面将中断传输，确定要离开吗？",
+    "mobileConnecting": "正在连接电脑...",
+    "mobileConnectingDesc": "正在建立安全的点对点连接，通常需要几秒钟。",
     "desktopMessages": "消息",
     "desktopTextPlaceholder": "输入消息并按 Enter 发送...",
     "desktopFileTransfer": "文件传输",

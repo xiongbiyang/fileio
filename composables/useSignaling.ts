@@ -23,10 +23,25 @@ export function useSignaling(roomId: Ref<string>) {
     disconnect()
     if (!roomId.value) return
 
+    const host = getHost()
+    console.log('[Signaling] Connecting to PartyKit:', host, 'room:', roomId.value)
+
     socket = new PartySocket({
-      host: getHost(),
+      host,
       room: roomId.value,
       party: 'signal',
+    })
+
+    socket.addEventListener('open', () => {
+      console.log('[Signaling] WebSocket connected to', host)
+    })
+
+    socket.addEventListener('error', (e) => {
+      console.error('[Signaling] WebSocket error:', e)
+    })
+
+    socket.addEventListener('close', (e) => {
+      console.log('[Signaling] WebSocket closed:', e.code, e.reason)
     })
 
     socket.addEventListener('message', (event: MessageEvent) => {
@@ -37,6 +52,8 @@ export function useSignaling(roomId: Ref<string>) {
       catch {
         return
       }
+
+      console.log('[Signaling] Received:', msg.type)
 
       switch (msg.type) {
         case 'offer':

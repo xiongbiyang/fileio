@@ -629,6 +629,8 @@
     "noMessagesYet": "No messages yet - type below to send",
     "askPcToRefresh": "Connection failed. Please ask the PC side to refresh the QR code and re-scan.",
     "leaveWarning": "A transfer is in progress. If you leave, the transfer will be interrupted. Are you sure?",
+    "mobileConnecting": "Connecting to PC...",
+    "mobileConnectingDesc": "Setting up a secure peer-to-peer connection. This usually takes a few seconds.",
     "desktopMessages": "Messages",
     "desktopTextPlaceholder": "Type a message and press Enter...",
     "desktopFileTransfer": "File Transfer",

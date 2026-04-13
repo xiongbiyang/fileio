@@ -13,46 +13,66 @@
         </div>
       </div>
 
-      <div class="space-y-3 min-h-[60px]">
-        <p v-if="!receivedMessages.length" class="text-center text-sm text-on-surface-variant py-4">
-          {{ isConnected ? $t('toolA.noMessagesYet') : $t('toolA.waitingConnection') }}
-        </p>
-        <div v-for="msg in receivedMessages" :key="msg.id" class="flex" :class="msg.isSelf ? 'justify-end' : 'justify-start'">
-          <div class="max-w-[85%] px-4 py-3 rounded-2xl text-sm" :class="msg.isSelf ? 'primary-gradient text-on-primary rounded-tr-none' : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface dark:text-surface rounded-tl-none'">
-            <p>{{ msg.content }}</p>
+      <!-- Mobile: Connected — transfer interface -->
+      <template v-if="isConnected">
+        <div class="space-y-3 min-h-[60px]">
+          <p v-if="!receivedMessages.length" class="text-center text-sm text-on-surface-variant py-4">
+            {{ $t('toolA.noMessagesYet') }}
+          </p>
+          <div v-for="msg in receivedMessages" :key="msg.id" class="flex" :class="msg.isSelf ? 'justify-end' : 'justify-start'">
+            <div class="max-w-[85%] px-4 py-3 rounded-2xl text-sm" :class="msg.isSelf ? 'primary-gradient text-on-primary rounded-tr-none' : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface dark:text-surface rounded-tl-none'">
+              <p>{{ msg.content }}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="bg-surface-container-lowest dark:bg-surface-container-high rounded-2xl p-5 shadow-ambient">
-        <h3 class="font-headline font-bold text-on-surface dark:text-surface mb-3">{{ $t('toolA.mobileTransferContent') }}</h3>
-        <textarea v-model="mobileTextInput" class="w-full bg-surface-container-low dark:bg-surface-container rounded-xl p-4 text-sm text-on-surface dark:text-surface placeholder:text-outline resize-none focus:ring-2 focus:ring-primary/20" rows="3" :placeholder="$t('toolA.mobilePastePlaceholder')" />
-        <div class="flex gap-3 mt-3">
-          <button class="flex-1 py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform" @click="triggerMobileFileInput">
-            <span class="material-symbols-outlined text-lg">attach_file</span>{{ $t('toolA.mobileFile') }}
-          </button>
-          <button class="flex-1 py-3 primary-gradient text-on-primary rounded-xl font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-50" :disabled="!isConnected || !mobileTextInput.trim()" @click="$emit('mobileSend')">
-            <span class="material-symbols-outlined text-lg">send</span>{{ $t('toolA.mobileTransfer') }}
-          </button>
+        <div class="bg-surface-container-lowest dark:bg-surface-container-high rounded-2xl p-5 shadow-ambient">
+          <h3 class="font-headline font-bold text-on-surface dark:text-surface mb-3">{{ $t('toolA.mobileTransferContent') }}</h3>
+          <textarea v-model="mobileTextInput" class="w-full bg-surface-container-low dark:bg-surface-container rounded-xl p-4 text-sm text-on-surface dark:text-surface placeholder:text-outline resize-none focus:ring-2 focus:ring-primary/20" rows="3" :placeholder="$t('toolA.mobilePastePlaceholder')" />
+          <div class="flex gap-3 mt-3">
+            <button class="flex-1 py-3 bg-surface-container-high dark:bg-surface-container text-on-surface dark:text-surface rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform" @click="triggerMobileFileInput">
+              <span class="material-symbols-outlined text-lg">attach_file</span>{{ $t('toolA.mobileFile') }}
+            </button>
+            <button class="flex-1 py-3 primary-gradient text-on-primary rounded-xl font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-50" :disabled="!mobileTextInput.trim()" @click="$emit('mobileSend')">
+              <span class="material-symbols-outlined text-lg">send</span>{{ $t('toolA.mobileTransfer') }}
+            </button>
+          </div>
+          <input ref="mobileFileInput" type="file" hidden @change="$emit('mobileFileSelect', $event)" >
         </div>
-        <input ref="mobileFileInput" type="file" hidden @change="$emit('mobileFileSelect', $event)" >
-      </div>
 
-      <div>
-        <h3 class="font-headline font-bold text-sm text-on-surface dark:text-surface mb-3 uppercase tracking-wider">{{ $t('toolA.mobileRecentTransfers') }}</h3>
-        <div class="space-y-2">
-          <div v-for="item in mobileRecentTransfers" :key="item.name" class="bg-surface-container-low dark:bg-surface-container rounded-xl p-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-surface-container-high dark:bg-surface-container-highest flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-on-surface-variant">{{ item.icon }}</span>
+        <div v-if="mobileRecentTransfers.length">
+          <h3 class="font-headline font-bold text-sm text-on-surface dark:text-surface mb-3 uppercase tracking-wider">{{ $t('toolA.mobileRecentTransfers') }}</h3>
+          <div class="space-y-2">
+            <div v-for="item in mobileRecentTransfers" :key="item.name" class="bg-surface-container-low dark:bg-surface-container rounded-xl p-4 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-surface-container-high dark:bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-on-surface-variant">{{ item.icon }}</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-on-surface dark:text-surface truncate">{{ item.name }}</p>
+                <p class="text-xs text-on-surface-variant">{{ item.desc }}</p>
+              </div>
+              <span class="text-xs text-on-surface-variant whitespace-nowrap">{{ item.time }}</span>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-on-surface dark:text-surface truncate">{{ item.name }}</p>
-              <p class="text-xs text-on-surface-variant">{{ item.desc }}</p>
-            </div>
-            <span class="text-xs text-on-surface-variant whitespace-nowrap">{{ item.time }}</span>
           </div>
         </div>
-      </div>
+      </template>
+
+      <!-- Mobile: Not connected — connecting / waiting view -->
+      <template v-else>
+        <div class="flex flex-col items-center justify-center py-16 gap-6">
+          <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-4xl animate-pulse">sync</span>
+          </div>
+          <div class="text-center space-y-2">
+            <h2 class="font-headline text-xl font-bold text-on-surface dark:text-surface">{{ $t('toolA.mobileConnecting') }}</h2>
+            <p class="text-sm text-on-surface-variant max-w-[280px]">{{ $t('toolA.mobileConnectingDesc') }}</p>
+          </div>
+          <div class="bg-surface-container-low dark:bg-surface-container rounded-xl px-6 py-3">
+            <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{{ $t('toolA.roomId') }}</span>
+            <span class="ml-2 text-lg font-extrabold text-primary font-headline">{{ roomId }}</span>
+          </div>
+        </div>
+      </template>
     </div>
 
     <div class="hidden md:block bg-surface-container-low dark:bg-surface-container rounded-xl overflow-hidden shadow-ambient">
