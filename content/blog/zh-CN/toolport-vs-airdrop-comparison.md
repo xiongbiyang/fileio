@@ -12,14 +12,14 @@ If you compare **ToolPort vs AirDrop**, the key difference is platform support. 
 
 ## ToolPort vs AirDrop: Feature Comparison
 
-| Feature | ToolPort | AirDrop |
+| 功能 | ToolPort | AirDrop |
 | --- | --- | --- |
-| iPhone to Windows | Yes | No |
-| Android to Mac/Windows | Yes | No |
+| iPhone to Windows | 是 | 否 |
+| Android to Mac/Windows | 是 | 否 |
 | Apple to Apple | Yes (browser) | Yes (native) |
-| App install required | No | No |
-| Account signup required | No | No |
-| Browser-based workflow | Yes | No |
+| App install required | 否 | No |
+| Account signup required | 否 | No |
+| 基于浏览器 workflow | 是 | 否 |
 
 ## Best Choice by Scenario
 
@@ -50,7 +50,7 @@ AirDrop is often faster to start because it is built into the system UX.
 ## 相关推荐 Guides
 
 - Browser alternative comparison: [ToolPort vs Snapdrop comparison](/blog/toolport-vs-snapdrop-comparison)
-- Cross-platform workflow: [Best AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
+- 跨平台 workflow: [Best AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
 - Step-by-step transfer tutorial: [How to transfer files from phone to PC](/blog/how-to-transfer-files-phone-to-pc)
 - Practical no-app setup: [iPhone to Windows transfer without app](/blog/iphone-to-windows-file-transfer-no-app-guide)
 

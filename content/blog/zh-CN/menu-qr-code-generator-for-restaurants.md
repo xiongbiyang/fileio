@@ -27,7 +27,7 @@ Menu QR codes are now standard for restaurants, cafes, and food trucks. A fast *
 - Avoid low contrast backgrounds
 - Test under low light before mass printing
 
-## Common Mistakes
+## 常见错误
 
 - Linking to a broken PDF URL
 - Using tiny QR size on crowded designs

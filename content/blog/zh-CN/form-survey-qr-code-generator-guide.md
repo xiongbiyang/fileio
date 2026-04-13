@@ -3,7 +3,7 @@ title:"表单和问卷 QR 码生成器：更快收集反馈"
 updated: "2026-04-04"
 ---
 
-A **form qr code generator** or **survey qr code generator** helps users open your form in one scan, reducing drop-off compared with manual URL entry.
+A **form qr code generator** or **survey qr code generator** helps users open your form in 一扫即可, reducing drop-off compared with manual URL entry.
 
 ## Best Form QR Use Cases
 

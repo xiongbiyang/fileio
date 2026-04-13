@@ -3,82 +3,82 @@ title:"如何无线传输文件从手机到电脑 — 免安装、免数据线"
 updated: "2026-04-04"
 ---
 
-Transferring files between your phone and computer shouldn't require installing apps, creating accounts, or uploading to the cloud. Here's how to do it instantly with end-to-end encryption.
+手机和电脑之间传文件不应该需要安装应用、创建账号或上传到云端。以下是如何通过端对端加密即时传输文件的方法。
 
-## 传统方式的问题 with Traditional File Transfer
+## 传统文件传输的问题
 
-Most people rely on one of these methods:
+大多数人依赖以下方式之一：
 
-- **Email** — File size limits (usually 25MB), slow, requires login
-- **Cloud storage** (Google Drive, iCloud) — Requires account, uploads to third-party servers
-- **USB cable** — Need a physical cable, driver issues
-- **AirDrop** — Apple-only, doesn't work across ecosystems
-- **Messaging apps** (WeChat, WhatsApp) — Compresses images, file size limits
+- **电子邮件** — 文件大小限制（通常 25MB），速度慢，需要登录
+- **云存储**（Google Drive、iCloud）— 需要账号，文件上传到第三方服务器
+- **USB 数据线** — 需要实体线缆，可能有驱动问题
+- **AirDrop** — 仅限 Apple 设备，不支持跨生态系统
+- **聊天应用**（微信、WhatsApp）— 会压缩图片，有文件大小限制
 
-## 更好的方式: Browser-Based P2P Transfer
+## 更好的方式：基于浏览器的 P2P 传输
 
-With [ToolPort's File Transfer tool](/tools/text-transfer), you can transfer files directly between devices using your browser:
+使用 [ToolPort 文件传输工具](/tools/text-transfer)，你可以直接通过浏览器在设备之间传输文件：
 
-1. **Open the tool** on your computer
-2. **Scan the QR code** with your phone's camera
-3. **Select files** and they transfer instantly
+1. 在电脑上**打开工具**
+2. 用手机相机**扫描 QR 码**
+3. **选择文件**即可立即传输
 
-No app to install. No account to create. No file uploaded to any server.
+无需安装应用。无需创建账号。文件不会上传到任何服务器。
 
-## 工作原理: WebRTC Peer-to-Peer
+## 工作原理：WebRTC 点对点传输
 
-The transfer uses **WebRTC DataChannel** — the same technology that powers video calls in your browser:
+传输使用 **WebRTC DataChannel** — 与浏览器视频通话使用的相同技术:
 
-- **Direct connection** — Files go straight from phone to PC, no server in between
-- **End-to-end encrypted** — AES-256-GCM encryption, even we can't see your files
-- **No file size limit** — Transfer 1MB or 1GB, it just works
-- **Fast** — Limited only by your local network speed, typically 10-50 MB/s on WiFi
+- **直接连接** — 文件直接从手机传到电脑，中间没有服务器
+- **端对端加密** — AES-256-GCM 加密，连我们也无法查看你的文件
+- **无文件大小限制** — 传 1MB 或 1GB 都没问题
+- **速度快** — 仅受本地网络速度限制, 在 WiFi 下通常可达 10-50 MB/s
 
 ## 操作步骤
 
 ### 在电脑上
 
-1. Go to [toolport.dev/tools/text-transfer](/tools/text-transfer)
-2. You'll see a QR code and a 6-character room ID
-3. Wait for the QR code to appear
+1. 打开 [toolport.dev/tools/text-transfer](/tools/text-transfer)
+2. 你会看到一个 QR 码和一个 6 位房间号
+3. 等待 QR 码出现
 
 ### 在手机上
 
-1. Open your phone's camera and scan the QR code
-2. The browser opens and connects automatically
-3. The connection is established in seconds
+1. 打开手机相机扫描 QR 码
+2. 浏览器会自动打开并连接
+3. 连接在几秒钟内建立
 
 ### 传输文件
 
-- **Phone to PC**: Tap "Attach File" or paste text on your phone
-- **PC to Phone**: Drag files into the queue and click "Start Transfer"
-- Watch the real-time progress bar with speed and ETA
+- **Phone to PC**: 在手机上点击"附加文件"或粘贴文本
+- **PC to Phone**: 将文件拖入队列并点击"开始传输"
+- 查看实时进度条，包含速度和预计时间
 
 ## 安全与隐私
 
-- All data is encrypted with **AES-256-GCM** before transmission
-- Files are **never stored** on any server
-- The room ID expires after use
-- No cookies, no tracking, no analytics
+- 所有数据在传输前使用 **AES-256-GCM** 加密
+- 文件**从不存储**在任何服务器上
+- 房间号使用后即失效
+- 无 Cookie、无追踪、无分析
 
 ## 性能优化技巧
 
-| Scenario | Tip |
+| 场景 | 建议 |
 |----------|-----|
-| Same WiFi | Fastest speeds — direct LAN transfer |
-| Different networks | Works via TURN relay, may be slower |
-| Large files | Backpressure handled automatically |
-| Multiple files | Queue them up, transfer in batch |
+| 同一 WiFi | 最快速度 — 直接局域网传输 |
+| 不同网络 | 通过 TURN 中继，可能较慢 |
+| 大文件 | 自动处理背压 |
+| 多个文件 | 排队批量传输 |
 
 ## 相关推荐 Transfer Workflows
 
-- iPhone on Windows focus: [iPhone to Windows without app](/blog/iphone-to-windows-file-transfer-no-app-guide)
-- Media-heavy workflow: [Send large video from phone to PC](/blog/send-large-video-from-phone-to-pc-guide)
-- Laptop workflow without cable: [Transfer files without USB](/blog/transfer-files-phone-to-laptop-without-usb-guide)
+- iPhone 传 Windows 专题： [iPhone 免安装传 Windows](/blog/iphone-to-windows-file-transfer-no-app-guide)
+- 大文件工作流： [手机发送大视频到电脑](/blog/send-large-video-from-phone-to-pc-guide)
+- 笔记本免数据线传输： [免 USB 传输文件](/blog/transfer-files-phone-to-laptop-without-usb-guide)
 
 ## 立即试用
 
-Ready to transfer files? Open the [File Transfer tool](/tools/text-transfer) and try it — it takes less than 10 seconds to set up.
+准备好传文件了吗？打开[文件传输工具](/tools/text-transfer) 试试吧 — 设置只需不到 10 秒。
 
 ---
 

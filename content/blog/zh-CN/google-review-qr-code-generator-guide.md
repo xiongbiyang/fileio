@@ -24,7 +24,7 @@ It is a QR code that points directly to your Google review page. Users scan, ope
 - Product packaging inserts
 - Invoice footer
 
-## Design Tips
+## 设计技巧
 
 - Add short CTA text: "Scan to review us"
 - Keep enough white margin around the QR code

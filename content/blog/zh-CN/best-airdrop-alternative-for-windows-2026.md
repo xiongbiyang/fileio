@@ -18,9 +18,9 @@ AirDrop is great for Apple-to-Apple transfers, but it breaks in common real-worl
 
 A modern AirDrop alternative for Windows should be:
 
-- Browser-based (no app install)
-- Cross-platform (iOS, Android, Windows, macOS)
-- End-to-end encrypted
+- 基于浏览器 (no app install)
+- 跨平台 (iOS, Android, Windows, macOS)
+- 端对端加密
 - Fast on local network
 - Free and no signup
 
@@ -53,12 +53,12 @@ For confidential workflows, still follow your company policy and avoid sharing r
 
 ## AirDrop Alternative Comparison (Quick)
 
-| Method | Cross-platform | No App | No Signup | Typical Speed |
+| Method | 跨平台 | No App | No Signup | Typical Speed |
 | --- | --- | --- | --- | --- |
-| AirDrop | No | Yes | Yes | Fast (Apple only) |
-| Cloud Drive | Yes | Yes | No | Medium |
-| Messaging Apps | Yes | Yes | No | Medium/Compressed |
-| ToolPort | Yes | Yes | Yes | Fast |
+| AirDrop | 否 | 是 | Yes | Fast (Apple only) |
+| Cloud Drive | 是 | Yes | 否 | Medium |
+| Messaging Apps | 是 | Yes | 否 | Medium/Compressed |
+| ToolPort | 是 | Yes | 是 | Fast |
 
 ## 相关推荐 Workflows
 
@@ -66,8 +66,8 @@ For confidential workflows, still follow your company policy and avoid sharing r
 - Need quick text/link sync: [Online clipboard sync](/tools/clipboard)
 - Need to share a link instantly: [Free QR code generator](/tools/qr-code?template=review)
 - Need a side-by-side decision page: [ToolPort vs AirDrop comparison](/blog/toolport-vs-airdrop-comparison)
-- iPhone-focused path: [iPhone to Windows without app](/blog/iphone-to-windows-file-transfer-no-app-guide)
-- Large media transfer: [Send large video from phone to PC](/blog/send-large-video-from-phone-to-pc-guide)
+- iPhone-focused path: [iPhone 免安装传 Windows](/blog/iphone-to-windows-file-transfer-no-app-guide)
+- Large media transfer: [手机发送大视频到电脑](/blog/send-large-video-from-phone-to-pc-guide)
 
 ## Try It
 
@@ -76,5 +76,5 @@ Start here: [AirDrop alternative for Windows - ToolPort](/tools/text-transfer)
 ## One-Click Companion Tools
 
 - Share WiFi access quickly: [WiFi QR template](/tools/qr-code?template=wifi)
-- Share contact card in one scan: [vCard QR template](/tools/qr-code?template=vcard)
+- Share contact card in 一扫即可: [vCard QR template](/tools/qr-code?template=vcard)
 - Share payment links: [Payment QR template](/tools/qr-code?template=payment)

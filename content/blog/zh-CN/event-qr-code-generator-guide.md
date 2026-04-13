@@ -3,7 +3,7 @@ title:"活动 QR 码生成器：即时分享日程和详情"
 updated: "2026-04-04"
 ---
 
-An **event qr code generator** helps attendees access event details in one scan. It works for meetups, conferences, workshops, and internal company events.
+An **event qr code generator** helps attendees access event details in 一扫即可. It works for meetups, conferences, workshops, and internal company events.
 
 ## What to Include in an Event QR
 

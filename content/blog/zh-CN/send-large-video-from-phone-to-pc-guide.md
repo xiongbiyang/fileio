@@ -30,7 +30,7 @@ To **send large video from phone to pc** quickly, avoid email and cloud relays. 
 ## 相关推荐 Reads
 
 - General phone-to-PC workflow: [How to transfer files wirelessly](/blog/how-to-transfer-files-phone-to-pc)
-- Cross-platform option list: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
+- 跨平台 option list: [AirDrop alternative for Windows](/blog/best-airdrop-alternative-for-windows-2026)
 
 ## Start Sending Large Files
 

@@ -11,14 +11,14 @@ If you compare **ToolPort vs Snapdrop**, both are browser-based tools, but they 
 
 ## ToolPort vs Snapdrop: Feature Comparison
 
-| Feature | ToolPort | Snapdrop |
+| 功能 | ToolPort | Snapdrop |
 | --- | --- | --- |
-| Works in browser | Yes | Yes |
-| Phone to PC focus | Yes | Partial |
+| Works in browser | 是 | Yes |
+| Phone to PC focus | 是 | Partial |
 | Same-network requirement | No strict dependency | Usually yes |
-| Session-style pairing UX | Yes | No |
-| Account signup required | No | No |
-| File + text workflow | Yes | Mainly files |
+| Session-style pairing UX | 是 | 否 |
+| Account signup required | 否 | No |
+| File + text workflow | 是 | Mainly files |
 
 ## Best Choice by Scenario
 

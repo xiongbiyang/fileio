@@ -3,7 +3,7 @@ title:"Google 地图 QR 码生成器：引导客户到你的位置"
 updated: "2026-04-04"
 ---
 
-A **google maps qr code generator** helps users open navigation in one scan. It works well for stores, clinics, offices, and event venues.
+A **google maps qr code generator** helps users open navigation in 一扫即可. It works well for stores, clinics, offices, and event venues.
 
 ## 为什么使用 a Maps QR Code
 
@@ -27,7 +27,7 @@ A **google maps qr code generator** helps users open navigation in one scan. It 
 - Event posters and booth signage
 - Parking and wayfinding signs
 
-## Common Mistakes
+## 常见错误
 
 - Using an incorrect or outdated map URL
 - Low-contrast code colors

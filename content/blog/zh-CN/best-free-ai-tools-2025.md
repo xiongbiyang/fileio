@@ -71,7 +71,7 @@ Extract text from images, screenshots, handwritten notes, and scanned documents.
 
 At ToolPort, we're working on bringing more AI-powered tools directly to your browser — with a focus on **privacy-first processing**. Our existing tools demonstrate this approach:
 
-- [**File Transfer**](/tools/text-transfer) — End-to-end encrypted P2P transfer
+- [**File Transfer**](/tools/text-transfer) — 端对端加密 P2P transfer
 - [**QR Code Generator**](/tools/qr-code) — All generation happens locally in your browser
 - [**Online Clipboard**](/tools/clipboard) — Encrypted rooms that auto-expire in 24 hours
 

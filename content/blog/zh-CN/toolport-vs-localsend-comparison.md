@@ -11,14 +11,14 @@ If you compare **ToolPort vs LocalSend**, both can serve local device sharing, b
 
 ## ToolPort vs LocalSend: Feature Comparison
 
-| Feature | ToolPort | LocalSend |
+| 功能 | ToolPort | LocalSend |
 | --- | --- | --- |
-| Browser-based usage | Yes | No |
-| App installation required | No | Yes |
-| Phone to PC quick start | Yes | Partial |
+| 基于浏览器 usage | 是 | 否 |
+| App installation required | 否 | 是 |
+| Phone to PC quick start | 是 | Partial |
 | Local network workflow | Supported | Strong |
-| Account signup required | No | No |
-| Fast link/text + file handoff | Yes | File-focused |
+| Account signup required | 否 | No |
+| Fast link/text + file handoff | 是 | File-focused |
 
 ## Best Choice by Scenario
 

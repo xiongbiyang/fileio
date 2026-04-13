@@ -19,7 +19,7 @@ Most free QR code tools have these problems:
 
 ToolPort's [QR Code Generator](/tools/qr-code) solves all of these — free, no signup, fully local.
 
-## Features
+## 功能特点
 
 ### Custom Design
 - **Foreground & background colors** — match your brand

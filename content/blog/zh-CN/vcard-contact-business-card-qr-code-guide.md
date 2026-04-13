@@ -3,9 +3,9 @@ title:"vCard QR 码生成器：联系人和名片二维码设置"
 updated: "2026-04-04"
 ---
 
-Sharing contact details should be one scan, not manual typing. A **vCard QR code generator** (also searched as **contact qr code generator** or **business card qr code**) helps you exchange profile info instantly.
+Sharing contact details should be 一扫即可, not manual typing. A **vCard QR code generator** (also searched as **contact qr code generator** or **business card qr code**) helps you exchange profile info instantly.
 
-## Use Cases
+## 使用场景
 
 - Sales meetings
 - Conference badges

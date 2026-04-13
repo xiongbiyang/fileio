@@ -85,6 +85,7 @@ export default defineNuxtConfig({
     ],
     exclude: ['/dashboard', '/settings', '/auth/**', '/welcome', '/maintenance'],
     urls: [
+      // English core pages
       { loc: '/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/tools', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
       { loc: '/tools/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
@@ -101,6 +102,20 @@ export default defineNuxtConfig({
       { loc: '/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
       { loc: '/privacy', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
       { loc: '/terms', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
+      // zh-CN core pages
+      { loc: '/zh-CN', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-CN/tools', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
+      { loc: '/zh-CN/tools/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-CN/tools/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
+      { loc: '/zh-CN/tools/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
+      { loc: '/zh-CN/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
+      { loc: '/zh-CN/pricing', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.8 },
+      { loc: '/zh-CN/guides/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
+      { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
+      { loc: '/zh-CN/guides/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
+      { loc: '/zh-CN/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
+      { loc: '/zh-CN/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
+      // Blog URLs (en + zh-CN)
       ...blogSitemapUrls,
     ],
   },
@@ -153,10 +168,12 @@ export default defineNuxtConfig({
         { property: 'og:image', content: 'https://toolport.dev/og-image.png' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
+        { property: 'og:image:alt', content: 'ToolPort - Privacy-first browser tools for file transfer, QR code generation, and cross-device clipboard' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: 'ToolPort - Free Online Tools for File Transfer, QR Code, and Clipboard' },
         { name: 'twitter:description', content: 'No-log WebRTC file drop, client-side QR workflows, and ephemeral browser-to-browser sharing. No install, no signup.' },
         { name: 'twitter:image', content: 'https://toolport.dev/og-image.png' },
+        { name: 'twitter:image:alt', content: 'ToolPort - Privacy-first browser tools for file transfer, QR code generation, and cross-device clipboard' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

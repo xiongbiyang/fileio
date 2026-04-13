@@ -22,7 +22,7 @@ If you want to **transfer files from phone to laptop without usb**, QR pairing i
 ## 为什么使用rs Prefer This Method
 
 - No install, no account
-- Cross-platform in browser
+- 跨平台 in browser
 - Fast for day-to-day transfers
 - Session-based privacy model
 

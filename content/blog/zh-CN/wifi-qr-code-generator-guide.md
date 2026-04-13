@@ -17,7 +17,7 @@ Typing passwords is slow, especially for guests and events. A **WiFi QR code gen
 1. Open [ToolPort QR Code Generator](/tools/qr-code?template=wifi)
 2. Enter WiFi string format or a connection instruction link
 3. Customize color and logo if needed
-4. Download as PNG or SVG
+4. 下载 PNG 或 SVG 格式
 5. Print or display it near your router
 
 ## 最佳实践

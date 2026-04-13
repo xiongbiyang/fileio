@@ -11,13 +11,13 @@ If you compare **ToolPort vs WeTransfer**, the core difference is workflow. WeTr
 
 ## ToolPort vs WeTransfer: Feature Comparison
 
-| Feature | ToolPort | WeTransfer |
+| 功能 | ToolPort | WeTransfer |
 | --- | --- | --- |
-| Browser-based | Yes | Yes |
-| Phone to PC direct workflow | Yes | Partial |
-| Upload-first link workflow | No | Yes |
-| Account-free basic usage | Yes | Yes |
-| Fast text + file handoff | Yes | File-focused |
+| 基于浏览器 | 是 | Yes |
+| Phone to PC direct workflow | 是 | Partial |
+| Upload-first link workflow | 否 | 是 |
+| Account-free basic usage | 是 | Yes |
+| Fast text + file handoff | 是 | File-focused |
 | Daily cross-device utility | Strong | Moderate |
 
 ## Best Choice by Scenario
