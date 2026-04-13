@@ -1,6 +1,7 @@
 import { getD1Binding } from '~/server/utils/d1'
 import { normalizeEmail, verifyPassword, validateCredentials } from '~/server/utils/auth'
 import { setAuthSession } from '~/server/utils/session'
+import { assertRateLimit } from '~/server/utils/rateLimit'
 
 interface SigninBody {
   email: string
@@ -14,6 +15,7 @@ interface DbUser {
 }
 
 export default defineEventHandler(async (event) => {
+  assertRateLimit(event, 'signin', 10, 60_000) // 10 attempts per minute
   const body = await readBody<SigninBody>(event)
   const { email, password } = validateCredentials(body || {})
   const db = getD1Binding(event)

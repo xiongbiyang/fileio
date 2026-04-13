@@ -15,6 +15,8 @@ import type * as Party from 'partykit/server'
  *   { type: 'peer-left'  }   — sent when the other peer disconnects
  *   { type: 'peer-count', count: number }
  */
+const MAX_MESSAGE_SIZE = 64_000 // 64 KB max for signaling messages
+
 export default class SignalParty implements Party.Server {
   constructor(readonly room: Party.Room) {}
 
@@ -34,6 +36,8 @@ export default class SignalParty implements Party.Server {
   }
 
   onMessage(raw: string, sender: Party.Connection) {
+    if (raw.length > MAX_MESSAGE_SIZE) return
+
     let msg: { type: string; data?: unknown }
     try {
       msg = JSON.parse(raw)

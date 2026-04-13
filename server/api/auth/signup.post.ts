@@ -1,6 +1,7 @@
 import { getD1Binding } from '~/server/utils/d1'
 import { hashPassword, normalizeUserId, validateCredentials } from '~/server/utils/auth'
 import { setAuthSession } from '~/server/utils/session'
+import { assertRateLimit } from '~/server/utils/rateLimit'
 
 interface SignupBody {
   email: string
@@ -12,6 +13,7 @@ interface ExistingUser {
 }
 
 export default defineEventHandler(async (event) => {
+  assertRateLimit(event, 'signup', 5, 60_000) // 5 signups per minute
   const body = await readBody<SignupBody>(event)
   const { email, password } = validateCredentials(body || {})
   const userId = normalizeUserId(email)

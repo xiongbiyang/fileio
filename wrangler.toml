@@ -8,11 +8,12 @@ pages_build_output_dir = "dist"
 # binding = "KV"
 # id = "your-kv-id"
 
-# D1 database for waitlist & contact (optional)
+# D1 database — create with: npx wrangler d1 create toolport-db
+# Then paste the database_id below and uncomment:
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "toolport-db"
-# database_id = "your-d1-id"
+# database_id = "paste-your-id-here"
 
 # Environment variables
 [vars]

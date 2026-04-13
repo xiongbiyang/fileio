@@ -1,4 +1,5 @@
 import { getD1Binding } from '~/server/utils/d1'
+import { assertRateLimit } from '~/server/utils/rateLimit'
 
 interface WaitlistBody {
   email: string
@@ -27,6 +28,7 @@ function createLeadId(email: string, plan: string) {
 }
 
 export default defineEventHandler(async (event) => {
+  assertRateLimit(event, 'waitlist', 5, 60_000) // 5 submissions per minute
   const body = await readBody<WaitlistBody>(event)
   const email = normalizeEmail(body?.email)
   const plan = normalizePlan(body?.plan)

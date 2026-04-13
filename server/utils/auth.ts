@@ -24,8 +24,8 @@ export function validateCredentials(input: Partial<AuthCredentials>) {
   if (!emailRegex.test(email)) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid email' })
   }
-  if (password.trim().length < 6) {
-    throw createError({ statusCode: 400, statusMessage: 'Password must be at least 6 characters' })
+  if (password.trim().length < 8) {
+    throw createError({ statusCode: 400, statusMessage: 'Password must be at least 8 characters' })
   }
   return { email, password }
 }

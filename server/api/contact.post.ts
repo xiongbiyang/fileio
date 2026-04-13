@@ -1,41 +1,43 @@
+import { assertRateLimit } from '~/server/utils/rateLimit'
+import { getD1Binding } from '~/server/utils/d1'
+
 /**
  * Contact form submission endpoint.
- * Stores feedback in Cloudflare D1 (or logs for MVP).
+ * Stores feedback in Cloudflare D1 with graceful fallback.
  */
 export default defineEventHandler(async (event) => {
+  assertRateLimit(event, 'contact', 3, 60_000) // 3 submissions per minute
   const body = await readBody(event)
 
-  if (!body.email || !body.message) {
+  const email = String(body.email || '').trim().slice(0, 254)
+  const name = String(body.name || '').trim().slice(0, 100)
+  const message = String(body.message || '').trim().slice(0, 2000)
+
+  if (!email || !message) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Email and message are required',
     })
   }
 
-  // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(body.email)) {
+  if (!emailRegex.test(email)) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Invalid email address',
     })
   }
 
-  // Rate limiting check (simple in-memory for MVP)
-  // In production, use Cloudflare KV or D1
+  const db = getD1Binding(event)
+  if (!db) {
+    return { success: true, reason: 'STORAGE_NOT_CONFIGURED' }
+  }
 
-  // For MVP: log the feedback
-  console.log('[Contact]', {
-    email: body.email,
-    message: body.message.substring(0, 500),
-    timestamp: new Date().toISOString(),
-  })
-
-  // In production: store in D1
-  // const db = event.context.cloudflare?.env?.DB
-  // await db.prepare('INSERT INTO feedback (email, message, created_at) VALUES (?, ?, ?)')
-  //   .bind(body.email, body.message, Date.now())
-  //   .run()
+  const id = `ct_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`
+  await db
+    .prepare('INSERT INTO contact_submissions (id, email, name, message, created_at) VALUES (?, ?, ?, ?, ?)')
+    .bind(id, email, name, message, Date.now())
+    .run()
 
   return { success: true }
 })
