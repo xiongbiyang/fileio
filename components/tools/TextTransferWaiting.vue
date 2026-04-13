@@ -3,9 +3,14 @@
     <div class="md:hidden space-y-4 pb-28">
       <div class="flex items-center justify-between">
         <span class="font-headline text-lg font-bold text-on-surface dark:text-surface">ToolPort</span>
-        <div v-if="isConnected" class="flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
-          <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" /><span class="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
-          <span class="text-xs font-medium text-primary">{{ $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) }}</span>
+        <div v-if="isConnected" class="flex items-center gap-2">
+          <div class="flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
+            <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" /><span class="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
+            <span class="text-xs font-medium text-primary">{{ $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) }}</span>
+          </div>
+          <button class="p-2 rounded-full bg-surface-container-high dark:bg-surface-container text-on-surface-variant active:scale-90 transition-transform" @click="$emit('disconnect')">
+            <span class="material-symbols-outlined text-lg">qr_code_2</span>
+          </button>
         </div>
         <div v-else class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full">
           <span class="w-2 h-2 rounded-full bg-outline animate-pulse" />
@@ -86,15 +91,21 @@
             </span>
           </div>
         </div>
-        <div class="flex items-center gap-3 px-4 py-2 rounded-xl shadow-ambient" :class="isConnected ? 'bg-primary/5' : 'bg-surface-container-lowest dark:bg-surface-container-high'">
-          <div v-if="isConnected" class="relative flex items-center justify-center">
-            <span class="w-3 h-3 bg-primary rounded-full z-10" />
-            <span class="absolute w-3 h-3 bg-primary-fixed-dim rounded-full soft-pulse" />
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 px-4 py-2 rounded-xl shadow-ambient" :class="isConnected ? 'bg-primary/5' : 'bg-surface-container-lowest dark:bg-surface-container-high'">
+            <div v-if="isConnected" class="relative flex items-center justify-center">
+              <span class="w-3 h-3 bg-primary rounded-full z-10" />
+              <span class="absolute w-3 h-3 bg-primary-fixed-dim rounded-full soft-pulse" />
+            </div>
+            <span v-else class="w-3 h-3 rounded-full bg-outline animate-pulse" />
+            <span class="text-sm font-medium" :class="isConnected ? 'text-primary' : 'text-on-surface-variant'">
+              {{ isConnected ? $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) : $t('toolA.waitingConnection') }}
+            </span>
           </div>
-          <span v-else class="w-3 h-3 rounded-full bg-outline animate-pulse" />
-          <span class="text-sm font-medium" :class="isConnected ? 'text-primary' : 'text-on-surface-variant'">
-            {{ isConnected ? $t('toolA.mobileConnectedToDynamic', { device: connectedDeviceName }) : $t('toolA.waitingConnection') }}
-          </span>
+          <button v-if="isConnected" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-high dark:bg-surface-container text-on-surface-variant text-sm font-medium hover:bg-surface-container transition-colors" @click="$emit('disconnect')">
+            <span class="material-symbols-outlined text-lg">qr_code_2</span>
+            {{ $t('toolA.newConnection') }}
+          </button>
         </div>
       </div>
 
@@ -254,6 +265,7 @@ const emit = defineEmits<{
   desktopFileSelect: [files: File[]]
   qrCanvasReady: [element: HTMLCanvasElement | null]
   refreshQr: []
+  disconnect: []
 }>()
 
 const mobileTextInput = defineModel<string>('mobileTextInput', { required: true })

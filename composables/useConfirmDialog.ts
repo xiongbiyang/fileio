@@ -7,16 +7,17 @@ interface ConfirmDialogState {
   resolve: ((value: boolean) => void) | null
 }
 
-const state = reactive<ConfirmDialogState>({
-  visible: false,
-  title: '',
-  message: '',
-  confirmText: '',
-  cancelText: '',
-  resolve: null,
-})
-
+// Use useState to safely share state across SSR/client and avoid module-scope reactive() issues
 export function useConfirmDialog() {
+  const dialogState = useState<ConfirmDialogState>('confirm-dialog', () => ({
+    visible: false,
+    title: '',
+    message: '',
+    confirmText: '',
+    cancelText: '',
+    resolve: null,
+  }))
+
   function confirm(options: {
     title: string
     message: string
@@ -24,29 +25,29 @@ export function useConfirmDialog() {
     cancelText?: string
   }): Promise<boolean> {
     return new Promise((resolve) => {
-      state.title = options.title
-      state.message = options.message
-      state.confirmText = options.confirmText || 'Confirm'
-      state.cancelText = options.cancelText || 'Cancel'
-      state.resolve = resolve
-      state.visible = true
+      dialogState.value.title = options.title
+      dialogState.value.message = options.message
+      dialogState.value.confirmText = options.confirmText || 'Confirm'
+      dialogState.value.cancelText = options.cancelText || 'Cancel'
+      dialogState.value.resolve = resolve
+      dialogState.value.visible = true
     })
   }
 
   function handleConfirm() {
-    state.visible = false
-    state.resolve?.(true)
-    state.resolve = null
+    dialogState.value.visible = false
+    dialogState.value.resolve?.(true)
+    dialogState.value.resolve = null
   }
 
   function handleCancel() {
-    state.visible = false
-    state.resolve?.(false)
-    state.resolve = null
+    dialogState.value.visible = false
+    dialogState.value.resolve?.(false)
+    dialogState.value.resolve = null
   }
 
   return {
-    state: readonly(state),
+    state: dialogState,
     confirm,
     handleConfirm,
     handleCancel,

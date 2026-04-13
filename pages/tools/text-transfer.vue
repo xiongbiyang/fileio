@@ -15,6 +15,7 @@
       @copy-link="copyLink"
       @desktop-file-select="handleDesktopFileSelect"
       @desktop-send="desktopSend"
+      @disconnect="disconnectAndRefresh"
       @mobile-file-select="handleMobileFileSelect"
       @mobile-send="mobileSend"
       @qr-canvas-ready="attachQrCanvas"
@@ -219,6 +220,7 @@ const {
   desktopSend,
   desktopTextInput,
   devices,
+  disconnectAndRefresh,
   denyPairing,
   docCards,
   goToWaitingState,

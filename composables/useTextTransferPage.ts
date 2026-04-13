@@ -515,6 +515,19 @@ export function useTextTransferPage() {
     signaling.disconnect()
     generateRoomQr().then(() => startSenderSignaling())
   }
+  async function disconnectAndRefresh() {
+    const leave = await showConfirm({
+      title: t('toolA.disconnectTitle'),
+      message: t('toolA.disconnectMessage'),
+      confirmText: t('toolA.disconnectConfirm'),
+      cancelText: t('toolA.leaveCancel'),
+    })
+    if (leave) {
+      receivedMessages.value = []
+      isReceiver.value = false
+      refreshQr()
+    }
+  }
   function confirmPairing() {
     if (webrtc.connectionState.value !== 'connected') return
     state.value = 'waiting'
@@ -677,7 +690,7 @@ export function useTextTransferPage() {
 
   return {
     addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, confirmPairing, copyLink,
-    connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, denyPairing, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
+    connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, denyPairing, disconnectAndRefresh, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
     historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
     mobileSend, mobileTextInput, qrExpired, queuedFiles, receivedMessages, reconnectAttempt,
     refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
