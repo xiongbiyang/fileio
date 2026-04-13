@@ -103,11 +103,19 @@ export function useTextTransferPage() {
             a.click()
             document.body.removeChild(a)
             setTimeout(() => URL.revokeObjectURL(url), 1000)
+            // Show file in message list so both sides can see transfer history
+            receivedMessages.value.push({
+              id: crypto.randomUUID(),
+              content: `📎 ${incomingFileMeta.name} (${formatSize(incomingFileMeta.size)})`,
+              isSelf: false,
+            })
             incomingFileMeta = null
             incomingFileChunks = []
             incomingReceivedBytes = 0
-            transferProgress.value = 100
-            state.value = 'success'
+            transferProgress.value = 0
+            currentFile.value = { name: '', size: '' }
+            // Return to transfer UI instead of success screen
+            state.value = 'waiting'
           }
           else if (msg.type === 'file-cancel') {
             clearReceiveTimeout()
@@ -138,7 +146,6 @@ export function useTextTransferPage() {
       }
     },
     onStateChange: (connectionState) => {
-      console.log('[WebRTC] State changed:', connectionState)
       if (connectionState === 'connected') {
         clearDisconnectTimer()
         markRemoteDeviceOnline(true)
@@ -236,7 +243,7 @@ export function useTextTransferPage() {
   const connectedDeviceName = computed(() => remoteDeviceName.value || t('toolA.unknownDevice'))
 
   onBeforeRouteLeave(() => {
-    if (state.value === 'transferring' || state.value === 'pairing') return window.confirm(t('toolA.leaveWarning'))
+    if (isConnected.value || state.value === 'transferring') return window.confirm(t('toolA.leaveWarning'))
   })
 
   onMounted(async () => {
@@ -251,8 +258,6 @@ export function useTextTransferPage() {
     const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1]
     const joinRoom = (queryRoom || searchRoom || hashRoom || '').trim().toLowerCase()
 
-    console.log('[Init] URL:', window.location.href)
-    console.log('[Init] route.query.r:', queryRoom, 'URLSearchParams.r:', searchRoom, 'hash.r:', hashRoom, '→ joinRoom:', joinRoom)
 
     if (joinRoom) {
       roomId.value = joinRoom
@@ -260,7 +265,6 @@ export function useTextTransferPage() {
     }
     else {
       roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
-      console.log('[Init] Generated roomId:', roomId.value)
       await generateRoomQr()
       startSenderSignaling()
     }
@@ -275,7 +279,6 @@ export function useTextTransferPage() {
   })
 
   function attachQrCanvas(element: HTMLCanvasElement | null) {
-    console.log('[QR] attachQrCanvas called, element=', !!element, 'roomId=', roomId.value)
     qrCanvasTransfer.value = element ?? undefined
     // Canvas might arrive after generateRoomQr() was called — re-render
     if (element && roomId.value && !isReceiver.value) {
@@ -391,7 +394,7 @@ export function useTextTransferPage() {
     saveTransferRecords()
   }
   function handleBeforeUnload(event: BeforeUnloadEvent) {
-    if (state.value === 'transferring' || state.value === 'pairing') {
+    if (isConnected.value || state.value === 'transferring') {
       event.preventDefault()
       event.returnValue = ''
     }
@@ -436,13 +439,11 @@ export function useTextTransferPage() {
   async function generateRoomQr() {
     await nextTick()
     if (!qrCanvasTransfer.value || !roomId.value) {
-      console.log('[QR] Skipped: canvas=', !!qrCanvasTransfer.value, 'roomId=', roomId.value)
       return
     }
     try {
       const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
       if (!url) return
-      console.log('[QR] Rendering:', url)
       await renderQrCodeToCanvas(qrCanvasTransfer.value, url, { width: 220, margin: 2 })
     }
     catch {
@@ -464,16 +465,8 @@ export function useTextTransferPage() {
     setupTrickleIce()
     signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
-      console.log('[Transfer] Received offer, creating answer...')
-      try {
-        const answer = await webrtc.connect(offer)
-        console.log('[Transfer] Answer created, sending...')
-        signaling.sendSignal('answer', answer)
-        console.log('[Transfer] Answer sent, waiting for ICE to connect...')
-      }
-      catch (e) {
-        console.error('[Transfer] Failed to process offer:', e)
-      }
+      const answer = await webrtc.connect(offer)
+      signaling.sendSignal('answer', answer)
     }
     signaling.connect()
   }
@@ -539,7 +532,6 @@ export function useTextTransferPage() {
   async function startTransfer() {
     if (!fileQueue.value.length || !isConnected.value) return
     state.value = 'transferring'
-    let hasFailure = false
     let lastBytes = 0
     let lastTime = Date.now()
     for (const file of fileQueue.value) {
@@ -573,15 +565,23 @@ export function useTextTransferPage() {
           }
         })
         updateTransferRecord(pendingRecordId, { status: 'completed' })
+        // Show sent file in message list
+        receivedMessages.value.push({
+          id: crypto.randomUUID(),
+          content: `📎 ${file.name} (${formatSize(file.size)})`,
+          isSelf: true,
+        })
       }
       catch {
-        hasFailure = true
         updateTransferRecord(pendingRecordId, { status: 'failed' })
         notify(t('common.transferFailed'), 'error')
       }
     }
     fileQueue.value = []
-    state.value = hasFailure ? 'waiting' : 'success'
+    transferProgress.value = 0
+    currentFile.value = { name: '', size: '' }
+    // Return to transfer UI — stay connected for more transfers
+    state.value = 'waiting'
   }
   function cancelTransfer() {
     webrtc.cancelSend()
@@ -650,7 +650,14 @@ export function useTextTransferPage() {
         }
       })
       updateTransferRecord(pendingRecordId, { status: 'completed' })
-      state.value = 'success'
+      receivedMessages.value.push({
+        id: crypto.randomUUID(),
+        content: `📎 ${file.name} (${formatSize(file.size)})`,
+        isSelf: true,
+      })
+      transferProgress.value = 0
+      currentFile.value = { name: '', size: '' }
+      state.value = 'waiting'
     }
     catch {
       updateTransferRecord(pendingRecordId, { status: 'failed' })
