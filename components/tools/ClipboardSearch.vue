@@ -25,7 +25,13 @@
       </div>
 
       <div class="bg-surface-container dark:bg-surface-container-high flex min-h-[700px] flex-col rounded-xl p-8 lg:col-span-9">
-        <h2 class="font-headline mb-6 text-3xl font-extrabold text-on-surface dark:text-surface">{{ $t('toolC.title') }}</h2>
+        <div class="flex items-center gap-4 mb-6">
+          <button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest dark:bg-surface-container rounded-xl text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors" @click="$emit('goBack')">
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+            {{ $t('common.goBack') }}
+          </button>
+          <h2 class="font-headline text-3xl font-extrabold text-on-surface dark:text-surface">{{ $t('toolC.title') }}</h2>
+        </div>
 
         <div class="relative mb-4 max-w-md">
           <span class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-4 -translate-y-1/2">search</span>
@@ -85,9 +91,6 @@
           </div>
         </div>
 
-        <div class="mt-6 flex justify-between">
-          <button class="px-4 py-2 text-sm font-bold text-primary hover:underline" @click="$emit('goBack')">{{ $t('common.goBack') }}</button>
-        </div>
       </div>
     </div>
   </div>
