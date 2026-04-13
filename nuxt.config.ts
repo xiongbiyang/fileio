@@ -164,7 +164,8 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/tools': { prerender: true },
-    '/tools/text-transfer': { prerender: true },
+    // text-transfer depends on ?r= query param for room joining — must NOT prerender
+    '/tools/text-transfer': { prerender: false },
     '/tools/clipboard': { prerender: true },
     '/tools/qr-code': { prerender: true },
     '/about': { prerender: true },
