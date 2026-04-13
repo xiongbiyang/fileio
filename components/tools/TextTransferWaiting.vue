@@ -297,7 +297,7 @@ const emit = defineEmits<{
   mobileSend: []
   desktopSend: []
   desktopFileSelect: [files: File[]]
-  qrCanvasReady: [element: HTMLCanvasElement | null]
+  qrCanvasReady: [elements: (HTMLCanvasElement | null)[]]
   refreshQr: []
   disconnect: []
 }>()
@@ -340,8 +340,7 @@ const props = defineProps<{
 }>()
 
 function emitQrCanvas() {
-  // Desktop and mobile have separate canvases — send whichever is available
-  emit('qrCanvasReady', qrCanvas.value || mobileQrCanvas.value)
+  emit('qrCanvasReady', [qrCanvas.value, mobileQrCanvas.value])
 }
 
 onMounted(() => emitQrCanvas())

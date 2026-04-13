@@ -46,7 +46,7 @@ export function useTextTransferPage() {
   const mobileTextInput = ref('')
   const desktopTextInput = ref('')
   const isReceiver = ref(false)
-  const qrCanvasTransfer = ref<HTMLCanvasElement>()
+  const qrCanvasElements = ref<(HTMLCanvasElement | null)[]>([])
   const transferProgress = ref(0)
   const transferredSize = ref('0 B')
   const transferSpeed = ref('--')
@@ -287,10 +287,10 @@ export function useTextTransferPage() {
     document.removeEventListener('visibilitychange', handleVisibilityChange)
   })
 
-  function attachQrCanvas(element: HTMLCanvasElement | null) {
-    qrCanvasTransfer.value = element ?? undefined
+  function attachQrCanvas(elements: (HTMLCanvasElement | null)[]) {
+    qrCanvasElements.value = elements
     // Canvas might arrive after generateRoomQr() was called — re-render
-    if (element && roomId.value && !isReceiver.value) {
+    if (elements.some(Boolean) && roomId.value && !isReceiver.value) {
       generateRoomQr()
     }
   }
@@ -447,13 +447,14 @@ export function useTextTransferPage() {
   }
   async function generateRoomQr() {
     await nextTick()
-    if (!qrCanvasTransfer.value || !roomId.value) {
-      return
-    }
+    const canvases = qrCanvasElements.value.filter((c): c is HTMLCanvasElement => c !== null)
+    if (!canvases.length || !roomId.value) return
     try {
       const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
       if (!url) return
-      await renderQrCodeToCanvas(qrCanvasTransfer.value, url, { width: 220, margin: 2 })
+      for (const canvas of canvases) {
+        await renderQrCodeToCanvas(canvas, url, { width: 220, margin: 2 })
+      }
     }
     catch {
       notify(t('common.qrFailed'), 'error')
