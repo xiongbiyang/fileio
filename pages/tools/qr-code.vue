@@ -42,10 +42,9 @@
       </div>
 
       <!-- Mobile Subtitle -->
-      <div class="mb-6">
-        <span class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">STUDIO</span>
-        <h1 class="font-headline text-3xl font-extrabold text-on-surface dark:text-surface tracking-tight">{{ $t('toolB.mobileHeadline') }}</h1>
-        <p class="text-on-surface-variant text-sm mt-1">{{ $t('toolB.mobileSubline') }}</p>
+      <div class="mb-4">
+        <h1 class="font-headline text-2xl font-extrabold text-on-surface dark:text-surface tracking-tight">{{ $t('toolB.mobileHeadline') }}</h1>
+        <p class="text-on-surface-variant text-xs mt-1">{{ $t('toolB.mobileSubline') }}</p>
       </div>
 
       <!-- Mobile Tabs -->
@@ -71,29 +70,8 @@
           </div>
         </div>
 
-        <!-- Mobile Popular Templates -->
-        <div class="rounded-xl border border-primary/20 bg-primary/5 p-3">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-on-surface dark:text-surface">{{ $t('toolB.popularTemplates') }}</span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary text-on-primary">{{ $t('toolB.hotBadge') }}</span>
-          </div>
-          <div class="max-h-44 overflow-y-auto pr-1">
-            <div class="grid grid-cols-1 gap-2">
-              <button
-                v-for="template in uiQrTemplates"
-                :key="`m-${template.key}`"
-                class="text-left rounded-lg border p-2.5 bg-surface-container-lowest dark:bg-surface-container-high"
-                :class="activeTemplateKey === template.key ? 'border-primary/60 bg-primary/5' : 'border-outline-variant/20'"
-                @click="applyQrTemplateByKey(template.key)"
-              >
-                <p class="text-sm font-bold text-on-surface dark:text-surface">{{ template.title }}</p>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile Live Preview -->
-        <div class="flex items-start gap-2 mb-2">
+        <!-- Mobile Live Preview — directly below input -->
+        <div class="flex items-start gap-2">
           <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">{{ $t('toolB.mobileLivePreview') }}</span>
           <span class="relative flex h-1.5 w-1.5 mt-0.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" /><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
         </div>
@@ -102,6 +80,27 @@
           <div class="w-56 h-56 bg-surface-container dark:bg-surface-container rounded-xl flex items-center justify-center">
             <canvas v-show="!!inputText" ref="qrCanvasMobile" class="w-full h-auto max-w-[200px]" />
             <span v-if="!inputText" class="material-symbols-outlined text-5xl text-outline-variant/30">qr_code_2</span>
+          </div>
+        </div>
+
+        <!-- Mobile Popular Templates — below preview -->
+        <div class="rounded-xl border border-primary/20 bg-primary/5 p-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-on-surface dark:text-surface">{{ $t('toolB.popularTemplates') }}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary text-on-primary">{{ $t('toolB.hotBadge') }}</span>
+          </div>
+          <div class="max-h-32 overflow-y-auto pr-1">
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                v-for="template in uiQrTemplates"
+                :key="`m-${template.key}`"
+                class="text-left rounded-lg border p-2 bg-surface-container-lowest dark:bg-surface-container-high"
+                :class="activeTemplateKey === template.key ? 'border-primary/60 bg-primary/5' : 'border-outline-variant/20'"
+                @click="applyQrTemplateByKey(template.key)"
+              >
+                <p class="text-xs font-bold text-on-surface dark:text-surface">{{ template.title }}</p>
+              </button>
+            </div>
           </div>
         </div>
 

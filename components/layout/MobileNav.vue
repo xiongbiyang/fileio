@@ -14,9 +14,10 @@ v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
 const route = useRoute()
 const localePath = useLocalePath()
 const navItems = [
-  { path: '/', icon: 'home', key: 'nav.home' },
-  { path: '/tools', icon: 'handyman', key: 'nav.tools' },
+  { path: '/tools', icon: 'apps', key: 'nav.tools' },
   { path: '/tools/text-transfer', icon: 'swap_horiz', key: 'nav.transfer' },
+  { path: '/tools/qr-code', icon: 'qr_code_2', key: 'nav.qrCode' },
+  { path: '/tools/clipboard', icon: 'content_paste', key: 'nav.clipboard' },
   { path: '/settings', icon: 'settings', key: 'nav.settings' },
 ]
 function isActive(path: string) {
