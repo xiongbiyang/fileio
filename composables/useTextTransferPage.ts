@@ -427,14 +427,22 @@ export function useTextTransferPage() {
       notify(t('common.qrFailed'), 'error')
     }
   }
+  function setupTrickleIce() {
+    // Send local ICE candidates to remote peer via signaling
+    webrtc.onIceCandidateEmit((candidate) => {
+      signaling.sendSignal('candidate', candidate)
+    })
+    // Receive remote ICE candidates from signaling
+    signaling.onCandidate.value = async (candidate: RTCIceCandidateInit) => {
+      await webrtc.addIceCandidate(candidate)
+    }
+  }
   function startSenderSignaling() {
     signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
       const answer = await webrtc.connect(offer)
-      await signaling.sendSignal('answer', answer)
-      // WebRTC handshake completes in ~200ms, so onStateChange('connected')
-      // fires almost immediately and transitions to 'waiting' + isConnected.
-      // No need to flash the 'pairing' verification screen.
+      setupTrickleIce()
+      signaling.sendSignal('answer', answer)
     }
     signaling.connect()
   }
@@ -443,11 +451,11 @@ export function useTextTransferPage() {
     try {
       signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
         await webrtc.setRemoteDescription(answer)
-        signaling.disconnect()
       }
       signaling.connect()
       const offer = await webrtc.connect()
-      await signaling.sendSignal('offer', offer)
+      setupTrickleIce()
+      signaling.sendSignal('offer', offer)
     }
     catch {
       notify(t('common.roomConnectFailed'), 'error')

@@ -9,6 +9,8 @@ interface WebRTCReturn {
   connectionState: Ref<RTCPeerConnectionState>
   connect: (offer?: RTCSessionDescriptionInit) => Promise<RTCSessionDescriptionInit>
   setRemoteDescription: (desc: RTCSessionDescriptionInit) => Promise<void>
+  addIceCandidate: (candidate: RTCIceCandidateInit) => Promise<void>
+  onIceCandidateEmit: (cb: (candidate: RTCIceCandidateInit) => void) => void
   restartIce: () => Promise<RTCSessionDescriptionInit>
   receiveRestartOffer: (offer: RTCSessionDescriptionInit) => Promise<RTCSessionDescriptionInit>
   sendControl: (type: string, data?: unknown) => void
@@ -46,6 +48,8 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
   let dataChannel: RTCDataChannel | null = null
   let sendCancelFlag = false
 
+  let onIceCandidate: ((candidate: RTCIceCandidateInit) => void) | null = null
+
   function initPeerConnection(iceServers: RTCIceServer[]) {
     pc = new RTCPeerConnection({ iceServers })
 
@@ -53,6 +57,12 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
       if (pc) {
         connectionState.value = pc.connectionState
         options.onStateChange?.(pc.connectionState)
+      }
+    }
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        onIceCandidate?.(event.candidate.toJSON())
       }
     }
 
@@ -95,7 +105,7 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
       setTimeout(() => {
         peerConnection.removeEventListener('icegatheringstatechange', handler)
         resolve()
-      }, 5000)
+      }, 2000)
     })
   }
 
@@ -106,25 +116,27 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     if (!pc) throw new Error('Failed to create peer connection')
 
     if (offer) {
-      // Answerer path
+      // Answerer path — Trickle ICE: send answer immediately, candidates follow
       await pc.setRemoteDescription(offer)
       const answer = await pc.createAnswer()
       await pc.setLocalDescription(answer)
-      await waitForIceGathering(pc)
       return pc.localDescription as RTCSessionDescriptionInit
     }
 
-    // Offerer path
+    // Offerer path — Trickle ICE: send offer immediately, candidates follow
     dataChannel = pc.createDataChannel('toolport-transfer', { ordered: true })
     setupDataChannel()
     const createdOffer = await pc.createOffer()
     await pc.setLocalDescription(createdOffer)
-    await waitForIceGathering(pc)
     return pc.localDescription as RTCSessionDescriptionInit
   }
 
   async function setRemoteDescription(desc: RTCSessionDescriptionInit) {
     if (pc) await pc.setRemoteDescription(desc)
+  }
+
+  async function addIceCandidate(candidate: RTCIceCandidateInit) {
+    if (pc) await pc.addIceCandidate(new RTCIceCandidate(candidate))
   }
 
   /**
@@ -242,6 +254,8 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
       connectionState,
       connect,
       setRemoteDescription,
+      addIceCandidate,
+      onIceCandidateEmit: (cb: (candidate: RTCIceCandidateInit) => void) => { onIceCandidate = cb },
       restartIce,
       receiveRestartOffer,
       sendControl,
