@@ -242,8 +242,17 @@ export function useTextTransferPage() {
   const isConnected = computed(() => webrtc.connectionState.value === 'connected')
   const connectedDeviceName = computed(() => remoteDeviceName.value || t('toolA.unknownDevice'))
 
-  onBeforeRouteLeave(() => {
-    if (isConnected.value || state.value === 'transferring') return window.confirm(t('toolA.leaveWarning'))
+  const { confirm: showConfirm } = useConfirmDialog()
+  onBeforeRouteLeave(async () => {
+    if (isConnected.value || state.value === 'transferring') {
+      const leave = await showConfirm({
+        title: t('toolA.leaveTitle'),
+        message: t('toolA.leaveWarning'),
+        confirmText: t('toolA.leaveConfirm'),
+        cancelText: t('toolA.leaveCancel'),
+      })
+      return leave
+    }
   })
 
   onMounted(async () => {

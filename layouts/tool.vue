@@ -10,6 +10,7 @@
       <AppFooter />
     </div>
     <MobileNav class="lg:hidden" />
+    <ConfirmDialog />
   </div>
 </template>
 
