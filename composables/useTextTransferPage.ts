@@ -138,6 +138,7 @@ export function useTextTransferPage() {
       }
     },
     onStateChange: (connectionState) => {
+      console.log('[WebRTC] State changed:', connectionState)
       if (connectionState === 'connected') {
         clearDisconnectTimer()
         markRemoteDeviceOnline(true)
@@ -442,8 +443,16 @@ export function useTextTransferPage() {
     setupTrickleIce()
     signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
-      const answer = await webrtc.connect(offer)
-      signaling.sendSignal('answer', answer)
+      console.log('[Transfer] Received offer, creating answer...')
+      try {
+        const answer = await webrtc.connect(offer)
+        console.log('[Transfer] Answer created, sending...')
+        signaling.sendSignal('answer', answer)
+        console.log('[Transfer] Answer sent, waiting for ICE to connect...')
+      }
+      catch (e) {
+        console.error('[Transfer] Failed to process offer:', e)
+      }
     }
     signaling.connect()
   }
