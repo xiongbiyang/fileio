@@ -249,6 +249,7 @@ export function useTextTransferPage() {
     }
     else {
       roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
+      console.log('[Init] Generated roomId:', roomId.value)
       await generateRoomQr()
       startSenderSignaling()
     }
@@ -263,6 +264,7 @@ export function useTextTransferPage() {
   })
 
   function attachQrCanvas(element: HTMLCanvasElement | null) {
+    console.log('[QR] attachQrCanvas called, element=', !!element, 'roomId=', roomId.value)
     qrCanvasTransfer.value = element ?? undefined
     // Canvas might arrive after generateRoomQr() was called — re-render
     if (element && roomId.value && !isReceiver.value) {
