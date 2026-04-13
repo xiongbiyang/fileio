@@ -67,9 +67,12 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
+import { getLocalizedPost } from '~/composables/useBlogPosts'
+
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const posts = useBlogPosts()
+const rawPosts = useBlogPosts()
+const posts = computed(() => rawPosts.map(p => ({ ...p, ...getLocalizedPost(p, locale.value) })))
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
 const canonicalUrl = computed(() =>
@@ -118,8 +121,8 @@ useJsonLd({
   '@type': 'ItemList',
   name: 'ToolPort Blog Articles',
   itemListOrder: 'https://schema.org/ItemListOrderDescending',
-  numberOfItems: posts.length,
-  itemListElement: posts.map((post, index) => ({
+  numberOfItems: posts.value.length,
+  itemListElement: posts.value.map((post: { slug: string; title: string }, index: number) => ({
     '@type': 'ListItem',
     position: index + 1,
     url: new URL(localePath(`/blog/${post.slug}`), canonicalUrl.value).toString(),

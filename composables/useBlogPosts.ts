@@ -5,6 +5,7 @@ export interface BlogPost {
   date: string
   tags: string[]
   author: string
+  zhCN?: { title: string; description: string; tags: string[] }
 }
 
 export function useBlogPosts(): BlogPost[] {
@@ -16,6 +17,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-04',
       tags: ['QR Code', 'Client-side', 'Privacy', 'Local Processing', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '纯客户端 QR 码生成器：开箱即用的本地工作流', description: '了解为什么纯客户端 QR 生成对隐私敏感型工作流更安全，以及如何在不上传服务器的情况下在本地创建 QR 码。', tags: ['QR 码', '客户端', '隐私', '本地处理', '教程'] },
     },
     {
       slug: 'no-tracking-qr-code-generator-guide',
@@ -24,6 +26,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-04',
       tags: ['QR Code', 'No Tracking', 'Privacy', 'Static QR', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '无追踪 QR 码生成器：开箱即用的干净链接', description: '创建不含自动添加的追踪参数、隐藏重定向或再营销追踪的干净 QR 码。', tags: ['QR 码', '无追踪', '隐私', '静态 QR', '教程'] },
     },
     {
       slug: 'offline-qr-code-generator-guide',
@@ -32,6 +35,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-04',
       tags: ['QR Code', 'Offline', 'Local-first', 'No Cloud', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '离线 QR 码生成器：开箱即用的本地优先工作流', description: '在网络不稳定时使用本地优先的 QR 工作流，以最少的云依赖生成 QR 码。', tags: ['QR 码', '离线', '本地优先', '无云', '教程'] },
     },
     {
       slug: 'static-qr-without-expiration-guide',
@@ -40,6 +44,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-04',
       tags: ['QR Code', 'Static QR', 'Never Expire', 'Long-term', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '永不过期的静态 QR 码：创建长期有效的二维码', description: '了解静态 QR 策略，通过直接、持久的 QR 链接避免付费墙限制的过期二维码。', tags: ['QR 码', '静态 QR', '永不过期', '长期有效', '教程'] },
     },
     {
       slug: 'toolport-vs-localsend-comparison',
@@ -48,6 +53,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Comparison', 'LocalSend', 'File Transfer', 'Phone to PC', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'ToolPort 与 LocalSend 对比：日常手机传文件到电脑哪个更好？', description: '对比 ToolPort 免安装手机传电脑和 LocalSend 局域网应用传输，选择更适合日常跨设备使用的工作流。', tags: ['对比', 'LocalSend', '文件传输', '手机传电脑', '教程'] },
     },
     {
       slug: 'toolport-vs-wetransfer-comparison',
@@ -56,6 +62,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Comparison', 'WeTransfer', 'File Transfer', 'Phone to PC', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'ToolPort 与 WeTransfer 对比：快速设备间传输哪个更好？', description: '对比 ToolPort 直连手机传电脑和 WeTransfer 上传链接分享，找到日常分享的更快工作流。', tags: ['对比', 'WeTransfer', '文件传输', '手机传电脑', '教程'] },
     },
     {
       slug: 'toolport-vs-snapdrop-comparison',
@@ -64,6 +71,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Comparison', 'Snapdrop', 'File Transfer', 'Phone to PC', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'ToolPort 与 Snapdrop 对比：跨设备共享哪个更好？', description: '对比 ToolPort 和 Snapdrop 的同 WiFi 共享和手机传电脑工作流，了解网络依赖差异。', tags: ['对比', 'Snapdrop', '文件传输', '手机传电脑', '教程'] },
     },
     {
       slug: 'toolport-vs-airdrop-comparison',
@@ -72,6 +80,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Comparison', 'AirDrop', 'File Transfer', 'Phone to PC', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'ToolPort 与 AirDrop 对比：手机传文件到电脑哪个更好？', description: '对比 ToolPort 和 AirDrop 的 iPhone 传 Windows 及跨平台传输能力，了解 Apple 生态限制。', tags: ['对比', 'AirDrop', '文件传输', '手机传电脑', '教程'] },
     },
     {
       slug: 'iphone-to-windows-file-transfer-no-app-guide',
@@ -80,6 +89,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['File Transfer', 'iPhone to Windows', 'No App', 'Phone to PC', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'iPhone 传文件到 Windows 无需安装应用：浏览器快速传输', description: '无需安装任何应用即可从 iPhone 传文件到 Windows。使用浏览器 QR 配对实现快速跨设备传输。', tags: ['文件传输', 'iPhone 传 Windows', '免安装', '手机传电脑', '教程'] },
     },
     {
       slug: 'send-large-video-from-phone-to-pc-guide',
@@ -88,6 +98,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['File Transfer', 'Large Video', 'Phone to PC', 'Wireless', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '手机发送大视频到电脑：无需数据线，无需等待上传', description: '无需数据线或等待云上传即可将大视频从手机传到电脑。实用的工作流和性能优化技巧。', tags: ['文件传输', '大视频', '手机传电脑', '无线', '教程'] },
     },
     {
       slug: 'transfer-files-phone-to-laptop-without-usb-guide',
@@ -96,6 +107,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['File Transfer', 'No USB', 'Phone to Laptop', 'QR Pairing', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '手机传文件到笔记本无需 USB：简单 QR 配对', description: '通过浏览器 QR 配对无需 USB 即可将手机文件传到笔记本，支持 iPhone、Android、Windows 和 Mac。', tags: ['文件传输', '无 USB', '手机传笔记本', 'QR 配对', '教程'] },
     },
     {
       slug: 'copy-link-from-phone-to-pc-instantly-guide',
@@ -104,6 +116,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Clipboard', 'Copy Link', 'Phone to PC', 'Cross-Device', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '手机即时复制链接到电脑：浏览器剪贴板工作流', description: '通过共享浏览器剪贴板房间即时从手机复制链接到电脑，无需安装应用或切换账号。', tags: ['剪贴板', '复制链接', '手机传电脑', '跨设备', '教程'] },
     },
     {
       slug: 'cross-device-clipboard-without-login-guide',
@@ -112,6 +125,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Clipboard', 'No Login', 'Cross-Device', 'Text Sync', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '免登录跨设备剪贴板：在设备间共享文本', description: '无需登录即可使用跨设备剪贴板同步，通过临时浏览器房间在手机、平板和电脑间共享文本和链接。', tags: ['剪贴板', '免登录', '跨设备', '文本同步', '教程'] },
     },
     {
       slug: 'temporary-shared-clipboard-room-guide',
@@ -120,6 +134,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['Clipboard', 'Temporary Room', 'Shared Text', 'Productivity', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '临时共享剪贴板房间：快速一次性文本共享', description: '创建临时共享剪贴板房间，通过简单的会话式工作流在设备间快速共享文本和链接。', tags: ['剪贴板', '临时房间', '共享文本', '效率', '教程'] },
     },
     {
       slug: 'pdf-qr-code-generator-guide',
@@ -128,6 +143,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'PDF QR', 'Document Sharing', 'Print', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'PDF QR 码生成器：快速分享菜单、宣传册和文档', description: '为菜单、宣传册和文档创建 PDF QR 码，包含扫码优化技巧、PNG/SVG 导出指南和印刷最佳实践。', tags: ['QR 码', 'PDF QR', '文档分享', '印刷', '教程'] },
     },
     {
       slug: 'google-maps-qr-code-generator-guide',
@@ -136,6 +152,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'Maps QR', 'Google Maps', 'Local SEO', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'Google 地图 QR 码生成器：引导客户到你的位置', description: '为商店、诊所和活动创建 Google 地图 QR 码，让用户一扫即可打开导航。', tags: ['QR 码', '地图 QR', 'Google 地图', '本地 SEO', '教程'] },
     },
     {
       slug: 'app-download-qr-code-generator-guide',
@@ -144,6 +161,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'App Download', 'Mobile App', 'Campaign', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '应用下载 QR 码生成器：一扫即可安装你的应用', description: '为包装、营销活动和店内推广创建应用下载 QR 码，一扫即可跳转 iOS 和 Android 安装页面。', tags: ['QR 码', '应用下载', '移动应用', '营销', '教程'] },
     },
     {
       slug: 'instagram-qr-code-generator-guide',
@@ -152,6 +170,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'Instagram QR', 'Social Media', 'Growth', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'Instagram QR 码生成器：从线下流量增长主页访问', description: '通过 Instagram QR 码将线下接触点转化为主页访问。学习摆放和设计技巧以提高扫码关注转化率。', tags: ['QR 码', 'Instagram QR', '社交媒体', '增长', '教程'] },
     },
     {
       slug: 'email-qr-code-generator-guide',
@@ -160,6 +179,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'Email QR', 'Lead Capture', 'Support', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '邮件 QR 码生成器：让用户一扫即可联系你', description: '创建邮件 QR 码，扫码后自动打开预填收件人和主题的邮件草稿，适用于客服、销售和咨询场景。', tags: ['QR 码', '邮件 QR', '获客', '客服', '教程'] },
     },
     {
       slug: 'sms-qr-code-generator-guide',
@@ -168,6 +188,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'SMS QR', 'Messaging', 'Mobile', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '短信 QR 码生成器：一扫即可发送短信', description: '创建预填号码和内容的短信 QR 码，适用于预约、客服和营销互动，支持 iOS 和 Android。', tags: ['QR 码', '短信 QR', '消息', '移动端', '教程'] },
     },
     {
       slug: 'event-qr-code-generator-guide',
@@ -176,6 +197,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'Event QR', 'Calendar', 'Conference', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '活动 QR 码生成器：即时分享日程和详情', description: '为邀请函、海报和现场标识创建活动 QR 码，一扫即可查看日程、场地和报名详情。', tags: ['QR 码', '活动 QR', '日历', '会议', '教程'] },
     },
     {
       slug: 'form-survey-qr-code-generator-guide',
@@ -184,6 +206,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-03',
       tags: ['QR Code', 'Form QR', 'Survey QR', 'Feedback', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '表单和问卷 QR 码生成器：更快收集反馈', description: '为反馈、注册和获客创建表单和问卷 QR 码，直接跳转移动端表单以提高完成率。', tags: ['QR 码', '表单 QR', '问卷 QR', '反馈', '教程'] },
     },
     {
       slug: 'payment-paypal-crypto-qr-code-generator-guide',
@@ -192,6 +215,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-02',
       tags: ['QR Code', 'Payment QR', 'PayPal', 'Crypto', 'Finance', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '支付 QR 码生成器：PayPal 和加密货币链接二维码指南', description: '学习为 PayPal 链接、加密钱包地址和发票 URL 创建支付 QR 码，包含 PNG/SVG 导出和扫码安全最佳实践。', tags: ['QR 码', '支付 QR', 'PayPal', '加密货币', '金融', '教程'] },
     },
     {
       slug: 'vcard-contact-business-card-qr-code-guide',
@@ -200,6 +224,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-02',
       tags: ['QR Code', 'vCard', 'Contact QR', 'Business Card', 'Networking'],
       author: 'ToolPort Team',
+      zhCN: { title: 'vCard QR 码生成器：联系人和名片二维码设置', description: '为活动、销售和社交创建联系人和名片 QR 码，一扫即可分享详细信息。', tags: ['QR 码', 'vCard', '联系人 QR', '名片', '社交'] },
     },
     {
       slug: 'menu-qr-code-generator-for-restaurants',
@@ -208,6 +233,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-02',
       tags: ['QR Code', 'Menu QR', 'Restaurant', 'Cafe', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: '餐厅菜单 QR 码生成器：快速设置指南', description: '创建扫码快、打印清晰的餐厅菜单 QR 码，包含咖啡馆和餐饮商家的摆放和设计技巧。', tags: ['QR 码', '菜单 QR', '餐厅', '咖啡馆', '教程'] },
     },
     {
       slug: 'google-review-qr-code-generator-guide',
@@ -216,6 +242,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-02',
       tags: ['QR Code', 'Google Review', 'Local SEO', 'Reputation', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'Google 评价 QR 码生成器：从线下客户获取更多评价', description: '将 Google 评价链接转为 QR 码，放在收据、桌面和柜台上以提高评价转化率。', tags: ['QR 码', 'Google 评价', '本地 SEO', '口碑', '教程'] },
     },
     {
       slug: 'wifi-qr-code-generator-guide',
@@ -224,6 +251,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-02',
       tags: ['QR Code', 'WiFi QR', 'Password Sharing', 'No Signup', 'Guide'],
       author: 'ToolPort Team',
+      zhCN: { title: 'WiFi QR 码生成器：用二维码分享 WiFi 密码', description: '为访客和活动创建 WiFi QR 码，通过可打印的 PNG/SVG 二维码即时分享网络访问。', tags: ['QR 码', 'WiFi QR', '密码分享', '免注册', '教程'] },
     },
     {
       slug: 'best-airdrop-alternative-for-windows-2026',
@@ -232,6 +260,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2026-04-01',
       tags: ['AirDrop Alternative', 'Windows', 'Phone to PC', 'File Transfer', 'No App', 'No Signup'],
       author: 'ToolPort Team',
+      zhCN: { title: '2026 年最佳 Windows AirDrop 替代方案 - 免费、免安装、免注册', description: '在寻找 Windows 上的 AirDrop 替代方案？学习从 iPhone 或 Android 传文件到 Windows 的快速跨平台工作流，无需安装应用或注册。', tags: ['AirDrop 替代', 'Windows', '手机传电脑', '文件传输', '免安装', '免注册'] },
     },
     {
       slug: 'best-free-ai-tools-2025',
@@ -240,6 +269,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2025-03-28',
       tags: ['AI Tools', 'Free', 'Online', 'AI Image Generator', 'AI Writing'],
       author: 'ToolPort Team',
+      zhCN: { title: '2025 年 10 款最佳免费在线 AI 工具 — 无需注册', description: '发现可以直接在浏览器中使用的最佳免费 AI 工具：AI 图片生成器、背景移除、写作助手、文字转语音、照片增强、翻译等。', tags: ['AI 工具', '免费', '在线', 'AI 图片生成', 'AI 写作'] },
     },
     {
       slug: 'free-online-qr-code-generator',
@@ -248,6 +278,7 @@ export function useBlogPosts(): BlogPost[] {
       date: '2025-03-20',
       tags: ['QR Code', 'Generator', 'Free Tool', 'Batch', 'SVG'],
       author: 'ToolPort Team',
+      zhCN: { title: '免费在线 QR 码生成器 — 自定义颜色、Logo 和批量导出', description: '免费生成高质量 QR 码。自定义颜色、添加 Logo、CSV 批量生成，下载 PNG 或 SVG。无需注册，全部本地处理。', tags: ['QR 码', '生成器', '免费工具', '批量', 'SVG'] },
     },
     {
       slug: 'how-to-transfer-files-phone-to-pc',
@@ -256,6 +287,15 @@ export function useBlogPosts(): BlogPost[] {
       date: '2025-03-15',
       tags: ['File Transfer', 'AirDrop Alternative', 'Phone to PC', 'No App', 'Wireless', 'No USB'],
       author: 'ToolPort Team',
+      zhCN: { title: '如何无线传输文件从手机到电脑 — 免安装、免数据线', description: '从 Android 或 iPhone 传文件、照片和文本到电脑的最快方法，无需数据线或应用。免费 AirDrop 替代方案 — 扫码即连，端对端加密，免注册。', tags: ['文件传输', 'AirDrop 替代', '手机传电脑', '免安装', '无线', '免数据线'] },
     },
   ]
+}
+
+/** Get localized blog post fields based on locale */
+export function getLocalizedPost(post: BlogPost, locale: string): { title: string; description: string; tags: string[] } {
+  if (locale === 'zh-CN' && post.zhCN) {
+    return post.zhCN
+  }
+  return { title: post.title, description: post.description, tags: post.tags }
 }

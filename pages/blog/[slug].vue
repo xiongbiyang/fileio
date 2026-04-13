@@ -10,16 +10,16 @@
       <!-- Header -->
       <header class="mb-10">
         <div class="flex items-center gap-3 mb-4">
-          <time class="text-sm text-on-surface-variant">{{ formatDate(post.date) }}</time>
+          <time class="text-sm text-on-surface-variant">{{ formatDate(localizedPost!.date) }}</time>
           <span class="text-on-surface-variant/30">|</span>
-          <span class="text-sm text-on-surface-variant">{{ post.author }}</span>
+          <span class="text-sm text-on-surface-variant">{{ localizedPost!.author }}</span>
         </div>
         <h1 class="font-headline text-3xl md:text-4xl font-extrabold text-on-surface dark:text-surface tracking-tight leading-tight mb-4">
-          {{ post.title }}
+          {{ localizedPost!.title }}
         </h1>
-        <p class="text-on-surface-variant text-lg leading-relaxed">{{ post.description }}</p>
+        <p class="text-on-surface-variant text-lg leading-relaxed">{{ localizedPost!.description }}</p>
         <div class="flex flex-wrap gap-2 mt-4">
-          <span v-for="tag in post.tags" :key="tag" class="px-3 py-1 bg-surface-container-high dark:bg-surface-container-highest rounded-full text-xs font-medium text-on-surface-variant">
+          <span v-for="tag in localizedPost!.tags" :key="tag" class="px-3 py-1 bg-surface-container-high dark:bg-surface-container-highest rounded-full text-xs font-medium text-on-surface-variant">
             {{ tag }}
           </span>
         </div>
@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { marked } from 'marked'
+import { getLocalizedPost } from '~/composables/useBlogPosts'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -77,15 +78,27 @@ const localizedBlogListPath = computed(() => localePath('/blog'))
 const localizedHomePath = computed(() => localePath('/'))
 const blogUrl = computed(() => new URL(localizedBlogPath.value, siteBaseUrl.value).toString())
 
+const { locale } = useI18n()
 const posts = useBlogPosts()
 const post = computed(() => posts.find(p => p.slug === slug.value))
+const localizedPost = computed(() => {
+  if (!post.value) return null
+  const localized = getLocalizedPost(post.value, locale.value)
+  return { ...post.value, ...localized }
+})
 
 // Load markdown at setup-time so SSR/prerender can render article content.
-const markdownModules = import.meta.glob('~/content/blog/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const markdownModulesEn = import.meta.glob('~/content/blog/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const markdownModulesZhCN = import.meta.glob('~/content/blog/zh-CN/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
 
 const rawMarkdown = computed(() => {
-  const key = Object.keys(markdownModules).find(k => k.endsWith(`/${slug.value}.md`))
-  return key ? markdownModules[key] : ''
+  // Try locale-specific markdown first, fall back to English
+  if (locale.value === 'zh-CN') {
+    const zhKey = Object.keys(markdownModulesZhCN).find(k => k.endsWith(`/${slug.value}.md`))
+    if (zhKey && markdownModulesZhCN[zhKey]) return markdownModulesZhCN[zhKey]
+  }
+  const key = Object.keys(markdownModulesEn).find(k => k.endsWith(`/${slug.value}.md`))
+  return key ? markdownModulesEn[key] : ''
 })
 
 const markdownContent = computed(() => {
