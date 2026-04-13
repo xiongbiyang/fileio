@@ -244,13 +244,15 @@ export function useTextTransferPage() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    // Try query param first, then check URL hash as fallback
+    // Read room ID from multiple sources to survive redirects / hydration issues
     const queryRoom = route.query.r as string | undefined
+    const urlParams = new URLSearchParams(window.location.search)
+    const searchRoom = urlParams.get('r') || undefined
     const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1]
-    const joinRoom = (queryRoom || hashRoom || '').trim().toLowerCase()
+    const joinRoom = (queryRoom || searchRoom || hashRoom || '').trim().toLowerCase()
 
     console.log('[Init] URL:', window.location.href)
-    console.log('[Init] query.r:', queryRoom, 'hash.r:', hashRoom, 'joinRoom:', joinRoom)
+    console.log('[Init] route.query.r:', queryRoom, 'URLSearchParams.r:', searchRoom, 'hash.r:', hashRoom, '→ joinRoom:', joinRoom)
 
     if (joinRoom) {
       roomId.value = joinRoom
