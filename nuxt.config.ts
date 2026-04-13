@@ -21,12 +21,23 @@ function getBlogPostLastmod(slug: string, fallbackDate: string) {
   }
 }
 
-const blogSitemapUrls = useBlogPosts().map(post => ({
-  loc: `/blog/${post.slug}`,
-  lastmod: getBlogPostLastmod(post.slug, post.date),
-  changefreq: 'monthly' as const,
-  priority: (post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7) as 0.8 | 0.7,
-}))
+const blogPosts = useBlogPosts()
+const blogSitemapUrls = [
+  // English blog URLs
+  ...blogPosts.map(post => ({
+    loc: `/blog/${post.slug}`,
+    lastmod: getBlogPostLastmod(post.slug, post.date),
+    changefreq: 'monthly' as const,
+    priority: (post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7) as 0.8 | 0.7,
+  })),
+  // zh-CN blog URLs
+  ...blogPosts.filter(post => post.zhCN).map(post => ({
+    loc: `/zh-CN/blog/${post.slug}`,
+    lastmod: getBlogPostLastmod(post.slug, post.date),
+    changefreq: 'monthly' as const,
+    priority: (post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7) as 0.8 | 0.7,
+  })),
+]
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

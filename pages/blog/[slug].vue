@@ -421,23 +421,28 @@ function buildKeywordsForPost(p: NonNullable<typeof post.value>) {
   return [...new Set(combined)].join(',')
 }
 
-if (post.value) {
+if (post.value && localizedPost.value) {
+  const lp = localizedPost.value
+  const langCode = locale.value === 'zh-CN' ? 'zh-CN' : locale.value === 'zh-TW' ? 'zh-TW' : 'en'
+  const breadcrumbHome = langCode === 'zh-CN' ? '首页' : langCode === 'zh-TW' ? '首頁' : 'Home'
+  const breadcrumbBlog = langCode === 'zh-CN' ? '博客' : langCode === 'zh-TW' ? '部落格' : 'Blog'
+
   useHead({
-    title: post.value.title,
+    title: lp.title,
     meta: [
-      { name: 'description', content: post.value.description },
+      { name: 'description', content: lp.description },
       { name: 'keywords', content: buildKeywordsForPost(post.value) },
     ],
     link: [{ rel: 'canonical', href: blogUrl.value }],
   })
   useSeoMeta({
-    ogTitle: post.value.title,
-    ogDescription: post.value.description,
+    ogTitle: lp.title,
+    ogDescription: lp.description,
     ogType: 'article',
     ogImage: 'https://toolport.dev/og-image.png',
     ogUrl: blogUrl.value,
-    twitterTitle: post.value.title,
-    twitterDescription: post.value.description,
+    twitterTitle: lp.title,
+    twitterDescription: lp.description,
     robots: 'index, follow',
     articlePublishedTime: post.value.date,
     articleModifiedTime: postModifiedDate.value,
@@ -446,8 +451,9 @@ if (post.value) {
   useJsonLd({
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: post.value.title,
-    description: post.value.description,
+    headline: lp.title,
+    description: lp.description,
+    inLanguage: langCode,
     datePublished: postPublishedDate.value,
     dateModified: postModifiedDate.value,
     author: { '@type': 'Organization', name: 'ToolPort', url: 'https://toolport.dev' },
@@ -459,9 +465,9 @@ if (post.value) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(localizedHomePath.value, siteBaseUrl.value).toString() },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL(localizedBlogListPath.value, siteBaseUrl.value).toString() },
-      { '@type': 'ListItem', position: 3, name: post.value.title, item: blogUrl.value },
+      { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: new URL(localizedHomePath.value, siteBaseUrl.value).toString() },
+      { '@type': 'ListItem', position: 2, name: breadcrumbBlog, item: new URL(localizedBlogListPath.value, siteBaseUrl.value).toString() },
+      { '@type': 'ListItem', position: 3, name: lp.title, item: blogUrl.value },
     ],
   })
   useJsonLd({
