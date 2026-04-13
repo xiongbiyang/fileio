@@ -183,6 +183,17 @@ export default defineNuxtConfig({
     cloudflare: {
       nodeCompat: false,
     },
+    unenv: {
+      alias: {
+        // Use native Node.js process from Workers nodejs_compat_v2
+        // instead of unenv's polyfill (which has private field conflicts)
+        'process': 'node:process',
+        'node:process': 'node:process',
+      },
+    },
+    rollupConfig: {
+      external: ['node:process'],
+    },
     storage: {
       // Keep prerender cache in-memory to avoid Windows file:// cache-driver resolution warnings.
       'internal:nuxt:prerender': { driver: 'memory' },
