@@ -11,6 +11,24 @@ export interface BlogPost {
 export function useBlogPosts(): BlogPost[] {
   return [
     {
+      slug: 'temporary-file-sharing-link-and-qr-guide',
+      title: 'Temporary File Sharing with a Download Link and QR Code — No Signup',
+      description: 'How to send a file with a temporary download link and QR code that auto-deletes after first download or in 3 days. Free, no signup, 100 MB per file, privacy-first.',
+      date: '2026-04-14',
+      tags: ['Quick Share', 'Temporary File Sharing', 'One-Time Download', 'QR Code', 'Guide'],
+      author: 'FileIO Team',
+      zhCN: { title: '临时文件分享：生成下载链接与二维码，免注册', description: '用临时下载链接和二维码发送文件，首次下载或 3 天内自动删除。免费、免注册、单文件 100 MB、隐私优先。', tags: ['快速分享', '临时文件分享', '一次性下载', '二维码', '教程'] },
+    },
+    {
+      slug: 'file-io-alternative-quick-share-comparison',
+      title: 'file.io Alternative: Free Quick Share with QR Code and Flexible Expiry',
+      description: 'Compare FileIO Quick Share, file.io, and WeTransfer for temporary file hosting. QR code, flexible expiry, self-destruct, no signup, 100 MB free.',
+      date: '2026-04-14',
+      tags: ['Quick Share', 'file.io Alternative', 'Comparison', 'Temporary File Sharing', 'Guide'],
+      author: 'FileIO Team',
+      zhCN: { title: 'file.io 替代方案：免费的临时文件分享（带二维码 + 灵活过期时间）', description: '对比 FileIO 快速分享、file.io、WeTransfer 的临时文件托管能力。带二维码、灵活过期、自毁、免注册、免费 100 MB。', tags: ['快速分享', 'file.io 替代', '对比', '临时文件分享', '教程'] },
+    },
+    {
       slug: 'fileio-vs-localsend-comparison',
       title: 'FileIO vs LocalSend: Which Is Better for Everyday Phone-to-PC Transfer?',
       description: 'Compare FileIO and LocalSend for no-install phone-to-PC transfer vs app-based LAN sharing. Pick the better workflow for daily cross-device use.',

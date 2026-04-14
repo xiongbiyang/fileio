@@ -2,11 +2,15 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <AdBlockNotice />
+  <!-- Ad-blocker nudge is only relevant when ads are actually served. -->
+  <AdBlockNotice v-if="adsEnabled" />
   <CookieConsent />
 </template>
 
 <script setup lang="ts">
+const runtimeConfig = useRuntimeConfig()
+const adsEnabled = computed(() => Boolean(runtimeConfig.public.adsEnabled))
+
 useHead({
   script: [
     {

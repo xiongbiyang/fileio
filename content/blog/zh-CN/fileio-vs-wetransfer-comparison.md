@@ -52,6 +52,7 @@ FileIO 通常更快，因为工作流围绕直接跨设备传输设计。
 - 本地网络替代方案：[FileIO 与 Snapdrop 对比](/blog/fileio-vs-snapdrop-comparison)
 - Apple 生态对比：[FileIO 与 AirDrop 对比](/blog/fileio-vs-airdrop-comparison)
 - 实用手机传电脑步骤：[如何从手机传文件到电脑](/blog/how-to-transfer-files-phone-to-pc)
+- 异步链接分享 + 自毁：[FileIO 快速分享 vs file.io vs WeTransfer](/blog/file-io-alternative-quick-share-comparison)
 
 ## 开始更快的传输工作流
 

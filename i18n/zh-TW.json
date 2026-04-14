@@ -305,9 +305,11 @@
     "notFound": "文章未找到",
     "tryTools": "試試我們的免費工具",
     "toolTransfer": "文件傳輸",
-    "ctaTitle": "試試我們的免費工具",
-    "ctaDesc": "傳輸文件、生成二維碼、共享剪貼板——全部加密，全部免費。",
-    "ctaTools": "瀏覽工具"
+    "ctaTitle": "準備好傳檔案了嗎？",
+    "ctaDesc": "掃碼在手機和電腦間直傳，或上傳一次產生自毀下載連結。免費、免註冊、端到端加密。",
+    "ctaTools": "檔案傳輸",
+    "ctaShare": "快速分享",
+    "toolShare": "快速分享"
   },
   "cookie": {
     "title": "Cookie 偏好",
@@ -416,7 +418,15 @@
       "errExpired": "分享已過期。",
       "errConsumed": "該單次分享已經被下載過。",
       "errGeneric": "無法載入該分享。",
-      "backHome": "返回 FileIO 首頁"
+      "backHome": "返回 FileIO 首頁",
+      "downloadedHeading": "檔案已下載",
+      "downloadedBody": "這個單次分享已經從我們的伺服器上刪除。再次重新整理或點擊連結會傳回錯誤——這是預期行為。"
+    },
+    "result": {
+      "heading": "分享連結已產生",
+      "noData": "目前沒有可顯示的分享。請先上傳檔案以產生連結。",
+      "backToUpload": "去上傳檔案",
+      "adSlot": "廣告版位"
     }
   }
 }

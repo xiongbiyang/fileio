@@ -305,9 +305,11 @@
     "notFound": "文章未找到",
     "tryTools": "试试我们的免费工具",
     "toolTransfer": "文件传输",
-    "ctaTitle": "试试我们的免费工具",
-    "ctaDesc": "传输文件、生成二维码、共享剪贴板——全部加密，全部免费。",
-    "ctaTools": "浏览工具"
+    "ctaTitle": "准备好传文件了？",
+    "ctaDesc": "扫码在手机和电脑间直传，或上传一次生成自毁下载链接。免费、免注册、端到端加密。",
+    "ctaTools": "文件传输",
+    "ctaShare": "快速分享",
+    "toolShare": "快速分享"
   },
   "cookie": {
     "title": "Cookie 偏好",
@@ -416,7 +418,15 @@
       "errExpired": "分享已过期。",
       "errConsumed": "该单次分享已经被下载过。",
       "errGeneric": "无法加载该分享。",
-      "backHome": "返回 FileIO 首页"
+      "backHome": "返回 FileIO 首页",
+      "downloadedHeading": "文件已下载",
+      "downloadedBody": "这个单次分享已经从我们的服务器上删除。再次刷新或点击链接会返回错误——这是预期行为。"
+    },
+    "result": {
+      "heading": "分享链接已生成",
+      "noData": "当前没有可展示的分享。请先上传文件以生成链接。",
+      "backToUpload": "去上传文件",
+      "adSlot": "广告位"
     }
   }
 }

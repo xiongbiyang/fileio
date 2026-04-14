@@ -66,6 +66,7 @@ For confidential workflows, still follow your company policy and avoid sharing r
 - Need a side-by-side decision page: [FileIO vs AirDrop comparison](/blog/fileio-vs-airdrop-comparison)
 - iPhone-focused path: [iPhone to Windows without app](/blog/iphone-to-windows-file-transfer-no-app-guide)
 - Large media transfer: [Send large video from phone to PC](/blog/send-large-video-from-phone-to-pc-guide)
+- Async alternative (recipient offline): [Temporary file sharing with a link and QR](/blog/temporary-file-sharing-link-and-qr-guide) via [FileIO Quick Share](/share)
 
 ## Try It
 

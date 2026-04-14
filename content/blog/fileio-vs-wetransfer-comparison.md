@@ -52,6 +52,7 @@ FileIO is more practical when your daily workflow includes frequent small transf
 - Local network alternative: [FileIO vs Snapdrop comparison](/blog/fileio-vs-snapdrop-comparison)
 - Apple ecosystem comparison: [FileIO vs AirDrop comparison](/blog/fileio-vs-airdrop-comparison)
 - Practical phone-to-PC steps: [How to transfer files from phone to PC](/blog/how-to-transfer-files-phone-to-pc)
+- For async link-style delivery with self-destruct: [FileIO Quick Share vs file.io vs WeTransfer](/blog/file-io-alternative-quick-share-comparison)
 
 ## Start a Faster Transfer Workflow
 

@@ -9,7 +9,11 @@ import { isShareIdShape } from '~/utils/shareId'
  */
 function encodeContentDisposition(filename: string): string {
   const asciiFallback = filename.replace(/[^\x20-\x7e]/g, '_').replace(/"/g, '\\"')
-  const encoded = encodeURIComponent(filename).replace(/['()]/g, escape).replace(/\*/g, '%2A')
+  const encoded = encodeURIComponent(filename)
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
   return `attachment; filename="${asciiFallback}"; filename*=UTF-8''${encoded}`
 }
 
@@ -48,22 +52,35 @@ export default defineEventHandler(async (event) => {
   const size = Number.parseInt(meta.size ?? String(obj.size), 10)
 
   setHeader(event, 'Content-Type', mime)
-  setHeader(event, 'Content-Length', String(size))
+  setHeader(event, 'Content-Length', size)
   setHeader(event, 'Content-Disposition', encodeContentDisposition(filename))
   setHeader(event, 'Cache-Control', 'no-store')
   setResponseStatus(event, 200)
+
+  const body = obj.body
 
   // Single-use share: schedule delete after the response is handed off.
   // Cloudflare Workers' waitUntil keeps the promise alive past the Worker
   // response boundary. For max_downloads === 0 (unlimited), the object is
   // left in place until the 3-day lifecycle rule sweeps it.
+  //
+  // IMPORTANT: do NOT destructure waitUntil — it is a bound method on the
+  // execution context. Calling a bare reference triggers "Illegal invocation"
+  // in workerd. Always invoke it via the owning object.
   if (maxDownloads === 1) {
-    const cf = event.context.cloudflare as { context?: { waitUntil?: (p: Promise<unknown>) => void } } | undefined
-    const waitUntil = cf?.context?.waitUntil
-    const deletePromise = bucket.delete(id).catch(() => {})
-    if (waitUntil) waitUntil(deletePromise)
-    // else: in local dev without cloudflare context, just fire-and-forget
+    const cf = event.context.cloudflare as
+      | { context?: { waitUntil?: (p: Promise<unknown>) => void } }
+      | undefined
+    if (cf?.context?.waitUntil) {
+      cf.context.waitUntil(bucket.delete(id).catch(() => {}))
+    }
+    else {
+      // Fallback for local dev without a cloudflare execution context —
+      // fire-and-forget. The delete may or may not complete before the
+      // process hands control back, which is acceptable for dev.
+      void bucket.delete(id).catch(() => {})
+    }
   }
 
-  return obj.body
+  return body
 })

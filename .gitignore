@@ -26,8 +26,10 @@ test-results/
 .env.*
 !.env.example
 
-# Wrangler temp files
+# Wrangler local state and dev secrets (R2/KV cache, Turnstile keys, etc.)
 .wrangler/
+.dev.vars
+.dev.vars.*
 
 # PartyKit local state
 .partykit/state/

@@ -52,6 +52,12 @@ NUXT_PUBLIC_TURNSTILE_SITE_KEY=
 NUXT_TURNSTILE_SECRET_KEY=
 ```
 
+Optional (toggle ad slots on once AdSense is wired up — see section 3c):
+
+```bash
+NUXT_PUBLIC_ADS_ENABLED=false
+```
+
 ## 3b. Quick Share infrastructure (R2 + KV + Turnstile)
 
 The `/share` tool requires three Cloudflare resources. Run once:
@@ -78,6 +84,34 @@ Then uncomment the `[[r2_buckets]]` and `[[kv_namespaces]]` blocks in
 For local development you may use Cloudflare's always-pass Turnstile test keys:
 - Site key:   `1x00000000000000000000AA`
 - Secret key: `1x0000000000000000000000000000000AA`
+
+## 3c. Ad system (optional — Google AdSense)
+
+All ad placements share two reusable components and a single feature flag:
+- `components/common/AdSlot.vue` — a single ad placeholder; takes a `slot`
+  identifier (e.g. `share-result-bottom`) and a `min-height` for CLS reservation
+- `components/common/AdRailWrapper.vue` — desktop-only sticky left+right rails
+  (160px on `xl`, 300px on `2xl`); auto-hides on `<xl` viewports
+
+Both render absolutely nothing unless `runtimeConfig.public.adsEnabled` is true,
+controlled by:
+
+```bash
+NUXT_PUBLIC_ADS_ENABLED=false   # default: ads off, no placeholders shown
+NUXT_PUBLIC_ADS_ENABLED=true    # ads on (or dev placeholders if AdSense not wired up yet)
+```
+
+Current placements (10 slots total):
+- `/share` upload page: left + right + bottom
+- `/share/result` upload-success page: left + right + bottom
+- `/share/[id]` download page: left + right + bottom
+- `TextTransferSuccess` component: bottom (only after a transfer completes)
+
+When wiring up real AdSense:
+1. Set `NUXT_PUBLIC_ADS_ENABLED=true` in Pages env vars
+2. Add the AdSense loader to `nuxt.config.ts` `app.head.script`
+3. Replace the placeholder `<div>` inside `AdSlot.vue` with the production
+   `<ins class="adsbygoogle">` markup and add a `SLOT_MAP` for the ad-slot IDs
 
 ## 4. PartyKit (WebRTC signaling)
 

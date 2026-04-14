@@ -50,13 +50,21 @@
       </NuxtLink>
     </div>
 
+    <!-- Ad — between post list and bottom CTA -->
+    <AdSlot slot="blog-list-bottom" container-class="mt-12" :min-height="120" />
+
     <!-- CTA -->
-    <div class="mt-16 primary-gradient rounded-3xl p-8 md:p-10 text-center">
+    <div class="mt-12 primary-gradient rounded-3xl p-8 md:p-10 text-center">
       <h2 class="font-headline text-2xl font-extrabold text-on-primary mb-3">{{ $t('blog.ctaTitle') }}</h2>
       <p class="text-on-primary/80 mb-6 max-w-lg mx-auto">{{ $t('blog.ctaDesc') }}</p>
-      <NuxtLink :to="localePath('/text-transfer')" class="inline-block px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
-        {{ $t('blog.ctaTools') }}
-      </NuxtLink>
+      <div class="flex flex-wrap justify-center gap-3">
+        <NuxtLink :to="localePath('/text-transfer')" class="inline-block px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
+          {{ $t('blog.ctaTools') }}
+        </NuxtLink>
+        <NuxtLink :to="localePath('/share')" class="inline-block px-6 py-3 bg-on-primary/10 text-on-primary rounded-xl font-bold text-sm hover:bg-on-primary/20 transition-colors">
+          {{ $t('blog.ctaShare') }}
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>

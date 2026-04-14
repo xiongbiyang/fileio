@@ -29,6 +29,9 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="prose" v-html="sanitizedHtml" />
 
+      <!-- Ad — between article body and tools/CTA -->
+      <AdSlot slot="blog-article-bottom" container-class="mt-12" :min-height="120" />
+
       <!-- Footer -->
       <footer class="mt-16 pt-8 border-t border-outline-variant/20">
         <div class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-6 mb-8">
@@ -443,6 +446,7 @@ if (post.value && localizedPost.value) {
 
 const tools = [
   { path: '/text-transfer', icon: 'swap_horiz', name: t('blog.toolTransfer') },
+  { path: '/share', icon: 'cloud_upload', name: t('blog.toolShare') },
 ]
 
 function formatDate(date: string) {

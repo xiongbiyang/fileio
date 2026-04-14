@@ -58,6 +58,9 @@ export default defineNuxtConfig({
       //   e.g. fileio.your-username.partykit.dev
       partykitHost: process.env.NUXT_PUBLIC_PARTYKIT_HOST || '',
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
+      // Ad slots: set to 'true' when Google AdSense (or similar) is wired up.
+      // While false the placeholder divs render as nothing.
+      adsEnabled: process.env.NUXT_PUBLIC_ADS_ENABLED === 'true',
     },
   },
 

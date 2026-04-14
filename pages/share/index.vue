@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-3xl mx-auto px-6 py-10 md:py-16">
+  <AdRailWrapper page-key="share-upload">
     <!-- Header -->
     <header class="mb-8 md:mb-12">
       <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/20 text-primary-container text-xs font-bold uppercase tracking-wider">
@@ -14,62 +14,8 @@
       </p>
     </header>
 
-    <!-- Result view -->
-    <section v-if="result" class="bg-surface-container-lowest dark:bg-surface-container-high rounded-2xl p-6 md:p-10 shadow-ambient">
-      <div class="flex items-center gap-2 text-primary mb-4">
-        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">check_circle</span>
-        <span class="font-headline font-bold">{{ $t('share.resultTitle') }}</span>
-      </div>
-      <p class="text-on-surface-variant text-sm mb-6">{{ $t('share.resultSubtitle') }}</p>
-
-      <div class="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-start mb-6">
-        <div class="flex justify-center md:justify-start">
-          <div class="p-3 bg-surface-container-low dark:bg-surface-container rounded-xl">
-            <canvas ref="resultQrCanvas" class="w-44 h-44" />
-          </div>
-        </div>
-        <div class="space-y-4 min-w-0">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">{{ $t('share.linkLabel') }}</p>
-            <div class="flex items-center gap-2">
-              <code class="flex-1 min-w-0 truncate bg-surface-container-high dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-primary font-mono">
-                {{ result.url }}
-              </code>
-              <button
-                class="primary-gradient text-on-primary rounded-lg px-4 py-2 text-sm font-bold whitespace-nowrap flex items-center gap-1 hover:scale-[1.02] active:scale-[0.98] transition-transform"
-                @click="copyResultLink"
-              >
-                <span class="material-symbols-outlined text-base">{{ copiedFlash ? 'check' : 'content_copy' }}</span>
-                {{ copiedFlash ? $t('share.copied') : $t('share.copyLink') }}
-              </button>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">{{ $t('share.expiresLabel') }}</p>
-              <p class="font-medium text-on-surface dark:text-surface">{{ formatExpiresAbs(result.expiresAt) }}</p>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">{{ $t('share.downloadsLabel') }}</p>
-              <p class="font-medium text-on-surface dark:text-surface">
-                {{ result.maxDownloads === 0 ? $t('share.downloadsUnlimited') : $t('share.downloadsOnce') }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button
-        class="w-full md:w-auto px-6 py-3 bg-surface-container-high dark:bg-surface-container-highest text-on-surface dark:text-surface rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-container transition-colors"
-        @click="resetForm"
-      >
-        <span class="material-symbols-outlined text-base">refresh</span>
-        {{ $t('share.shareAnother') }}
-      </button>
-    </section>
-
     <!-- Upload view -->
-    <section v-else class="space-y-6">
+    <section class="space-y-6">
       <!-- Dropzone -->
       <div
         class="relative rounded-2xl border-2 border-dashed transition-colors p-8 md:p-12 text-center cursor-pointer"
@@ -175,19 +121,12 @@
         </i18n-t>
       </p>
     </section>
-  </div>
+
+    <AdSlot slot="share-upload-bottom" container-class="mt-10" :min-height="120" />
+  </AdRailWrapper>
 </template>
 
 <script setup lang="ts">
-import { renderQrCodeToCanvas } from '~/utils/qrcode'
-
-interface UploadResult {
-  id: string
-  url: string
-  expiresAt: number
-  maxDownloads: number
-}
-
 definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
@@ -224,6 +163,80 @@ useSeoMeta({
   robots: 'index, follow',
 })
 
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'FileIO Quick Share',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Web, Android, iOS, Windows, macOS',
+  description: 'Temporary file sharing with a link and QR code. Upload a file, get a self-destructing download link that expires after first download or within 3 days. 100 MB per file, no signup, Turnstile-protected.',
+  featureList: [
+    'No app install required',
+    'No signup or account needed',
+    'Self-destructing download links (single-use by default)',
+    'Flexible expiry: 1 hour, 24 hours, or 3 days',
+    'QR code generated with every share',
+    'Cloudflare Turnstile human verification',
+    'Hosted on Cloudflare R2 with 3-day bucket lifecycle safety net',
+  ],
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  isAccessibleForFree: true,
+  url: 'https://fileio.top/share',
+})
+
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How does FileIO Quick Share differ from file.io or WeTransfer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Quick Share generates both a download link and a QR code in the same result page, and lets you pick expiry (1 hour, 24 hours, 3 days) on the free tier. file.io requires a paid plan for expiry choices; WeTransfer uses a fixed 7-day window and requires an email.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How long are my files stored?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Only until first download (if you picked single-use) or your selected expiry time, whichever comes first. A 72-hour bucket-wide lifecycle rule on Cloudflare R2 deletes anything older regardless, as a safety net.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is signup required?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Uploads are anonymous. Human verification uses Cloudflare Turnstile only to prevent abuse; no account is created.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the maximum file size?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '100 MB per file. If you need to transfer larger files and both devices are online at the same time, use the peer-to-peer tool at /text-transfer which has no size limit.',
+      },
+    },
+  ],
+})
+
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to share a file with a temporary download link',
+  description: 'Upload a file to FileIO Quick Share and send the resulting link or QR code.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', name: 'Open Quick Share', text: 'Open FileIO Quick Share in your browser.', url: 'https://fileio.top/share' },
+    { '@type': 'HowToStep', name: 'Upload the file', text: 'Drop a file on the page or click to select. Pick expiry and download policy.' },
+    { '@type': 'HowToStep', name: 'Verify', text: 'Complete the Cloudflare Turnstile human verification.' },
+    { '@type': 'HowToStep', name: 'Share the link or QR code', text: 'Copy the generated download link or show the QR code to the recipient.' },
+  ],
+})
+
 // ── state ────────────────────────────────────────────────
 const fileInput = ref<HTMLInputElement | null>(null)
 const selectedFile = ref<File | null>(null)
@@ -232,11 +245,8 @@ const expiresIn = ref(86400) // 24h default
 const maxDownloads = ref(1) // single-use default
 const isUploading = ref(false)
 const uploadProgress = ref(0)
-const result = ref<UploadResult | null>(null)
-const copiedFlash = ref(false)
 const turnstileContainer = ref<HTMLElement | null>(null)
 const turnstileWidgetId = ref<string | null>(null)
-const resultQrCanvas = ref<HTMLCanvasElement | null>(null)
 
 const MAX_BYTES = 100 * 1024 * 1024
 
@@ -256,10 +266,6 @@ function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
-}
-
-function formatExpiresAbs(ms: number): string {
-  return new Date(ms).toLocaleString()
 }
 
 function handleFileChange(event: Event) {
@@ -286,16 +292,6 @@ function setSelectedFile(file: File | null) {
 function clearSelectedFile() {
   selectedFile.value = null
   if (fileInput.value) fileInput.value.value = ''
-}
-
-function resetForm() {
-  selectedFile.value = null
-  result.value = null
-  uploadProgress.value = 0
-  isUploading.value = false
-  copiedFlash.value = false
-  if (fileInput.value) fileInput.value.value = ''
-  resetTurnstile()
 }
 
 // ── Turnstile integration ────────────────────────────────
@@ -376,19 +372,18 @@ function handleUpload() {
       uploadProgress.value = Math.round((e.loaded / e.total) * 100)
     }
   }
-  xhr.onload = async () => {
-    isUploading.value = false
+  xhr.onload = () => {
     if (xhr.status >= 200 && xhr.status < 300) {
       try {
         const data = JSON.parse(xhr.responseText) as { id: string; expiresAt: number; maxDownloads: number }
-        const url = new URL(localePath(`/share/${data.id}`), siteBaseUrl.value).toString()
-        result.value = { id: data.id, url, expiresAt: data.expiresAt, maxDownloads: data.maxDownloads }
-        await nextTick()
-        if (resultQrCanvas.value) {
-          await renderQrCodeToCanvas(resultQrCanvas.value, url, { width: 220, margin: 2 })
-        }
+        const target = `${localePath('/share/result')}?id=${encodeURIComponent(data.id)}&exp=${data.expiresAt}&max=${data.maxDownloads}`
+        // Use a full navigation so we don't depend on the Nuxt SPA router
+        // surviving inside an XHR callback — simpler and more reliable.
+        window.location.assign(target)
+        return
       }
-      catch {
+      catch (err) {
+        console.error('[share] result parse failed', err, xhr.responseText)
         notify(t('share.errUpload'), 'error')
       }
     }
@@ -396,6 +391,8 @@ function handleUpload() {
     else if (xhr.status === 413) notify(t('share.errFileTooLarge'), 'error')
     else if (xhr.status === 429) notify(t('share.errRateLimit'), 'error')
     else notify(t('share.errUpload'), 'error')
+
+    isUploading.value = false
     resetTurnstile()
   }
   xhr.onerror = () => {
@@ -404,17 +401,5 @@ function handleUpload() {
     resetTurnstile()
   }
   xhr.send(form)
-}
-
-async function copyResultLink() {
-  if (!result.value) return
-  try {
-    await navigator.clipboard.writeText(result.value.url)
-    copiedFlash.value = true
-    setTimeout(() => { copiedFlash.value = false }, 1500)
-  }
-  catch {
-    notify(t('common.copyFailed'), 'error')
-  }
 }
 </script>

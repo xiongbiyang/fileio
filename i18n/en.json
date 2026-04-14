@@ -305,9 +305,11 @@
     "notFound": "Post not found",
     "tryTools": "Try our free tools",
     "toolTransfer": "File Transfer",
-    "ctaTitle": "Try Our Free Tools",
-    "ctaDesc": "Transfer files, generate QR codes, and share clipboards - all encrypted, all free.",
-    "ctaTools": "Browse Tools"
+    "ctaTitle": "Ready to move a file?",
+    "ctaDesc": "Send files between phone and PC with a QR scan, or upload once and share a self-destructing link. Free, no signup, encrypted.",
+    "ctaTools": "File Transfer",
+    "ctaShare": "Quick Share",
+    "toolShare": "Quick Share"
   },
   "cookie": {
     "title": "Cookie Preferences",
@@ -416,7 +418,15 @@
       "errExpired": "This share has expired.",
       "errConsumed": "This single-use share has already been downloaded.",
       "errGeneric": "Could not load this share.",
-      "backHome": "Back to FileIO"
+      "backHome": "Back to FileIO",
+      "downloadedHeading": "File downloaded",
+      "downloadedBody": "This single-use share has been deleted from our servers. Refreshing the page or clicking the link again will return an error — that is expected."
+    },
+    "result": {
+      "heading": "Share link ready",
+      "noData": "No active share to display. Upload a file to generate a link.",
+      "backToUpload": "Upload a file",
+      "adSlot": "Ad space"
     }
   }
 }

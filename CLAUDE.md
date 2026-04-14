@@ -29,8 +29,10 @@ transfer/
 ├── pages/
 │   ├── index.vue                    # Redirects to /text-transfer
 │   ├── text-transfer.vue            # Tool A — WebRTC P2P (SoftwareApplication JSON-LD)
-│   ├── share.vue                    # Tool B — Quick Share upload page
-│   ├── share/[id].vue               # Tool B — download page (noindex)
+│   ├── share/
+│   │   ├── index.vue                # Tool B — Quick Share upload page
+│   │   ├── result.vue               # Tool B — post-upload result (link + QR, noindex)
+│   │   └── [id].vue                 # Tool B — download page (noindex)
 │   ├── blog/
 │   │   ├── index.vue                # Blog list (Blog JSON-LD)
 │   │   └── [slug].vue               # Article (BlogPosting JSON-LD)
@@ -42,7 +44,9 @@ transfer/
 ├── components/
 │   ├── layout/                      # AppHeader, AppFooter, AppNotifications,
 │   │                                #   LanguageSwitcher, ThemeToggle, MobileNav
-│   ├── common/                      # AdBlockNotice, CookieConsent, ConfirmDialog
+│   ├── common/                      # AdBlockNotice, CookieConsent, ConfirmDialog,
+│   │                                #   AdSlot (single ad), AdRailWrapper (left/right
+│   │                                #   sticky rails for desktop)
 │   └── tools/                       # TextTransfer* (Waiting, Pairing, Transferring,
 │                                    #   Success, Reconnecting, FileQueue,
 │                                    #   DeviceHistory, History, Audit)
@@ -115,6 +119,7 @@ Run `npm run lint:i18n` to verify en/zh-CN/zh-TW key parity.
 - `useWebRTC` sends plaintext through the DataChannel; encryption is DTLS at the transport layer (browser-provided), not the `useCrypto` helper (which exists but is currently unreferenced).
 - Tool B uploads are hashed with SHA-256 into R2 custom metadata for future abuse-blocklist lookups.
 - Single-use share (`max_downloads=1`) deletes the R2 object via `waitUntil()` after the response body is handed to the client; an R2 bucket lifecycle rule wipes anything older than 3 days as a safety net.
+- All ad placements use `<AdSlot>` / `<AdRailWrapper>` and only render when `runtimeConfig.public.adsEnabled` is true (env var `NUXT_PUBLIC_ADS_ENABLED=true`). Default off — the placeholder divs do not appear in production until AdSense is wired up.
 - `partykit` devDep is required for `npm run dev:party` and `npm run party:deploy`; `partysocket` is the runtime client used by `useSignaling.ts`.
 - Blog posts are raw Markdown files under `content/blog/` (and `content/blog/zh-CN/`) rendered by `marked` — not @nuxt/content.
 
