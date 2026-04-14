@@ -50,12 +50,14 @@ export default defineNuxtConfig({
     // Server-only (never exposed to client)
     cloudflareTurnKeyId: process.env.NUXT_CLOUDFLARE_TURN_KEY_ID || '',
     cloudflareTurnApiToken: process.env.NUXT_CLOUDFLARE_TURN_API_TOKEN || '',
+    turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://fileio.top',
       // Development: leave empty (defaults to localhost:1999)
       // Production: set NUXT_PUBLIC_PARTYKIT_HOST in Cloudflare Pages env vars
       //   e.g. fileio.your-username.partykit.dev
       partykitHost: process.env.NUXT_PUBLIC_PARTYKIT_HOST || '',
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     },
   },
 

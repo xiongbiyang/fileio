@@ -44,6 +44,41 @@ NUXT_CLOUDFLARE_TURN_KEY_ID=
 NUXT_CLOUDFLARE_TURN_API_TOKEN=
 ```
 
+Required if Quick Share is deployed:
+
+```bash
+# Generated in Cloudflare Dashboard → Turnstile → add site
+NUXT_PUBLIC_TURNSTILE_SITE_KEY=
+NUXT_TURNSTILE_SECRET_KEY=
+```
+
+## 3b. Quick Share infrastructure (R2 + KV + Turnstile)
+
+The `/share` tool requires three Cloudflare resources. Run once:
+
+```bash
+# 1. R2 bucket for uploaded files
+npx wrangler r2 bucket create fileio-share
+
+# 2. Safety-net lifecycle: auto-delete anything older than 3 days
+npx wrangler r2 bucket lifecycle add fileio-share --prefix "" --expire-days 3
+
+# 3. KV namespace for per-IP rate limits
+npx wrangler kv:namespace create RATE_LIMIT_KV
+# Copy the printed id and paste into wrangler.toml under [[kv_namespaces]]
+
+# 4. Turnstile site (browser):
+#    https://dash.cloudflare.com/?to=/:account/turnstile
+#    Create a Managed widget. Note Site Key (public) + Secret Key (server-only).
+```
+
+Then uncomment the `[[r2_buckets]]` and `[[kv_namespaces]]` blocks in
+`wrangler.toml`, set both Turnstile env vars in Pages, and redeploy.
+
+For local development you may use Cloudflare's always-pass Turnstile test keys:
+- Site key:   `1x00000000000000000000AA`
+- Secret key: `1x0000000000000000000000000000000AA`
+
 ## 4. PartyKit (WebRTC signaling)
 
 The PartyKit server (`party/signal.ts`) relays WebRTC offer/answer/candidate between paired devices.

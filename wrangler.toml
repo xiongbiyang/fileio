@@ -3,13 +3,22 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat_v2"]
 pages_build_output_dir = "dist"
 
-# KV namespace for session data (optional, for future use)
-# [[kv_namespaces]]
-# binding = "KV"
-# id = "your-kv-id"
+# ── Quick Share (temporary file sharing) ─────────────────────────────────────
+# R2 bucket: stores uploaded files (purged on download / after 3 days)
+# Create:  npx wrangler r2 bucket create fileio-share
+# Lifecycle: npx wrangler r2 bucket lifecycle add fileio-share --prefix "" --expire-days 3
+# [[r2_buckets]]
+# binding = "SHARE_BUCKET"
+# bucket_name = "fileio-share"
 
-# D1 database — create with: npx wrangler d1 create fileio-db
-# Then paste the database_id below and uncomment:
+# KV namespace: rate-limit counters for upload / download per IP
+# Create:  npx wrangler kv:namespace create RATE_LIMIT_KV
+# Then paste the id below and uncomment:
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id = "paste-your-kv-id-here"
+
+# ── Optional: D1 database (not used currently, reserved for future) ──────────
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "fileio-db"
