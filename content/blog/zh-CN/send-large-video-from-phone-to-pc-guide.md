@@ -14,7 +14,7 @@ updated: "2026-04-04"
 
 ## 大视频传输的快速工作流
 
-1. 在电脑上打开 [ToolPort 文件传输](/tools/text-transfer)
+1. 在电脑上打开 [FileIO 文件传输](/text-transfer)
 2. 用手机扫描配对 QR 码
 3. 选择原始视频文件
 4. 传输完成前保持两台设备活跃
@@ -34,4 +34,4 @@ updated: "2026-04-04"
 
 ## 开始发送大文件
 
-打开免费的[手机传电脑工具](/tools/text-transfer)。
+打开免费的[手机传电脑工具](/text-transfer)。

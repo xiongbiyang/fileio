@@ -54,14 +54,9 @@
     <div class="mt-16 primary-gradient rounded-3xl p-8 md:p-10 text-center">
       <h2 class="font-headline text-2xl font-extrabold text-on-primary mb-3">{{ $t('blog.ctaTitle') }}</h2>
       <p class="text-on-primary/80 mb-6 max-w-lg mx-auto">{{ $t('blog.ctaDesc') }}</p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <NuxtLink :to="localePath('/tools')" class="px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
-          {{ $t('blog.ctaTools') }}
-        </NuxtLink>
-        <NuxtLink :to="localePath('/tool-request')" class="px-6 py-3 bg-on-primary/10 text-on-primary rounded-xl font-bold text-sm hover:bg-on-primary/20 transition-colors">
-          {{ $t('blog.ctaSurvey') }}
-        </NuxtLink>
-      </div>
+      <NuxtLink :to="localePath('/text-transfer')" class="inline-block px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
+        {{ $t('blog.ctaTools') }}
+      </NuxtLink>
     </div>
   </div>
 </template>
@@ -74,7 +69,7 @@ const localePath = useLocalePath()
 const rawPosts = useBlogPosts()
 const posts = computed(() => rawPosts.map(p => ({ ...p, ...getLocalizedPost(p, locale.value) })))
 const runtimeConfig = useRuntimeConfig()
-const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
 const canonicalUrl = computed(() =>
   new URL(localePath('/blog'), siteBaseUrl.value).toString(),
 )
@@ -90,7 +85,7 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.blog.title'),
   ogDescription: () => t('seo.blog.ogDesc'),
-  ogImage: 'https://toolport.dev/og-image.png',
+  ogImage: 'https://fileio.top/og-image.png',
   ogUrl: () => canonicalUrl.value,
   twitterTitle: () => t('seo.blog.title'),
   twitterDescription: () => t('seo.blog.ogDesc'),
@@ -99,27 +94,27 @@ useSeoMeta({
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'Blog',
-  name: 'ToolPort Blog',
+  name: 'FileIO Blog',
   url: canonicalUrl.value,
-  description: 'Tutorials for wireless file transfer, QR code generation/scanning, and online clipboard sync.',
+  description: 'Tutorials for wireless phone-to-PC file transfer, QR pairing, and privacy-first browser workflows.',
   publisher: {
     '@type': 'Organization',
-    name: 'ToolPort',
-    url: 'https://toolport.dev',
+    name: 'FileIO',
+    url: 'https://fileio.top',
   },
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://fileio.top/' },
     { '@type': 'ListItem', position: 2, name: 'Blog', item: canonicalUrl.value },
   ],
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'ToolPort Blog Articles',
+  name: 'FileIO Blog Articles',
   itemListOrder: 'https://schema.org/ItemListOrderDescending',
   numberOfItems: posts.value.length,
   itemListElement: posts.value.map((post: { slug: string; title: string }, index: number) => ({

@@ -77,7 +77,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const canonicalUrl = computed(() =>
-  new URL(localePath('/about'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+  new URL(localePath('/about'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
 )
 
 useHead({
@@ -91,19 +91,19 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.about.title'),
   ogDescription: () => t('seo.about.desc'),
-  ogImage: 'https://toolport.dev/og-image.png',
+  ogImage: 'https://fileio.top/og-image.png',
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   name: t('seo.about.title'),
   description: t('seo.about.desc'),
-  url: 'https://toolport.dev/about',
+  url: 'https://fileio.top/about',
   mainEntity: {
     '@type': 'Organization',
-    name: 'ToolPort',
-    url: 'https://toolport.dev',
-    logo: 'https://toolport.dev/og-image.png',
+    name: 'FileIO',
+    url: 'https://fileio.top',
+    logo: 'https://fileio.top/og-image.png',
   },
 })
 

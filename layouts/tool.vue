@@ -2,14 +2,11 @@
   <div class="min-h-screen bg-surface dark:bg-on-surface flex flex-col">
     <AppHeader />
     <AppNotifications />
-    <SideNav />
-    <main class="flex-1 lg:ml-64 pt-16 min-h-screen">
+    <main class="flex-1 pt-16">
       <slot />
     </main>
-    <div class="lg:ml-64">
-      <AppFooter />
-    </div>
-    <MobileNav class="lg:hidden" />
+    <AppFooter />
+    <MobileNav class="md:hidden" />
     <ConfirmDialog />
   </div>
 </template>

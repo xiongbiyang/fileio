@@ -1,14 +1,12 @@
-﻿import { expect, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test('home page loads', async ({ page }) => {
   await page.goto('/')
-  await expect(page).toHaveTitle(/ToolPort/i)
-  await expect(page.locator('body')).toContainText(/ToolPort/i)
+  await expect(page).toHaveTitle(/FileIO/i)
+  await expect(page.locator('body')).toContainText(/FileIO/i)
 })
 
-test('qr tool page is reachable', async ({ page }) => {
-  await page.goto('/tools/qr-code')
-  await expect(page).toHaveURL(/\/tools\/qr-code/)
-  await expect(page.locator('body')).toContainText(/QR|二维码/i)
-  await expect(page.getByRole('button', { name: /Generate|生成/i }).first()).toBeVisible()
+test('text-transfer tool page is reachable', async ({ page }) => {
+  await page.goto('/text-transfer')
+  await expect(page).toHaveURL(/\/text-transfer/)
 })

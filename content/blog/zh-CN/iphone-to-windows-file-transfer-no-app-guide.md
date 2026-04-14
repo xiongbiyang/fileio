@@ -14,7 +14,7 @@ updated: "2026-04-04"
 
 ## 如何免安装从 iPhone 传文件到 Windows
 
-1. 在 Windows 设备上打开 [ToolPort 文件传输](/tools/text-transfer)
+1. 在 Windows 设备上打开 [FileIO 文件传输](/text-transfer)
 2. 用 iPhone 扫描 QR 码
 3. 在 iPhone 上选择照片、视频或文件
 4. 即时在 Windows 上发送和接收
@@ -34,4 +34,4 @@ updated: "2026-04-04"
 
 ## 立即开始传输
 
-使用免费的 [iPhone 传 Windows 工具](/tools/text-transfer)。
+使用免费的 [iPhone 传 Windows 工具](/text-transfer)。

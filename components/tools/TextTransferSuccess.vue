@@ -50,19 +50,6 @@
       </div>
 
       <div class="space-y-6 lg:col-span-4">
-        <div class="bg-surface-container-high dark:bg-surface-container overflow-hidden rounded-xl p-8">
-          <h3 class="font-headline mb-4 text-2xl font-bold text-on-surface dark:text-surface">{{ $t('toolA.beyondTransfer') }}</h3>
-          <p class="mb-6 text-sm text-on-surface-variant">{{ $t('toolA.beyondTransferDesc') }}</p>
-          <div class="bg-surface-container-lowest dark:bg-surface-container-high mb-6 rounded-lg p-6">
-            <p class="text-sm font-bold text-on-surface dark:text-surface">{{ $t('toolA.needPersistentRoom') }}</p>
-            <p class="mt-1 text-xs text-on-surface-variant">{{ $t('toolA.tryClipboard') }}</p>
-          </div>
-          <NuxtLink :to="localePath('/tools/clipboard')" class="primary-gradient flex w-full items-center justify-center gap-2 rounded-lg py-4 text-sm font-bold text-on-primary transition-transform hover:scale-[1.01] active:scale-[0.95]">
-            {{ $t('toolA.initClipboard') }}
-            <span class="material-symbols-outlined">arrow_forward</span>
-          </NuxtLink>
-        </div>
-
         <div class="bg-surface-container-low dark:bg-surface-container flex items-center gap-4 rounded-xl p-8">
           <span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1">shield_lock</span>
           <div>
@@ -76,10 +63,7 @@
 </template>
 
 <script setup lang="ts">
-interface TransferFileSummary {
-  name: string
-  size: string
-}
+import type { TransferFileSummary } from '~/types/toolPages'
 
 defineProps<{
   currentFile: TransferFileSummary

@@ -40,14 +40,10 @@
             </NuxtLink>
           </div>
         </div>
-        <div class="flex justify-between items-center">
+        <div>
           <NuxtLink :to="localePath('/blog')" class="text-primary font-bold text-sm hover:underline flex items-center gap-1">
             <span class="material-symbols-outlined text-lg">arrow_back</span>
             {{ $t('blog.backToList') }}
-          </NuxtLink>
-          <NuxtLink :to="localePath('/tool-request')" class="text-primary font-bold text-sm hover:underline flex items-center gap-1">
-            {{ $t('blog.suggestTool') }}
-            <span class="material-symbols-outlined text-lg">arrow_forward</span>
           </NuxtLink>
         </div>
       </footer>
@@ -72,7 +68,7 @@ const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 
 const slug = computed(() => route.params.slug as string)
-const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
 const localizedBlogPath = computed(() => localePath(`/blog/${slug.value}`))
 const localizedBlogListPath = computed(() => localePath('/blog'))
 const localizedHomePath = computed(() => localePath('/'))
@@ -176,14 +172,13 @@ function inferBlogType(p: NonNullable<typeof post.value>) {
   const title = p.title.toLowerCase()
   const tags = p.tags.map(tag => tag.toLowerCase())
   if (title.startsWith('how to') || tags.includes('guide')) return 'howto'
-  if (tags.some(tag => tag.includes('qr'))) return 'qr'
   if (tags.some(tag => tag.includes('airdrop') || tag.includes('file transfer') || tag.includes('phone to pc'))) return 'transfer'
   return 'general'
 }
 
 function buildFaqForPost(p: NonNullable<typeof post.value>) {
   const comparisonFaqBySlug: Record<string, Array<{ '@type': 'Question', name: string, acceptedAnswer: { '@type': 'Answer', text: string } }>> = {
-    'toolport-vs-airdrop-comparison': [
+    'fileio-vs-airdrop-comparison': [
       {
         '@type': 'Question',
         name: 'Does AirDrop work from iPhone to Windows?',
@@ -192,15 +187,15 @@ function buildFaqForPost(p: NonNullable<typeof post.value>) {
       {
         '@type': 'Question',
         name: 'What is a practical AirDrop alternative for Windows users?',
-        acceptedAnswer: { '@type': 'Answer', text: 'A browser-based workflow like ToolPort is practical for iPhone or Android to Windows transfer without app installation.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'A browser-based workflow like FileIO is practical for iPhone or Android to Windows transfer without app installation.' },
       },
       {
         '@type': 'Question',
         name: 'Do I need account signup for phone-to-PC transfer?',
-        acceptedAnswer: { '@type': 'Answer', text: 'No. ToolPort supports account-free browser transfer workflows for common scenarios.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'No. FileIO supports account-free browser transfer workflows for common scenarios.' },
       },
     ],
-    'toolport-vs-snapdrop-comparison': [
+    'fileio-vs-snapdrop-comparison': [
       {
         '@type': 'Question',
         name: 'Do both devices need to be on the same Wi-Fi for Snapdrop?',
@@ -209,15 +204,15 @@ function buildFaqForPost(p: NonNullable<typeof post.value>) {
       {
         '@type': 'Question',
         name: 'Which tool is better when office network discovery is unstable?',
-        acceptedAnswer: { '@type': 'Answer', text: 'ToolPort is often easier in restricted or unstable network environments thanks to its session-based browser flow.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'FileIO is often easier in restricted or unstable network environments thanks to its session-based browser flow.' },
       },
       {
         '@type': 'Question',
         name: 'Can I share both files and quick text snippets?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort supports practical file and text handoff workflows in browser.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. FileIO supports practical file and text handoff workflows in browser.' },
       },
     ],
-    'toolport-vs-wetransfer-comparison': [
+    'fileio-vs-wetransfer-comparison': [
       {
         '@type': 'Question',
         name: 'Is WeTransfer mainly an upload-and-share-link workflow?',
@@ -226,15 +221,15 @@ function buildFaqForPost(p: NonNullable<typeof post.value>) {
       {
         '@type': 'Question',
         name: 'What is better for direct phone-to-PC transfer without extra upload steps?',
-        acceptedAnswer: { '@type': 'Answer', text: 'ToolPort is generally better for direct browser transfer between your own devices.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'FileIO is generally better for direct browser transfer between your own devices.' },
       },
       {
         '@type': 'Question',
         name: 'Do I need to install software for quick cross-device sending?',
-        acceptedAnswer: { '@type': 'Answer', text: 'No. ToolPort works in browser with no installation for common transfer tasks.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'No. FileIO works in browser with no installation for common transfer tasks.' },
       },
     ],
-    'toolport-vs-localsend-comparison': [
+    'fileio-vs-localsend-comparison': [
       {
         '@type': 'Question',
         name: 'Does LocalSend require app installation on each device?',
@@ -243,12 +238,12 @@ function buildFaqForPost(p: NonNullable<typeof post.value>) {
       {
         '@type': 'Question',
         name: 'Which option is better for temporary devices or no-install policy?',
-        acceptedAnswer: { '@type': 'Answer', text: 'ToolPort is usually more convenient because it works directly in browser without setup overhead.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'FileIO is usually more convenient because it works directly in browser without setup overhead.' },
       },
       {
         '@type': 'Question',
-        name: 'Can I use ToolPort without creating an account?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort supports account-free transfer workflows for most everyday cases.' },
+        name: 'Can I use FileIO without creating an account?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. FileIO supports account-free transfer workflows for most everyday cases.' },
       },
     ],
   }
@@ -256,55 +251,36 @@ function buildFaqForPost(p: NonNullable<typeof post.value>) {
   if (comparisonFaq) return comparisonFaq
 
   const kind = inferBlogType(p)
-  if (kind === 'qr') {
-    return [
-      {
-        '@type': 'Question',
-        name: 'Can I create this QR code type without signup?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort QR code tools are free and browser-based with no signup required.' },
-      },
-      {
-        '@type': 'Question',
-        name: 'Can I export QR codes in high resolution?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. You can export PNG, SVG, and WebP with high-resolution options for print and HD usage.' },
-      },
-      {
-        '@type': 'Question',
-        name: 'Can I add logo and custom colors?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort supports branded QR design with logo overlay, custom colors, and transparent background.' },
-      },
-    ]
-  }
   if (kind === 'transfer') {
     return [
       {
         '@type': 'Question',
         name: 'Do I need to install an app to transfer files?',
-        acceptedAnswer: { '@type': 'Answer', text: 'No. ToolPort works directly in your browser without app installation.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'No. FileIO works directly in your browser without app installation.' },
       },
       {
         '@type': 'Question',
         name: 'Is transfer encrypted?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Yes. ToolPort file transfer is designed with privacy-first encrypted sessions.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. FileIO file transfer is designed with privacy-first encrypted sessions.' },
       },
     ]
   }
   return [
     {
       '@type': 'Question',
-      name: 'Are ToolPort tools free to use?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Yes. Core ToolPort tools are free and browser-based.' },
+      name: 'Are FileIO tools free to use?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes. Core FileIO tools are free and browser-based.' },
     },
     {
       '@type': 'Question',
-      name: 'Can I use ToolPort without creating an account?',
+      name: 'Can I use FileIO without creating an account?',
       acceptedAnswer: { '@type': 'Answer', text: 'Yes. Most workflows work without signup.' },
     },
   ]
 }
 
 function buildHowToForPost(p: NonNullable<typeof post.value>) {
-  if (p.slug.startsWith('toolport-vs-')) {
+  if (p.slug.startsWith('fileio-vs-')) {
     return null
   }
   const kind = inferBlogType(p)
@@ -317,25 +293,10 @@ function buildHowToForPost(p: NonNullable<typeof post.value>) {
       description: p.description,
       totalTime: 'PT3M',
       step: [
-        { '@type': 'HowToStep', name: 'Open ToolPort', text: 'Open ToolPort in your browser.', url: `${baseUrl}/tools` },
-        { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Go to the phone-to-PC transfer tool.', url: `${baseUrl}/tools/text-transfer` },
+        { '@type': 'HowToStep', name: 'Open FileIO', text: 'Open FileIO in your browser.', url: `${baseUrl}/text-transfer` },
+        { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Go to the phone-to-PC transfer tool.', url: `${baseUrl}/text-transfer` },
         { '@type': 'HowToStep', name: 'Pair devices', text: 'Use QR pairing between phone and computer.' },
         { '@type': 'HowToStep', name: 'Send data', text: 'Transfer files or text securely in your browser.' },
-      ],
-    }
-  }
-  if (kind === 'qr') {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'HowTo',
-      name: p.title,
-      description: p.description,
-      totalTime: 'PT2M',
-      step: [
-        { '@type': 'HowToStep', name: 'Open QR generator', text: 'Open ToolPort QR Code Generator.', url: `${baseUrl}/tools/qr-code` },
-        { '@type': 'HowToStep', name: 'Enter your content', text: 'Paste URL/text or choose a popular template.' },
-        { '@type': 'HowToStep', name: 'Customize design', text: 'Set colors, logo, and transparency options.' },
-        { '@type': 'HowToStep', name: 'Download QR', text: 'Export as PNG, SVG, or WebP in high resolution.' },
       ],
     }
   }
@@ -344,25 +305,25 @@ function buildHowToForPost(p: NonNullable<typeof post.value>) {
 
 function buildComparisonItemListForPost(p: NonNullable<typeof post.value>) {
   const comparisonItemsBySlug: Record<string, string[]> = {
-    'toolport-vs-airdrop-comparison': [
+    'fileio-vs-airdrop-comparison': [
       'AirDrop does not natively support iPhone to Windows transfer',
-      'ToolPort supports cross-platform phone-to-PC browser workflow',
+      'FileIO supports cross-platform phone-to-PC browser workflow',
       'AirDrop is strongest inside Apple-only ecosystem',
     ],
-    'toolport-vs-snapdrop-comparison': [
+    'fileio-vs-snapdrop-comparison': [
       'Snapdrop is usually best in same-Wi-Fi discovery scenarios',
-      'ToolPort is designed for more stable session-based transfer flow',
-      'ToolPort supports practical file and text handoff in one workflow',
+      'FileIO is designed for more stable session-based transfer flow',
+      'FileIO supports practical file and text handoff in one workflow',
     ],
-    'toolport-vs-wetransfer-comparison': [
+    'fileio-vs-wetransfer-comparison': [
       'WeTransfer commonly uses upload-and-share-link workflow',
-      'ToolPort focuses on direct browser transfer between your devices',
-      'ToolPort reduces extra upload steps for daily phone-to-PC sharing',
+      'FileIO focuses on direct browser transfer between your devices',
+      'FileIO reduces extra upload steps for daily phone-to-PC sharing',
     ],
-    'toolport-vs-localsend-comparison': [
+    'fileio-vs-localsend-comparison': [
       'LocalSend is app-based and typically needs installation on each device',
-      'ToolPort is browser-based and no-install for quick start',
-      'ToolPort is often better for temporary devices and mixed-system sessions',
+      'FileIO is browser-based and no-install for quick start',
+      'FileIO is often better for temporary devices and mixed-system sessions',
     ],
   }
 
@@ -385,35 +346,34 @@ function buildKeywordsForPost(p: NonNullable<typeof post.value>) {
   const baseKeywords = [
     ...p.tags,
     'wireless file transfer phone to pc',
-    'free qr code generator',
-    'online clipboard sync',
+    'qr code pairing',
     'privacy-first tools',
   ]
 
   const slugKeywords: Record<string, string[]> = {
-    'toolport-vs-airdrop-comparison': [
+    'fileio-vs-airdrop-comparison': [
       'airdrop for windows alternative',
       'iphone to windows file transfer without app',
       'airdrop does not work on windows',
-      'toolport vs airdrop',
+      'fileio vs airdrop',
     ],
-    'toolport-vs-snapdrop-comparison': [
+    'fileio-vs-snapdrop-comparison': [
       'snapdrop alternative for office wifi',
       'same wifi file transfer browser',
       'phone to pc transfer without lan dependency',
-      'toolport vs snapdrop',
+      'fileio vs snapdrop',
     ],
-    'toolport-vs-wetransfer-comparison': [
+    'fileio-vs-wetransfer-comparison': [
       'wetransfer alternative for personal transfer',
       'send files without upload link delay',
       'direct browser phone to laptop transfer',
-      'toolport vs wetransfer',
+      'fileio vs wetransfer',
     ],
-    'toolport-vs-localsend-comparison': [
+    'fileio-vs-localsend-comparison': [
       'localsend alternative no install',
       'browser file transfer without desktop app',
       'temporary device file sharing without signup',
-      'toolport vs localsend',
+      'fileio vs localsend',
     ],
   }
 
@@ -439,14 +399,14 @@ if (post.value && localizedPost.value) {
     ogTitle: lp.title,
     ogDescription: lp.description,
     ogType: 'article',
-    ogImage: 'https://toolport.dev/og-image.png',
+    ogImage: 'https://fileio.top/og-image.png',
     ogUrl: blogUrl.value,
     twitterTitle: lp.title,
     twitterDescription: lp.description,
     robots: 'index, follow',
     articlePublishedTime: post.value.date,
     articleModifiedTime: postModifiedDate.value,
-    articleAuthor: ['ToolPort'],
+    articleAuthor: ['FileIO'],
   })
   useJsonLd({
     '@context': 'https://schema.org',
@@ -456,9 +416,9 @@ if (post.value && localizedPost.value) {
     inLanguage: langCode,
     datePublished: postPublishedDate.value,
     dateModified: postModifiedDate.value,
-    author: { '@type': 'Organization', name: 'ToolPort', url: 'https://toolport.dev' },
-    publisher: { '@type': 'Organization', name: 'ToolPort', url: 'https://toolport.dev', logo: { '@type': 'ImageObject', url: 'https://toolport.dev/og-image.png' } },
-    image: 'https://toolport.dev/og-image.png',
+    author: { '@type': 'Organization', name: 'FileIO', url: 'https://fileio.top' },
+    publisher: { '@type': 'Organization', name: 'FileIO', url: 'https://fileio.top', logo: { '@type': 'ImageObject', url: 'https://fileio.top/og-image.png' } },
+    image: 'https://fileio.top/og-image.png',
     mainEntityOfPage: { '@type': 'WebPage', '@id': blogUrl.value },
   })
   useJsonLd({
@@ -482,9 +442,7 @@ if (post.value && localizedPost.value) {
 }
 
 const tools = [
-  { path: '/tools/text-transfer', icon: 'swap_horiz', name: t('blog.toolTransfer') },
-  { path: '/tools/qr-code', icon: 'qr_code_2', name: t('blog.toolQr') },
-  { path: '/tools/clipboard', icon: 'content_paste', name: t('blog.toolClipboard') },
+  { path: '/text-transfer', icon: 'swap_horiz', name: t('blog.toolTransfer') },
 ]
 
 function formatDate(date: string) {

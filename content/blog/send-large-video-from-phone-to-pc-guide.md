@@ -14,7 +14,7 @@ To **send large video from phone to pc** quickly, avoid email and cloud relays. 
 
 ## Fast Workflow for Large Video Transfer
 
-1. Open [ToolPort File Transfer](/tools/text-transfer) on PC
+1. Open [FileIO File Transfer](/text-transfer) on PC
 2. Scan the pairing QR code with your phone
 3. Choose the original video file
 4. Keep both devices active until completion
@@ -34,4 +34,4 @@ To **send large video from phone to pc** quickly, avoid email and cloud relays. 
 
 ## Start Sending Large Files
 
-Open the free [phone-to-PC transfer tool](/tools/text-transfer).
+Open the free [phone-to-PC transfer tool](/text-transfer).

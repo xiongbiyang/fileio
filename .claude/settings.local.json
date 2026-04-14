@@ -10,7 +10,9 @@
       "Bash(ls -1 /d/work/web/toolbase/stitch/tool_a_*)",
       "Bash(xargs -n1 basename)",
       "Bash(python3:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(grep -l \"/tools/clipboard\\\\|/tools/qr-code\\\\|/pricing\\\\|/pro-waitlist\\\\|/auth/\\\\|/dashboard\" /d/work/web/transfer/content/blog/*.md)",
+      "Bash(grep -l \"/tools/clipboard\\\\|/tools/qr-code\\\\|/pricing\\\\|/pro-waitlist\" /d/work/web/transfer/content/blog/zh-CN/*.md)"
     ]
   }
 }

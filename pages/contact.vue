@@ -64,7 +64,7 @@
           </p>
           <div class="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/10 relative z-10">
             <span class="text-xs text-on-primary/60 font-label uppercase tracking-wider">{{ $t('contact.directEmail') }}</span>
-            <p class="font-medium mt-1">support@toolport.dev</p>
+            <p class="font-medium mt-1">support@fileio.top</p>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const canonicalUrl = computed(() =>
-  new URL(localePath('/contact'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+  new URL(localePath('/contact'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
 )
 useHead({
   title: () => t('seo.contact.title'),
@@ -99,7 +99,7 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.contact.title'),
   ogDescription: () => t('seo.contact.desc'),
-  ogImage: 'https://toolport.dev/og-image.png',
+  ogImage: 'https://fileio.top/og-image.png',
 })
 
 const form = reactive({ name: '', email: '', message: '' })

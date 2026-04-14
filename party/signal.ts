@@ -1,7 +1,7 @@
 import type * as Party from 'partykit/server'
 
 /**
- * WebRTC signaling relay for ToolPort File & Text Transfer (Tool A).
+ * WebRTC signaling relay for FileIO File & Text Transfer (Tool A).
  * Each room holds exactly two peers. Messages are forwarded to all
  * other connections in the room — no server-side state needed.
  *

@@ -1,454 +1,114 @@
-# ToolPort - Project Architecture
+# FileIO - Project Architecture
 
-> Free, privacy-first browser tools: file transfer, QR code, online clipboard.
-> Deployed on Cloudflare Pages + PartyKit. Build verified: 1.95 MB (552 KB gzip).
+> Privacy-first browser file transfer: WebRTC P2P phone-to-PC sharing with QR pairing.
+> Deployed on Cloudflare Pages + PartyKit.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Nuxt 3.21 (Vue 3.5 + Vite 7 + Nitro 2.13) |
-| Language | TypeScript 5.7 |
-| Styling | Tailwind CSS 3.4 + Material Design 3 color tokens |
-| i18n | @nuxtjs/i18n 9.5 (en, zh-CN, zh-TW) |
-| Real-time | PartyKit 0.0.115 (WebSocket rooms) |
+| Framework | Nuxt 3 (Vue 3 + Vite + Nitro) |
+| Language | TypeScript |
+| Styling | Tailwind CSS + Material Design 3 color tokens |
+| i18n | @nuxtjs/i18n (en, zh-CN, zh-TW — `prefix_except_default`) |
+| Signaling | PartyKit (WebSocket relay for WebRTC handshake) |
 | P2P | WebRTC DataChannel + AES-256-GCM (Web Crypto API) |
 | SEO | @nuxtjs/sitemap + JSON-LD (`useJsonLd` composable) |
-| Markdown | `marked` (blog article rendering) |
+| Markdown | `marked` (blog article rendering, raw imports — NOT @nuxt/content) |
 | Deployment | Cloudflare Pages (`cloudflare-pages` preset) + PartyKit |
-| Fonts | Inter (body), Manrope (headlines), Material Symbols Outlined |
 
 ## Directory Structure
 
 ```
-toolbase/
+transfer/
 ├── pages/
-│   ├── index.vue               # Homepage (WebApplication JSON-LD)
-│   ├── tools/
-│   │   ├── index.vue           # Tools directory
-│   │   ├── text-transfer.vue   # Tool A: File & Text Transfer (SoftwareApplication JSON-LD)
-│   │   ├── qr-code.vue         # Tool B: QR Code Generator/Scanner (SoftwareApplication JSON-LD)
-│   │   └── clipboard.vue       # Tool C: Online Clipboard (SoftwareApplication JSON-LD)
+│   ├── index.vue                    # Redirects to /text-transfer
+│   ├── text-transfer.vue            # THE tool (SoftwareApplication JSON-LD)
 │   ├── blog/
-│   │   ├── index.vue           # Blog list page
-│   │   └── [slug].vue          # Blog article page (BlogPosting JSON-LD)
-│   ├── guides/                 # Guide articles (Vue pages, prerendered)
-│   │   ├── file-transfer.vue
-│   │   ├── qr-code.vue
-│   │   └── clipboard.vue
-│   ├── auth/                   # Auth pages (signin, noindex)
-│   ├── pricing.vue             # Pricing (Product + FAQPage JSON-LD)
-│   ├── pro-waitlist.vue        # Pro waitlist signup
-│   ├── tool-request.vue        # Tool request survey (24 vote options + FAQPage JSON-LD)
-│   ├── about.vue
-│   ├── contact.vue
-│   ├── privacy.vue
-│   ├── terms.vue
-│   ├── dashboard.vue           # noindex
-│   ├── settings.vue            # noindex
-│   └── [...slug].vue           # Catch-all 404
-├── content/blog/               # Markdown blog articles (raw imports, NOT @nuxt/content)
-│   ├── how-to-transfer-files-phone-to-pc.md
-│   ├── free-online-qr-code-generator.md
-│   └── best-free-ai-tools-2025.md
+│   │   ├── index.vue                # Blog list (Blog JSON-LD)
+│   │   └── [slug].vue               # Article (BlogPosting JSON-LD)
+│   ├── guides/file-transfer.vue     # Transfer guide (prerendered)
+│   ├── about.vue / contact.vue / privacy.vue / terms.vue
+│   ├── settings.vue                 # Theme + language (noindex)
+│   └── [...slug].vue                # 404 catch-all
+├── content/blog/                    # Markdown blog articles (en + zh-CN)
 ├── components/
-│   ├── layout/                 # AppHeader, AppFooter, SideNav, MobileNav, LanguageSwitcher, ThemeToggle
-│   └── common/                 # CookieConsent, ErrorModal, StatusIndicator, ToolCard
+│   ├── layout/                      # AppHeader, AppFooter, AppNotifications,
+│   │                                #   LanguageSwitcher, ThemeToggle, MobileNav
+│   ├── common/                      # AdBlockNotice, CookieConsent, ConfirmDialog
+│   └── tools/                       # TextTransfer* (Waiting, Pairing, Transferring,
+│                                    #   Success, Reconnecting, FileQueue,
+│                                    #   DeviceHistory, History, Audit)
 ├── composables/
-│   ├── useWebRTC.ts            # WebRTC P2P connection + file transfer
-│   ├── useSignaling.ts         # WebRTC signaling relay via PartyKit
-│   ├── useClipboardRoom.ts     # Clipboard room WebSocket (PartyKit)
-│   ├── useCrypto.ts            # AES-256-GCM encrypt/decrypt
-│   ├── useTheme.ts             # Dark/light mode toggle
-│   ├── useJsonLd.ts            # JSON-LD structured data injection
-│   └── useBlogPosts.ts         # Blog post index (title, description, tags, date)
+│   ├── useWebRTC.ts                 # P2P connection + file transfer
+│   ├── useSignaling.ts              # WebRTC signaling relay via PartyKit
+│   ├── useTextTransferPage.ts       # Page-level orchestration
+│   ├── useCrypto.ts                 # AES-256-GCM encrypt/decrypt
+│   ├── useTheme.ts                  # Dark/light mode toggle
+│   ├── useConfirmDialog.ts          # Confirm dialog state
+│   ├── useNotifier.ts               # Toast notifications
+│   ├── useJsonLd.ts                 # JSON-LD structured data injection
+│   └── useBlogPosts.ts              # Blog post index (title, desc, tags, date)
 ├── layouts/
-│   ├── default.vue             # Standard layout — injects hreflang + canonical via useLocaleHead()
-│   └── tool.vue                # Tool layout — injects hreflang + canonical via useLocaleHead()
-├── i18n/                       # Translation files (3 locales, fully in sync)
-│   ├── en.json
-│   ├── zh-CN.json
-│   └── zh-TW.json
-├── party/                      # PartyKit server (WebSocket rooms)
-│   ├── clipboard.ts            # Clipboard: message relay, device count, typing
-│   └── signal.ts               # Signaling: WebRTC offer/answer/candidate relay
-├── server/api/                 # Nitro API endpoints (run on Cloudflare Workers)
-│   ├── health.get.ts           # GET /api/health
-│   ├── turn-credentials.get.ts # GET /api/turn-credentials (region-aware STUN/TURN)
-│   ├── contact.post.ts         # POST /api/contact
-│   └── rooms/[roomId].ts       # GET/POST /api/rooms/:id
+│   ├── default.vue                  # Standard pages (blog, about, legal)
+│   └── tool.vue                     # Tool + settings (adds ConfirmDialog)
+├── i18n/                            # en.json, zh-CN.json, zh-TW.json (keys in sync)
+├── party/
+│   └── signal.ts                    # PartyKit: WebRTC offer/answer/candidate relay
+├── server/api/
+│   ├── health.get.ts                # Liveness check
+│   └── turn-credentials.get.ts      # Region-aware STUN/TURN (used by useWebRTC)
+├── utils/                           # clipboard, qrcode, roomId, shareLink, transferFormat
+├── types/toolPages.ts               # TransferState, *Item interfaces
+├── constants/toolPageData.ts        # Mock transfer history / device items
 ├── scripts/
-│   └── gen-og-image.py         # Python script to regenerate public/og-image.png
-├── assets/css/global.css       # Custom CSS utilities, color tokens, animations
-├── public/                     # Static assets
-│   ├── og-image.png            # 1200×630px OG image (brand green, generated by scripts/gen-og-image.py)
-│   ├── robots.txt
-│   ├── _headers                # Cloudflare Pages security headers
-│   └── _redirects              # /r/* → /tools/clipboard?room=:splat
-├── nuxt.config.ts
-├── partykit.json
-├── wrangler.toml
-└── tailwind.config.ts
+│   ├── check_i18n.py                # i18n sync validation (npm run lint:i18n)
+│   └── gen-og-image.py              # Regenerate og-image.png
+├── e2e/smoke.spec.ts                # Playwright smoke tests
+├── public/                          # og-image.png, robots.txt, _headers, _redirects
+├── nuxt.config.ts                   # Sitemap, routeRules, i18n, SEO meta
+├── partykit.json                    # PartyKit entry = party/signal.ts
+└── wrangler.toml                    # Cloudflare Pages config
 ```
 
-## Routing Overview
-
-| Path | Page | Layout | Prerender | Notes |
-|------|------|--------|-----------|-------|
-| `/` | index.vue | default | ✓ | WebApplication JSON-LD |
-| `/tools` | tools/index.vue | tool | ✓ | |
-| `/tools/text-transfer` | tools/text-transfer.vue | tool | — | SoftwareApplication JSON-LD |
-| `/tools/qr-code` | tools/qr-code.vue | tool | ✓ | SoftwareApplication JSON-LD |
-| `/tools/clipboard` | tools/clipboard.vue | tool | — | SoftwareApplication JSON-LD |
-| `/blog` | blog/index.vue | default | ✓ | |
-| `/blog/:slug` | blog/[slug].vue | default | ✓ | BlogPosting JSON-LD |
-| `/guides/file-transfer` | guides/file-transfer.vue | default | ✓ | |
-| `/guides/qr-code` | guides/qr-code.vue | default | ✓ | |
-| `/guides/clipboard` | guides/clipboard.vue | default | ✓ | |
-| `/pricing` | pricing.vue | default | ✓ | Product + FAQPage JSON-LD |
-| `/pro-waitlist` | pro-waitlist.vue | default | ✓ | |
-| `/tool-request` | tool-request.vue | default | ✓ | FAQPage JSON-LD, 24 vote options |
-| `/about` | about.vue | default | ✓ | |
-| `/contact` | contact.vue | tool | — | |
-| `/privacy` | privacy.vue | default | ✓ | |
-| `/terms` | terms.vue | default | ✓ | |
-| `/dashboard` | dashboard.vue | tool | — | noindex, nofollow |
-| `/settings` | settings.vue | tool | — | noindex, nofollow |
-| `/auth/signin` | auth/signin.vue | — | — | noindex, nofollow |
-
-## Three Core Tools
-
-### Tool A: File & Text Transfer (`text-transfer.vue`)
-- **WebRTC P2P** encrypted file/text transfer between phone and PC
-- QR code for connection, manual room ID fallback
-- `useWebRTC` composable: offer/answer, ICE restart, chunk-based file send (16KB chunks, `bufferedamountlow` backpressure)
-- `useSignaling` composable: PartyKit relay for WebRTC signaling
-- States: `waiting → pairing → transferring → success → reconnecting`
-- Interruption handling: `beforeunload` + `onBeforeRouteLeave` + `visibilitychange` + receive timeout (30s) + `cancelSend()` + `onError` reconnect
-- Cancel: both sender (`cancelSend`) and receiver (`file-cancel` message) supported
-
-### Tool B: QR Code Generator/Scanner (`qr-code.vue`)
-- Generate: `qrcode` npm package → canvas, download PNG/SVG
-- Scan: `jsqr` library, file upload + camera + drag-and-drop
-- Batch: CSV import → bulk QR generation → ZIP download
-- Features: custom colors, logo overlay, error correction levels, mobile settings panel
-- Scan history persisted to `localStorage` (`tp_scan_history`, max 20)
-- Paste from clipboard button on mobile
-
-### Tool C: Online Clipboard (`clipboard.vue`)
-- Real-time message sync via PartyKit WebSocket rooms
-- Text + image (paste/attach) message types
-- `useClipboardRoom` composable: connect, send, typing indicator, device count
-- Room history persisted to `localStorage` (`tp_clipboard_rooms`) with E2EE flag
-- 24-hour auto-expiry timer, QR code sharing (sidebar + modal)
-- Search view with real-time message filtering by type (text/link/image)
-- Copy message to clipboard via `copyToClipboard()` helper
-
-## Blog System
-
-**No @nuxt/content** — incompatible with Cloudflare Workers (requires SQLite/D1). Uses a lightweight custom approach:
-
-- **Articles**: Markdown files in `content/blog/*.md` (frontmatter: `title` only)
-- **Index**: `composables/useBlogPosts.ts` — array of `{ slug, title, description, date, tags, author }`
-- **List page**: `pages/blog/index.vue` — reads from `useBlogPosts()`
-- **Article page**: `pages/blog/[slug].vue` — loads markdown via `import.meta.glob('~/content/blog/*.md', { query: '?raw' })`, strips frontmatter, renders with `marked`
-- **SEO**: Each article gets `BlogPosting` JSON-LD, `og:title/description/image`, `articlePublishedTime`, `articleAuthor`
-- **Sitemap**: Blog slugs manually listed in `nuxt.config.ts` sitemap `urls` array (dynamic routes not auto-discovered)
-- **Internal links**: Article footer links to all 3 tools + tool-request survey
-
-### Adding a Blog Post
-
-1. Create `content/blog/your-slug.md` with frontmatter (`title` field)
-2. Add entry to `composables/useBlogPosts.ts` array (slug, title, description, date, tags, author)
-3. Add to `sitemap.urls` in `nuxt.config.ts` with `loc` and `lastmod`
-4. Done — prerendered automatically via `routeRules: { '/blog/**': { prerender: true } }`
-
-## Composables Reference
-
-### `useWebRTC(options)`
-```ts
-interface WebRTCOptions {
-  onMessage?: (data: string | ArrayBuffer) => void
-  onStateChange?: (state: RTCPeerConnectionState) => void
-  onDataChannelOpen?: () => void
-  onError?: (error: Error) => void
-}
-// Returns: connectionState, connect, setRemoteDescription, restartIce,
-//          receiveRestartOffer, sendText, sendFile, cancelSend, disconnect
-```
-
-### `useSignaling(roomId)`
-- PartyKit WebSocket for relaying WebRTC offer/answer/candidate
-- `onOffer`, `onAnswer` callbacks; `sendSignal(type, data)`
-
-### `useClipboardRoom(options)`
-```ts
-interface ClipboardRoomOptions {
-  onMessage?: (message: ClipboardMessage) => void
-  onDeviceCountChange?: (count: number) => void
-  onClear?: () => void
-  onTyping?: () => void
-  onError?: (error: Error) => void
-}
-// Returns: isConnected, deviceCount, roomId, connect, disconnect,
-//          sendMessage, sendTyping, clearRoom
-```
-
-### `useCrypto()`
-- `generateKey()`, `exportKey(key)`, `importKey(raw)`
-- `encrypt(key, data)`, `decrypt(key, data)`
-
-### `useJsonLd(data)`
-- Injects `<script type="application/ld+json">` into `<head>`
-- Used for WebApplication, SoftwareApplication, Product, FAQPage, BlogPosting schemas
-
-### `useBlogPosts()`
-- Returns `BlogPost[]` array — the blog index
-- Each post: `{ slug, title, description, date, tags, author }`
-
-## i18n Keys Structure
-
-Top-level keys in translation files:
-```
-common, nav, sidebar, footer, home, toolsDir,
-toolA, toolB, toolC, auth, dashboard, settings,
-pricing, contact, waitlist, welcome, terms, privacy,
-maintenance, cookie, error404, errorModal, toolRequest, blog
-```
-
-Strategy: `prefix_except_default` — English at root, Chinese prefixed (`/zh-CN/tools`).
-
-All 3 locale files are fully in sync (0 missing keys). When adding keys, update all 3 files.
-
-## SEO Implementation
-
-### Automatic (via layouts)
-Both `layouts/default.vue` and `layouts/tool.vue` call `useLocaleHead({ dir, lang, seo })` which automatically injects:
-- `<link rel="canonical">` on every page
-- `<link rel="alternate" hreflang="...">` for en / zh-CN / zh-TW / x-default
-- `lang` and `dir` attributes on `<html>`
-
-### Per-page
-Every public page has `useHead()` (title + description + keywords) + `useSeoMeta()` (og:title, og:description, og:image).
-
-| Page type | Additional SEO |
-|-----------|----------------|
-| Homepage | `WebApplication` JSON-LD |
-| Tool pages | `SoftwareApplication` JSON-LD |
-| Pricing | `Product` + `FAQPage` JSON-LD |
-| Tool Request | `FAQPage` JSON-LD (5 questions) |
-| Blog articles | `BlogPosting` JSON-LD + `og:type: article` + `articlePublishedTime` |
-| Private pages | `robots: noindex, nofollow` |
-
-### Global config (`nuxt.config.ts`)
-- `og:image` → `https://toolport.dev/og-image.png` (1200×630, in `public/`)
-- `twitter:card` → `summary_large_image`
-- Sitemap generated by `@nuxtjs/sitemap`, excludes private pages, includes manual blog URLs
-
-## CSS Custom Utilities
-
-Defined in `assets/css/global.css`:
-- `.primary-gradient` — `linear-gradient(135deg, #005147, #006b5e)`
-- `.glass-panel` — Glassmorphism with backdrop blur
-- `.shadow-ambient` — Subtle ambient shadow
-- `.soft-pulse` — 2s pulsing animation
-- Color tokens as CSS variables: `--color-surface-*`, `--color-on-surface-*`, `--color-primary-*`
-
-Blog article styles in `pages/blog/[slug].vue` `<style>` block (`.prose` classes).
-
-## PartyKit Configuration
-
-```json
-{
-  "name": "toolport",
-  "parties": {
-    "clipboard": "party/clipboard.ts",
-    "signal": "party/signal.ts"
-  }
-}
-```
-
-- **Dev**: `localhost:1999` (`npm run dev:party`)
-- **Prod**: deploy with `npm run party:deploy`, then set `NUXT_PUBLIC_PARTYKIT_HOST` in Cloudflare Pages env vars
-- PartyKit is deployed independently from Cloudflare Pages — they are two separate services
-
-## Environment Variables
-
-```bash
-# PartyKit host (dev defaults to localhost:1999)
-NUXT_PUBLIC_PARTYKIT_HOST=toolport.your-username.partykit.dev
-
-# WebRTC TURN credentials (optional — falls back to STUN-only without these)
-# Set in Cloudflare Pages env vars for production
-# Without TURN, users behind symmetric NAT (common on CN mobile ISPs) cannot connect
-NUXT_CLOUDFLARE_TURN_KEY_ID=
-NUXT_CLOUDFLARE_TURN_API_TOKEN=
-
-# Site URL for sitemap (hardcoded to https://toolport.dev in nuxt.config.ts)
-NUXT_PUBLIC_SITE_URL=https://toolport.dev
-
-# OAuth (Google / GitHub)
-# Keep false until provider apps are configured
-NUXT_PUBLIC_OAUTH_ENABLED=false
-NUXT_OAUTH_GOOGLE_CLIENT_ID=
-NUXT_OAUTH_GOOGLE_CLIENT_SECRET=
-NUXT_OAUTH_GITHUB_CLIENT_ID=
-NUXT_OAUTH_GITHUB_CLIENT_SECRET=
-```
-
-All env vars are declared in `nuxt.config.ts` `runtimeConfig`. TURN keys are server-only (never exposed to client).
-OAuth setup and callback checklist: `docs/oauth-setup.md`.
-
-## NPM Scripts
-
-```bash
-npm run dev          # Nuxt dev server (:3000)
-npm run dev:party    # PartyKit dev server (:1999)
-npm run dev:all      # Both servers concurrently (full local testing)
-npm run build        # Build for Cloudflare Pages
-npm run party:deploy # Deploy PartyKit to production
-```
-
-## Deployment
-
-### Cloudflare Pages
-- **Preset**: `cloudflare-pages` (Nitro)
-- **Build**: `npm run build` → `dist/`
-- **Deploy**: `npx wrangler pages deploy dist/`
-- **Build size**: ~1.95 MB (552 KB gzip)
-- **Worker entry**: `dist/_worker.js/index.js` handles SSR + API routes
-- **Static assets**: served directly by Pages CDN (excluded from Worker via `_routes.json`)
-- **Cloudflare compatibility**: No Node.js-only APIs. `nodejs_compat` flag not required.
-
-### PartyKit
-- **Deploy**: `npm run party:deploy`
-- **Prod URL**: `toolport.your-username.partykit.dev`
-- After deploying, set `NUXT_PUBLIC_PARTYKIT_HOST` in Cloudflare Pages → Settings → Environment variables, then redeploy Pages
-
-### Full Deployment Order
-1. `npm run party:deploy` — deploy PartyKit
-2. Set `NUXT_PUBLIC_PARTYKIT_HOST` in Cloudflare Pages env vars
-3. `npm run build && npx wrangler pages deploy dist/`
-
-## Adding a New Tool — Checklist
-
-1. **Create page**: `pages/tools/your-tool.vue`
-   - `definePageMeta({ layout: 'tool' })`
-   - `useHead()` with title, description, keywords
-   - `useSeoMeta()` with ogTitle, ogDescription, ogImage
-   - `useJsonLd()` with `SoftwareApplication` schema
-   - Mobile + desktop views (see existing tools for pattern)
-   - `alt` attributes on all `<img>` tags
-
-2. **Add i18n keys**: Add `toolX` section to all 3 locale files (`en.json`, `zh-CN.json`, `zh-TW.json`)
-
-3. **Add navigation**:
-   - `components/layout/SideNav.vue` — add nav item
-   - `components/layout/AppHeader.vue` — update if needed
-
-4. **Add to tools directory**: Update `pages/tools/index.vue`:
-   - Add to `featuredItems` carousel
-   - Add to `categories` grid
-
-5. **Add to tool-request survey**: Update `pages/tool-request.vue`:
-   - Add to `liveTools` computed array
-
-6. **Prerender**: Add route to `routeRules` in `nuxt.config.ts`
-
-7. **Write blog post** (optional):
-   - Create `content/blog/your-tool-guide.md`
-   - Add to `composables/useBlogPosts.ts`
-   - Add to `sitemap.urls` in `nuxt.config.ts`
-
-8. **Add guide** (optional): Create `pages/guides/your-tool.vue`
-   - `useHead()` + `useSeoMeta()` + keywords
-   - Add to `routeRules` and `nitro.prerender.routes`
-
-9. **If needs real-time**: Create party in `party/`, register in `partykit.json`
-
-10. **If needs composable**: Create in `composables/` (auto-imported by Nuxt)
-
-## localStorage Keys
-
-| Key | Used By | Purpose |
-|-----|---------|---------|
-| `tp_theme` | useTheme | Dark/light mode preference |
-| `tp_lang` | i18n cookie | Language preference |
-| `tp_scan_history` | qr-code.vue | QR scan history (max 20) |
-| `tp_clipboard_rooms` | clipboard.vue | Clipboard room history (with E2EE flag) |
-| `tp_tool_requests` | tool-request.vue | Tool survey submissions (votes + suggestions) |
-| `tp_device_id` | useClipboardRoom (sessionStorage) | Unique device identifier per tab |
-
-## Navigation Structure
-
-**Top header** (`AppHeader.vue`): Tools | Blog | Pricing | About
-
-**Side nav** (`SideNav.vue`): All Tools | Text Transfer | QR Code | Clipboard | Settings | Upgrade to Pro (→ /pro-waitlist)
-
-**Key internal links for SEO**:
-- Tool Request page → links to all 3 live tools
-- Blog articles → link to tools + tool-request
-- Tools directory CTA → links to tool-request survey
-- Pricing Pro button → links to pro-waitlist
-- Side nav "Upgrade to Pro" → links to pro-waitlist
-## 2026-04 Update Snapshot
-
-### Auth & OAuth
-- Added real auth pages and flows:
-  - `pages/auth/signin.vue`
-  - `pages/auth/signup.vue`
-- Added server auth APIs (D1-backed, with local fallback behavior in UI when D1 is missing):
-  - `POST /api/auth/signin`
-  - `POST /api/auth/signup`
-- Added OAuth start/callback flow:
-  - `GET /api/auth/oauth-url`
-  - `GET /api/auth/callback/:provider`
-  - Shared helper: `server/utils/oauth.ts`
-- OAuth env vars are enabled via:
-  - `NUXT_PUBLIC_OAUTH_ENABLED`
-  - `NUXT_OAUTH_GOOGLE_CLIENT_ID`
-  - `NUXT_OAUTH_GOOGLE_CLIENT_SECRET`
-  - `NUXT_OAUTH_GITHUB_CLIENT_ID`
-  - `NUXT_OAUTH_GITHUB_CLIENT_SECRET`
-- Setup reference: `docs/oauth-setup.md`
-
-### Pricing & Waitlist Segmentation
-- Pricing upgraded to 4-card layout:
-  - Free
-  - Pro Monthly (`$6.99`)
-  - Pro Yearly (`$69.9`)
-  - Pro Lifetime (`$199.9`)
-- Pricing copy now clearly differentiates plans:
-  - Monthly = flexible, cancel anytime
-  - Yearly = lower annual cost
-  - Lifetime = one-time payment + future tools included
-- Current product state is pre-launch for paid plans:
-  - Monthly/Yearly/Lifetime CTA buttons route to waitlist, not checkout
-- Plan-specific waitlist routing:
-  - `/pro-waitlist?plan=monthly`
-  - `/pro-waitlist?plan=yearly`
-  - `/pro-waitlist?plan=lifetime`
-- Waitlist page now reads `plan` query and shows plan-intent messaging accordingly.
-
-### Waitlist Data Capture
-- Added waitlist API:
-  - `POST /api/waitlist`
-  - Captures `email + plan + locale + source`
-  - If D1 is unavailable, endpoint returns graceful success with storage-not-configured reason.
-- Added D1 schema for segmented waitlist:
-  - `db/migrations/0003_waitlist.sql`
-  - Table: `pro_waitlist_leads` with unique `(email, plan)`
-
-### New/Updated D1 Migrations
-- `0002_auth.sql` (auth users)
-- `0003_waitlist.sql` (plan-segmented waitlist leads)
-
-Apply (Cloudflare D1):
-
-```bash
-wrangler d1 migrations apply <DB_NAME>
-```
-
-### Notes
-- Price structured data (JSON-LD) now uses USD consistently for Monthly/Yearly/Lifetime offers.
-- Pricing card visual system was normalized (consistent button style, icon style, badge alignment, responsive spacing).
+## Routing
+
+| Path | Notes |
+|------|-------|
+| `/` | 301 redirect to `/text-transfer` (via routeRules) |
+| `/text-transfer` | The tool — NOT prerendered (needs `?r=` query) |
+| `/blog`, `/blog/[slug]` | Prerendered |
+| `/guides/file-transfer` | Prerendered |
+| `/about`, `/privacy`, `/terms` | Prerendered |
+| `/contact` | Form submission |
+| `/settings` | noindex (theme + language) |
+| `/zh-CN/*`, `/zh-TW/*` | Localized equivalents (prefix_except_default) |
+
+## i18n Key Structure
+
+Top-level keys: `common`, `nav`, `footer`, `contact`, `privacy`, `terms`, `error404`, `toolA`, `settings`, `blog`, `cookie`, `about`, `seo`.
+
+`toolA.*` holds text for the transfer tool (QR pairing, pairing flow, transfer UI, E2EE audit, history, etc.). `seo.*` holds per-page meta tags used via `useHead({ title: t('seo.<page>.title'), ... })`.
+
+Run `npm run lint:i18n` to verify en/zh-CN/zh-TW key parity.
+
+## Key Invariants
+
+- `/text-transfer` cannot be prerendered — it reads the `?r=` query param for pairing.
+- `utils/qrcode.ts` dynamically imports the `qrcode` npm package; it renders a pairing QR on the PC side.
+- `partykit` devDep is required for `npm run dev:party` and `npm run party:deploy`; `partysocket` is the runtime client used by `useSignaling.ts`.
+- WebRTC traffic uses AES-256-GCM via Web Crypto API — no plaintext ever touches the signaling server.
+- Blog posts are raw Markdown files under `content/blog/` (and `content/blog/zh-CN/`) rendered by `marked` — not @nuxt/content.
+
+## Scripts
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Nuxt dev (:3000) |
+| `npm run dev:party` | PartyKit signaling (:1999) |
+| `npm run dev:all` | Both concurrently |
+| `npm run build` | Production build for Cloudflare Pages |
+| `npm run lint` / `lint:i18n` | ESLint / i18n key parity |
+| `npm run test` | Vitest unit tests |
+| `npm run test:e2e` | Playwright smoke |
+| `npm run party:deploy` | Deploy PartyKit |

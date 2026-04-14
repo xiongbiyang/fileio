@@ -74,8 +74,6 @@ useHead({
 })
 
 const quickLinks = computed(() => [
-  { path: '/tools/text-transfer', icon: 'devices', label: t('error404.linkTransfer') },
-  { path: '/tools/qr-code', icon: 'qr_code_2', label: t('error404.linkQr') },
-  { path: '/tools/clipboard', icon: 'content_paste', label: t('error404.linkClipboard') },
+  { path: '/text-transfer', icon: 'devices', label: t('error404.linkTransfer') },
 ])
 </script>

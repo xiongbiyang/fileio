@@ -130,7 +130,7 @@ export function useWebRTC(options: WebRTCOptions = {}): WebRTCReturn {
     }
 
     // Offerer path — Trickle ICE: send offer immediately, candidates follow
-    dataChannel = pc.createDataChannel('toolport-transfer', { ordered: true })
+    dataChannel = pc.createDataChannel('fileio-transfer', { ordered: true })
     setupDataChannel()
     const createdOffer = await pc.createOffer()
     await pc.setLocalDescription(createdOffer)

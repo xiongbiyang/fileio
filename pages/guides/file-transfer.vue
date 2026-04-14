@@ -1,6 +1,6 @@
 ﻿<template>
   <article class="max-w-2xl mx-auto px-6 py-12">
-    <NuxtLink :to="localePath('/tools')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
+    <NuxtLink :to="localePath('/text-transfer')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       {{ c.back }}
     </NuxtLink>
@@ -57,7 +57,7 @@
     </section>
 
     <NuxtLink
-      :to="localePath('/tools/text-transfer')"
+      :to="localePath('/text-transfer')"
       class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
     >
       {{ c.cta }}
@@ -70,7 +70,7 @@
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
-const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://toolport.dev')
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
 const canonicalUrl = computed(() =>
   new URL(localePath('/guides/file-transfer'), siteBaseUrl.value).toString(),
 )
@@ -85,8 +85,8 @@ const c = computed(() => {
     readTime: zh ? '约 3 分钟阅读' : '3 min read',
     title: zh ? '如何在手机和电脑之间传输文件与文本' : 'How to Transfer Files & Text Between Phone and PC',
     intro: zh
-      ? 'ToolPort 通过 WebRTC 在手机和电脑间建立加密直连。无需账号、无需安装 App，文件与文本可在设备间直接传输。'
-      : "ToolPort's File & Text Transfer tool creates a direct encrypted WebRTC connection between your phone and computer, with no account and no app installation required.",
+      ? 'FileIO 通过 WebRTC 在手机和电脑间建立加密直连。无需账号、无需安装 App，文件与文本可在设备间直接传输。'
+      : "FileIO's File & Text Transfer tool creates a direct encrypted WebRTC connection between your phone and computer, with no account and no app installation required.",
     stepsTitle: zh ? '操作步骤' : 'Step-by-step',
     steps: zh ? [
       { title: '在电脑端打开工具', desc: '进入工具后会自动生成二维码与房间 ID。' },
@@ -103,11 +103,11 @@ const c = computed(() => {
     ],
     secTitle: zh ? '端到端加密' : 'End-to-End Encrypted',
     secDesc: zh
-      ? '所有传输内容在离开设备前完成加密，服务端仅用于协助建立连接。'
-      : 'All data is encrypted with AES-256-GCM before it leaves your device. ToolPort servers only assist in establishing the initial handshake and never see the content of your transfer.',
+      ? '所有传输内容通过 WebRTC DTLS 加密；服务端仅协助建立配对握手，不经过文件和文本。'
+      : 'All traffic is encrypted in transit via WebRTC DTLS. FileIO servers only assist in the pairing handshake and never see the content of your transfer.',
     tip: zh
-      ? '提示：会话在长时间无操作后会过期，可随时刷新二维码重新连接。'
-      : 'Tip: Sessions expire after 10 minutes of inactivity. Click "Refresh QR Code" to start a new session at any time.',
+      ? '提示：如果房间未能配对成功，可随时点击"刷新二维码"重新开始会话。'
+      : 'Tip: If pairing stalls, click "Refresh QR Code" anytime to start a new session.',
     cta: zh ? '立即使用传输工具' : 'Open Transfer Tool',
   }
 })
@@ -124,7 +124,7 @@ useHead(() => ({
 useSeoMeta({
   ogTitle: () => t('seo.guideTransfer.ogTitle'),
   ogDescription: () => t('seo.guideTransfer.ogDesc'),
-  ogImage: 'https://toolport.dev/og-image.png',
+  ogImage: 'https://fileio.top/og-image.png',
   ogUrl: () => canonicalUrl.value,
   twitterTitle: () => t('seo.guideTransfer.ogTitle'),
   twitterDescription: () => t('seo.guideTransfer.ogDesc'),
@@ -140,7 +140,7 @@ useJsonLd({
       name: 'How do I transfer files from phone to PC without USB?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Open ToolPort on both devices, scan the QR code, and transfer files over an encrypted browser connection.',
+        text: 'Open FileIO on both devices, scan the QR code, and transfer files over an encrypted browser connection.',
       },
     },
     {
@@ -148,7 +148,7 @@ useJsonLd({
       name: 'Is there a free AirDrop alternative for Windows?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. ToolPort works as a free AirDrop alternative for Windows, Android, iPhone, and macOS with no app installation.',
+        text: 'Yes. FileIO works as a free AirDrop alternative for Windows, Android, iPhone, and macOS with no app installation.',
       },
     },
     {
@@ -166,8 +166,8 @@ useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolport.dev/' },
-    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://toolport.dev/tools' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://fileio.top/' },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://fileio.top/tools' },
     { '@type': 'ListItem', position: 3, name: 'File Transfer Guide', item: canonicalUrl.value },
   ],
 })
@@ -176,10 +176,10 @@ useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'HowTo',
   name: 'How to Transfer Files from Phone to PC',
-  description: 'Use ToolPort to transfer files/text wirelessly between devices.',
+  description: 'Use FileIO to transfer files/text wirelessly between devices.',
   totalTime: 'PT3M',
   step: [
-    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open ToolPort File & Text Transfer on your PC.', url: 'https://toolport.dev/tools/text-transfer' },
+    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open FileIO File & Text Transfer on your PC.', url: 'https://fileio.top/text-transfer' },
     { '@type': 'HowToStep', name: 'Pair devices', text: 'Scan QR code or enter Room ID on your phone.' },
     { '@type': 'HowToStep', name: 'Send file or text', text: 'Choose a file or input text and send through encrypted P2P session.' },
     { '@type': 'HowToStep', name: 'Receive on target device', text: 'Open or save received content on the paired device.' },
@@ -187,9 +187,9 @@ useJsonLd({
 })
 
 const relatedLinks = [
-  { to: '/tools/text-transfer', label: 'accountless file transfer' },
-  { to: '/tools/text-transfer', label: 'p2p web transfer' },
-  { to: '/tools/text-transfer', label: 'zero-knowledge file drop' },
+  { to: '/text-transfer', label: 'accountless file transfer' },
+  { to: '/text-transfer', label: 'p2p web transfer' },
+  { to: '/text-transfer', label: 'zero-knowledge file drop' },
 ]
 </script>
 

@@ -1,8 +1,8 @@
 <template>
   <header class="fixed top-0 w-full z-50 px-8 h-16 glass-panel">
     <div class="max-w-[1800px] mx-auto h-full flex items-center justify-between">
-      <NuxtLink :to="localePath('/')" class="flex items-center gap-2">
-        <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-surface font-headline">ToolPort</span>
+      <NuxtLink :to="localePath('/text-transfer')" class="flex items-center gap-2">
+        <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-surface font-headline">FileIO</span>
       </NuxtLink>
       <nav class="hidden md:flex items-center gap-1 font-headline">
         <NuxtLink
@@ -20,10 +20,10 @@ class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low tra
         </button>
         <LanguageSwitcher />
         <NuxtLink
-          :to="localePath('/auth/signin')"
-          class="hidden md:inline-flex px-5 py-2 primary-gradient text-on-primary rounded-lg text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
-        >
-          {{ $t('common.signIn') }}
+          :to="localePath('/settings')"
+          class="hidden md:inline-flex p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+          :aria-label="$t('nav.settings')">
+          <span class="material-symbols-outlined text-xl">settings</span>
         </NuxtLink>
       </div>
     </div>
@@ -35,9 +35,8 @@ const localePath = useLocalePath()
 const route = useRoute()
 const { isDark, toggle: toggleTheme } = useTheme()
 const navItems = [
-  { path: '/tools', key: 'nav.tools' },
+  { path: '/text-transfer', key: 'nav.transfer' },
   { path: '/blog', key: 'nav.blog' },
-  { path: '/pricing', key: 'nav.pricing' },
   { path: '/about', key: 'nav.about' },
 ]
 function isActive(path: string) { return route.path.startsWith(localePath(path)) }

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /*/r/
 
-Sitemap: https://toolport.dev/sitemap.xml
+Sitemap: https://fileio.top/sitemap.xml

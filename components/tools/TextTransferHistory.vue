@@ -63,19 +63,7 @@ interface HistoryStat {
   label: string
 }
 
-interface TransferHistoryItem {
-  name: string
-  size: string
-  icon: string
-  iconBg: string
-  iconColor: string
-  device: string
-  deviceIcon: string
-  time: string
-  status: string
-  statusClass: string
-  dotClass: string
-}
+import type { TransferHistoryItem } from '~/types/toolPages'
 
 defineProps<{
   historyFilter: string

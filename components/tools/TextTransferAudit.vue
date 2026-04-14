@@ -59,11 +59,7 @@
 </template>
 
 <script setup lang="ts">
-interface SecurityLogItem {
-  time: string
-  msg: string
-  color: string
-}
+import type { SecurityLogItem } from '~/types/toolPages'
 
 defineProps<{
   keyFingerprint: string[]

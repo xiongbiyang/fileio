@@ -17,7 +17,7 @@ Most people rely on one of these methods:
 
 ## A Better Way: Browser-Based P2P Transfer
 
-With [ToolPort's File Transfer tool](/tools/text-transfer), you can transfer files directly between devices using your browser:
+With [FileIO's File Transfer tool](/text-transfer), you can transfer files directly between devices using your browser:
 
 1. **Open the tool** on your computer
 2. **Scan the QR code** with your phone's camera
@@ -38,7 +38,7 @@ The transfer uses **WebRTC DataChannel** — the same technology that powers vid
 
 ### On Your Computer
 
-1. Go to [toolport.dev/tools/text-transfer](/tools/text-transfer)
+1. Go to [fileio.top/text-transfer](/text-transfer)
 2. You'll see a QR code and a 6-character room ID
 3. Wait for the QR code to appear
 
@@ -78,7 +78,7 @@ The transfer uses **WebRTC DataChannel** — the same technology that powers vid
 
 ## Try It Now
 
-Ready to transfer files? Open the [File Transfer tool](/tools/text-transfer) and try it — it takes less than 10 seconds to set up.
+Ready to transfer files? Open the [File Transfer tool](/text-transfer) and try it — it takes less than 10 seconds to set up.
 
 ---
 

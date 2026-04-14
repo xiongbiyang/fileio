@@ -1,16 +1,14 @@
-# ToolPort
+# FileIO
 
-Free, privacy-first browser tools: file transfer, QR code, and online clipboard.
+Privacy-first browser file transfer: P2P encrypted phone-to-PC sharing with QR-code pairing.
 
-**Live:** [toolport.dev](https://toolport.dev)
+**Live:** [fileio.top](https://fileio.top)
 
 ## Features
 
-- **File & Text Transfer** — P2P encrypted transfer between phone and PC via WebRTC
-- **QR Code Generator/Scanner** — Generate, scan, and batch-create QR codes
-- **Online Clipboard** — Real-time message sync across devices via WebSocket rooms
+- **File & Text Transfer** — P2P encrypted transfer between phone and PC via WebRTC with QR-code pairing
 
-All tools run entirely in the browser. No files are uploaded to any server.
+Runs entirely in the browser. No files are uploaded to any server.
 
 ## Tech Stack
 
@@ -20,7 +18,7 @@ All tools run entirely in the browser. No files are uploaded to any server.
 | Language | TypeScript |
 | Styling | Tailwind CSS + Material Design 3 color tokens |
 | i18n | @nuxtjs/i18n (en, zh-CN, zh-TW) |
-| Real-time | PartyKit (WebSocket rooms) |
+| Signaling | PartyKit (WebSocket relay) |
 | P2P | WebRTC DataChannel + AES-256-GCM |
 | Deployment | Cloudflare Pages + PartyKit |
 
@@ -58,18 +56,11 @@ npm run build
 
 ```bash
 # PartyKit host (dev defaults to localhost:1999)
-NUXT_PUBLIC_PARTYKIT_HOST=toolport.your-username.partykit.dev
+NUXT_PUBLIC_PARTYKIT_HOST=fileio.your-username.partykit.dev
 
 # WebRTC TURN credentials (optional)
 NUXT_CLOUDFLARE_TURN_KEY_ID=
 NUXT_CLOUDFLARE_TURN_API_TOKEN=
-
-# OAuth (optional, disabled by default)
-NUXT_PUBLIC_OAUTH_ENABLED=false
-NUXT_OAUTH_GOOGLE_CLIENT_ID=
-NUXT_OAUTH_GOOGLE_CLIENT_SECRET=
-NUXT_OAUTH_GITHUB_CLIENT_ID=
-NUXT_OAUTH_GITHUB_CLIENT_SECRET=
 ```
 
 ## Deployment

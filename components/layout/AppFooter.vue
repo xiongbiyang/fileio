@@ -2,7 +2,7 @@
   <footer class="w-full py-8 px-12 bg-surface-container-lowest dark:bg-on-surface">
     <div class="max-w-[1800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex flex-col md:flex-row items-center gap-4">
-        <span class="text-lg font-black tracking-tight text-on-surface dark:text-surface font-headline">TOOLPORT</span>
+        <span class="text-lg font-black tracking-tight text-on-surface dark:text-surface font-headline">FILEIO</span>
         <span class="text-xs text-on-surface-variant/60">{{ $t('footer.copyright', { year: new Date().getFullYear() }) }}</span>
       </div>
       <div class="flex flex-wrap items-center gap-6">

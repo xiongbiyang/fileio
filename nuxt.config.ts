@@ -28,14 +28,14 @@ const blogSitemapUrls = [
     loc: `/blog/${post.slug}`,
     lastmod: getBlogPostLastmod(post.slug, post.date),
     changefreq: 'monthly' as const,
-    priority: (post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7) as 0.8 | 0.7,
+    priority: (post.slug.startsWith('fileio-vs-') ? 0.8 : 0.7) as 0.8 | 0.7,
   })),
   // zh-CN blog URLs
   ...blogPosts.filter(post => post.zhCN).map(post => ({
     loc: `/zh-CN/blog/${post.slug}`,
     lastmod: getBlogPostLastmod(post.slug, post.date),
     changefreq: 'monthly' as const,
-    priority: (post.slug.startsWith('toolport-vs-') || post.slug === 'free-online-qr-code-generator' ? 0.8 : 0.7) as 0.8 | 0.7,
+    priority: (post.slug.startsWith('fileio-vs-') ? 0.8 : 0.7) as 0.8 | 0.7,
   })),
 ]
 
@@ -50,20 +50,12 @@ export default defineNuxtConfig({
     // Server-only (never exposed to client)
     cloudflareTurnKeyId: process.env.NUXT_CLOUDFLARE_TURN_KEY_ID || '',
     cloudflareTurnApiToken: process.env.NUXT_CLOUDFLARE_TURN_API_TOKEN || '',
-    oauthGoogleClientId: process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID || '',
-    oauthGoogleClientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET || '',
-    oauthGithubClientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
-    oauthGithubClientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
-    authSessionSecret: process.env.NUXT_AUTH_SESSION_SECRET || '',
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://toolport.dev',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://fileio.top',
       // Development: leave empty (defaults to localhost:1999)
       // Production: set NUXT_PUBLIC_PARTYKIT_HOST in Cloudflare Pages env vars
-      //   e.g. toolport.your-username.partykit.dev
+      //   e.g. fileio.your-username.partykit.dev
       partykitHost: process.env.NUXT_PUBLIC_PARTYKIT_HOST || '',
-      // Keep cloud persistence disabled until login is officially launched.
-      enableClipboardCloudPersistence: process.env.NUXT_PUBLIC_ENABLE_CLIPBOARD_CLOUD === 'true',
-      oauthEnabled: process.env.NUXT_PUBLIC_OAUTH_ENABLED === 'true',
     },
   },
 
@@ -74,7 +66,7 @@ export default defineNuxtConfig({
   ],
 
   site: {
-    url: 'https://toolport.dev',
+    url: 'https://fileio.top',
   },
 
   sitemap: {
@@ -83,36 +75,22 @@ export default defineNuxtConfig({
       { label: 'URL', width: '65%' },
       { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
     ],
-    exclude: ['/dashboard', '/settings', '/auth/**', '/welcome', '/maintenance'],
+    exclude: ['/settings', '/maintenance'],
     urls: [
       // English core pages
       { loc: '/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/tools', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
-      { loc: '/tools/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/tools/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
-      { loc: '/tools/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
+      { loc: '/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
-      { loc: '/pricing', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.8 },
-      { loc: '/guides/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/guides/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/pro-waitlist', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.7 },
-      { loc: '/tool-request', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.7 },
       { loc: '/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
       { loc: '/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
       { loc: '/privacy', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
       { loc: '/terms', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
       // zh-CN core pages
       { loc: '/zh-CN', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-CN/tools', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
-      { loc: '/zh-CN/tools/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-CN/tools/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
-      { loc: '/zh-CN/tools/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.9 },
+      { loc: '/zh-CN/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/zh-CN/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
-      { loc: '/zh-CN/pricing', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.8 },
-      { loc: '/zh-CN/guides/qr-code', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/zh-CN/guides/clipboard', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/zh-CN/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
       { loc: '/zh-CN/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
       // Blog URLs (en + zh-CN)
@@ -128,7 +106,7 @@ export default defineNuxtConfig({
   ],
 
   i18n: {
-    baseUrl: 'https://toolport.dev',
+    baseUrl: 'https://fileio.top',
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
       { code: 'zh-CN', language: 'zh-CN', file: 'zh-CN.json', name: '简体中文' },
@@ -151,29 +129,29 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'ToolPort',
-      titleTemplate: '%s | ToolPort',
+      title: 'FileIO',
+      titleTemplate: '%s | FileIO',
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       meta: [
-        { name: 'description', content: 'ToolPort offers frictionless, out-of-the-box privacy-first browser tools: no-log WebRTC file drop, client-side no-tracking QR workflows, and ephemeral browser-to-browser sharing.' },
-        { name: 'keywords', content: 'frictionless tools,no-log webrtc file drop,out-of-the-box transfer,client-side qr code creator,no-tracking qr code,ephemeral text share,browser-to-browser share,privacy-first tools' },
+        { name: 'description', content: 'FileIO delivers frictionless, privacy-first browser file transfer: no-log WebRTC direct drop, QR-code pairing, and ephemeral phone-to-PC sharing with no install or signup.' },
+        { name: 'keywords', content: 'frictionless tools,no-log webrtc file drop,out-of-the-box transfer,phone to pc transfer,qr code pairing,ephemeral file share,browser-to-browser share,privacy-first tools' },
         { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
         { name: 'googlebot', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
         { name: 'theme-color', content: '#005147' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'ToolPort' },
-        { property: 'og:title', content: 'ToolPort - Free Online Tools for File Transfer, QR Code, and Clipboard' },
-        { property: 'og:description', content: 'Frictionless privacy-first browser tools: no-log WebRTC transfer, client-side no-tracking QR, and ephemeral cross-device sharing.' },
-        { property: 'og:image', content: 'https://toolport.dev/og-image.png' },
+        { property: 'og:site_name', content: 'FileIO' },
+        { property: 'og:title', content: 'FileIO - Fast, Private Phone-to-PC File Transfer in the Browser' },
+        { property: 'og:description', content: 'Frictionless privacy-first browser file transfer: no-log WebRTC direct drop, QR-code pairing, and ephemeral cross-device sharing.' },
+        { property: 'og:image', content: 'https://fileio.top/og-image.png' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
-        { property: 'og:image:alt', content: 'ToolPort - Privacy-first browser tools for file transfer, QR code generation, and cross-device clipboard' },
+        { property: 'og:image:alt', content: 'FileIO - Privacy-first browser file transfer with QR-code pairing' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'ToolPort - Free Online Tools for File Transfer, QR Code, and Clipboard' },
-        { name: 'twitter:description', content: 'No-log WebRTC file drop, client-side QR workflows, and ephemeral browser-to-browser sharing. No install, no signup.' },
-        { name: 'twitter:image', content: 'https://toolport.dev/og-image.png' },
-        { name: 'twitter:image:alt', content: 'ToolPort - Privacy-first browser tools for file transfer, QR code generation, and cross-device clipboard' },
+        { name: 'twitter:title', content: 'FileIO - Fast, Private Phone-to-PC File Transfer in the Browser' },
+        { name: 'twitter:description', content: 'No-log WebRTC file drop with QR-code pairing and ephemeral browser-to-browser sharing. No install, no signup.' },
+        { name: 'twitter:image', content: 'https://fileio.top/og-image.png' },
+        { name: 'twitter:image:alt', content: 'FileIO - Privacy-first browser file transfer with QR-code pairing' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -190,19 +168,14 @@ export default defineNuxtConfig({
   ],
 
   routeRules: {
-    '/': { prerender: true },
-    '/tools': { prerender: true },
+    '/': { redirect: '/text-transfer' },
+    '/zh-CN': { redirect: '/zh-CN/text-transfer' },
+    '/zh-TW': { redirect: '/zh-TW/text-transfer' },
     // text-transfer depends on ?r= query param for room joining — must NOT prerender
-    '/tools/text-transfer': { prerender: false },
-    // clipboard depends on ?r= query param for room joining — must NOT prerender
-    '/tools/clipboard': { prerender: false },
-    '/tools/qr-code': { prerender: true },
+    '/text-transfer': { prerender: false },
     '/about': { prerender: true },
     '/privacy': { prerender: true },
     '/terms': { prerender: true },
-    '/pricing': { prerender: true },
-    '/tool-request': { prerender: true },
-    '/pro-waitlist': { prerender: true },
     '/blog': { prerender: true },
     '/blog/**': { prerender: true },
     '/guides/**': { prerender: true },
@@ -230,7 +203,7 @@ export default defineNuxtConfig({
     },
     prerender: {
       crawlLinks: true,
-      routes: ['/blog', '/guides/qr-code', '/guides/file-transfer', '/guides/clipboard'],
+      routes: ['/blog', '/guides/file-transfer'],
     },
   },
 })

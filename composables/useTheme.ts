@@ -43,11 +43,7 @@ export function useTheme() {
   function init() {
     if (import.meta.client) {
       const stored = localStorage.getItem('tp_theme')
-      if (stored) {
-        isDark.value = stored === 'dark'
-      } else {
-        isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
-      }
+      isDark.value = stored === 'dark'
       applyTheme()
     }
   }

@@ -38,7 +38,6 @@ export function useTextTransferPage() {
   const route = useRoute()
   const { notify } = useNotifier()
   const state = ref<TransferState>('waiting')
-  const qrExpired = ref(false)
   const roomId = ref('')
   const verificationDigits = ref(['8', '4', '9', '2'])
   const reconnectAttempt = ref(3)
@@ -450,7 +449,7 @@ export function useTextTransferPage() {
     const canvases = qrCanvasElements.value.filter((c): c is HTMLCanvasElement => c !== null)
     if (!canvases.length || !roomId.value) return
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/text-transfer'), roomId.value)
       if (!url) return
       for (const canvas of canvases) {
         await renderQrCodeToCanvas(canvas, url, { width: 220, margin: 2 })
@@ -497,7 +496,7 @@ export function useTextTransferPage() {
   }
   async function copyLink() {
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/tools/text-transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/text-transfer'), roomId.value)
       if (!url) return
       await writeToClipboard(url)
       notify(t('common.copied'))
@@ -509,7 +508,6 @@ export function useTextTransferPage() {
   function refreshQr() {
     state.value = 'waiting'
     roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
-    qrExpired.value = false
     reconnectAttempt.value = 3
     markRemoteDeviceOnline(false)
     webrtc.disconnect()
@@ -693,14 +691,10 @@ export function useTextTransferPage() {
     addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, confirmPairing, copyLink,
     connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, denyPairing, disconnectAndRefresh, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
     historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
-    mobileSend, mobileTextInput, qrExpired, queuedFiles, receivedMessages, reconnectAttempt,
+    mobileSend, mobileTextInput, queuedFiles, receivedMessages, reconnectAttempt,
     refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
     timeRemaining, transferHistoryItems, transferProgress, transferSpeed, transferredSize, verificationDigits,
   }
-}
-
-function _generateVerificationCode(): string[] {
-  return Array.from({ length: 4 }, () => Math.floor(Math.random() * 10).toString())
 }
 
 function safeParseStorage<T>(key: string, fallback: T): T {

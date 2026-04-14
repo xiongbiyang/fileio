@@ -79,7 +79,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const canonicalUrl = computed(() =>
-  new URL(localePath('/privacy'), runtimeConfig.public.siteUrl || 'https://toolport.dev').toString(),
+  new URL(localePath('/privacy'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
 )
 useHead({
   title: () => t('seo.privacy.title'),
@@ -92,14 +92,14 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.privacy.title'),
   ogDescription: () => t('seo.privacy.desc'),
-  ogImage: 'https://toolport.dev/og-image.png',
+  ogImage: 'https://fileio.top/og-image.png',
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   name: t('seo.privacy.title'),
   description: t('seo.privacy.desc'),
-  url: 'https://toolport.dev/privacy',
+  url: 'https://fileio.top/privacy',
 })
 
 const toolPrivacy = computed(() => [
@@ -108,18 +108,6 @@ const toolPrivacy = computed(() => [
     icon: 'devices',
     desc: t('privacy.toolADesc'),
     points: [t('privacy.toolAPoint1'), t('privacy.toolAPoint2'), t('privacy.toolAPoint3')],
-  },
-  {
-    name: t('privacy.toolBName'),
-    icon: 'qr_code_2',
-    desc: t('privacy.toolBDesc'),
-    points: [t('privacy.toolBPoint1'), t('privacy.toolBPoint2'), t('privacy.toolBPoint3')],
-  },
-  {
-    name: t('privacy.toolCName'),
-    icon: 'content_paste',
-    desc: t('privacy.toolCDesc'),
-    points: [t('privacy.toolCPoint1'), t('privacy.toolCPoint2'), t('privacy.toolCPoint3')],
   },
 ])
 

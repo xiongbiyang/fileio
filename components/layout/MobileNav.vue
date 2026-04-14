@@ -14,14 +14,13 @@ v-for="item in navItems" :key="item.key" :to="localePath(item.path)"
 const route = useRoute()
 const localePath = useLocalePath()
 const navItems = [
-  { path: '/tools', icon: 'apps', key: 'nav.tools' },
-  { path: '/tools/text-transfer', icon: 'swap_horiz', key: 'nav.transfer' },
-  { path: '/tools/qr-code', icon: 'qr_code_2', key: 'nav.qrCode' },
-  { path: '/tools/clipboard', icon: 'content_paste', key: 'nav.clipboard' },
+  { path: '/text-transfer', icon: 'swap_horiz', key: 'nav.transfer' },
+  { path: '/blog', icon: 'article', key: 'nav.blog' },
+  { path: '/about', icon: 'info', key: 'nav.about' },
   { path: '/settings', icon: 'settings', key: 'nav.settings' },
 ]
 function isActive(path: string) {
-  if (path === '/') return route.path === '/'
-  return route.path.startsWith(path)
+  const localized = localePath(path)
+  return route.path === localized || route.path.startsWith(localized + '/')
 }
 </script>

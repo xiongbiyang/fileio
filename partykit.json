@@ -1,8 +1,7 @@
 {
-  "name": "toolport",
-  "main": "party/clipboard.ts",
+  "name": "transfer",
+  "main": "party/signal.ts",
   "parties": {
-    "clipboard": "party/clipboard.ts",
     "signal": "party/signal.ts"
   }
 }

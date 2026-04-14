@@ -1,41 +1,3 @@
-export interface ClipboardMessage {
-  id: string
-  content: string
-  type: 'text' | 'image'
-  isSelf: boolean
-  time: string
-}
-
-export interface ClipboardPastRoom {
-  id: string
-  name: string
-  desc: string
-  active: boolean
-  time: string
-  createdAt: number
-  e2ee: boolean
-}
-
-export interface SearchFilter {
-  key: string
-  label: string
-}
-
-export interface RoomMember {
-  name: string
-  initials: string
-  role: string
-  isAdmin: boolean
-  avatarClass: string
-}
-
-export interface VoteFeature {
-  icon: string
-  title: string
-  votes: string
-  desc: string
-}
-
 export interface RecentTransferItem {
   icon: string
   name: string
@@ -70,5 +32,9 @@ export interface SecurityLogItem {
   color: string
 }
 
-export type ClipboardViewState = 'entry' | 'room' | 'history' | 'search' | 'settings'
+export interface TransferFileSummary {
+  name: string
+  size: string
+}
+
 export type TransferState = 'waiting' | 'pairing' | 'transferring' | 'success' | 'reconnecting' | 'fileQueue' | 'deviceHistory' | 'transferHistory' | 'e2eeAudit'

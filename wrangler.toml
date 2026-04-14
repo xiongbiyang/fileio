@@ -1,4 +1,4 @@
-name = "toolport"
+name = "transfer"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat_v2"]
 pages_build_output_dir = "dist"
@@ -8,13 +8,13 @@ pages_build_output_dir = "dist"
 # binding = "KV"
 # id = "your-kv-id"
 
-# D1 database — create with: npx wrangler d1 create toolport-db
+# D1 database — create with: npx wrangler d1 create fileio-db
 # Then paste the database_id below and uncomment:
 # [[d1_databases]]
 # binding = "DB"
-# database_name = "toolport-db"
+# database_name = "fileio-db"
 # database_id = "paste-your-id-here"
 
 # Environment variables
 [vars]
-NUXT_PUBLIC_SITE_URL = "https://toolport.dev"
+NUXT_PUBLIC_SITE_URL = "https://fileio.top"

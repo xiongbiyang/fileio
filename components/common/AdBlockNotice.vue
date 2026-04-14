@@ -33,7 +33,7 @@ const { locale } = useI18n()
 const isZh = computed(() => locale.value.startsWith('zh'))
 
 const title = computed(() =>
-  isZh.value ? '支持 ToolPort 持续免费运行' : 'Help Keep ToolPort Free',
+  isZh.value ? '支持 FileIO 持续免费运行' : 'Help Keep FileIO Free',
 )
 const message = computed(() =>
   isZh.value

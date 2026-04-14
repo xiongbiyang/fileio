@@ -61,12 +61,7 @@
 </template>
 
 <script setup lang="ts">
-interface DeviceHistoryItem {
-  icon: string
-  name: string
-  time: string
-  online: boolean
-}
+import type { DeviceHistoryItem } from '~/types/toolPages'
 
 defineProps<{
   devices: DeviceHistoryItem[]

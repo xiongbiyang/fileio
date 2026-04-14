@@ -2,7 +2,7 @@
   <div class="w-full max-w-4xl">
     <div class="md:hidden space-y-4 pb-28">
       <div class="flex items-center justify-between">
-        <span class="font-headline text-lg font-bold text-on-surface dark:text-surface">ToolPort</span>
+        <span class="font-headline text-lg font-bold text-on-surface dark:text-surface">FileIO</span>
         <div v-if="isConnected" class="flex items-center gap-2">
           <div class="flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
             <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" /><span class="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
@@ -85,12 +85,6 @@
           <div class="p-4 bg-surface-container-lowest dark:bg-surface-container-high rounded-2xl shadow-ambient">
             <div class="w-52 h-52 bg-surface-container dark:bg-surface-container rounded-lg flex items-center justify-center relative">
               <canvas ref="mobileQrCanvas" class="w-44 h-44" />
-              <div v-if="qrExpired" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-container-lowest/40 dark:bg-on-surface/40 backdrop-blur-md rounded-lg p-4 text-center">
-                <button class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg mb-2 active:rotate-180 transition-transform duration-500" @click="$emit('refreshQr')">
-                  <span class="material-symbols-outlined text-xl">refresh</span>
-                </button>
-                <span class="text-xs font-headline font-bold text-on-surface dark:text-surface">{{ $t('toolA.qrExpired') }}</span>
-              </div>
             </div>
           </div>
           <div class="text-center space-y-2">
@@ -115,17 +109,22 @@
     </div>
 
     <div class="hidden md:block bg-surface-container-low dark:bg-surface-container rounded-xl overflow-hidden shadow-ambient">
-      <div class="px-8 py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 class="font-headline text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface dark:text-surface">{{ $t('toolA.title') }}</h1>
-          <div class="flex items-center gap-2 mt-2">
+      <div class="px-8 py-8 md:py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-3">
             <span class="px-3 py-1 bg-primary-container/20 text-primary-container rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">verified_user</span>
               {{ $t('toolA.e2eeSecure') }}
             </span>
           </div>
+          <h1 class="font-headline text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface dark:text-surface">
+            {{ isConnected ? $t('toolA.title') : $t('toolA.introHeading') }}
+          </h1>
+          <p v-if="!isConnected" class="text-on-surface-variant text-sm leading-relaxed mt-3 max-w-xl">
+            {{ $t('toolA.introSubtitle') }}
+          </p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 shrink-0">
           <div class="flex items-center gap-3 px-4 py-2 rounded-xl shadow-ambient" :class="isConnected ? 'bg-primary/5' : 'bg-surface-container-lowest dark:bg-surface-container-high'">
             <div v-if="isConnected" class="relative flex items-center justify-center">
               <span class="w-3 h-3 bg-primary rounded-full z-10" />
@@ -205,13 +204,6 @@
             <div class="p-4 md:p-6 bg-surface-container-low dark:bg-surface-container rounded-xl shadow-inner relative group">
               <div class="w-48 h-48 md:w-64 md:h-64 bg-surface-container dark:bg-surface-container-high rounded-lg flex items-center justify-center relative">
                 <canvas ref="qrCanvas" class="w-40 h-40 md:w-56 md:h-56" />
-                <div v-if="qrExpired" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-container-lowest/40 dark:bg-on-surface/40 backdrop-blur-md rounded-lg p-4 text-center">
-                  <button class="w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg mb-3 active:rotate-180 transition-transform duration-500" @click="$emit('refreshQr')">
-                    <span class="material-symbols-outlined text-2xl">refresh</span>
-                  </button>
-                  <span class="text-sm font-headline font-bold text-on-surface dark:text-surface">{{ $t('toolA.qrExpired') }}</span>
-                  <span class="text-xs text-on-surface-variant mt-1">{{ $t('toolA.qrExpiredDesc') }}</span>
-                </div>
               </div>
               <div class="absolute inset-0 flex items-center justify-center rounded-xl bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hidden md:flex">
                 <span class="text-on-primary font-bold text-sm">{{ $t('toolA.clickEnlarge') }}</span>
@@ -219,7 +211,7 @@
             </div>
             <div class="text-on-surface-variant text-sm font-medium">
               <p>{{ $t('toolA.scanQr') }}</p>
-              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">toolport.dev/tools/text-transfer?r={{ roomId }}</p>
+              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">fileio.top/text-transfer?r={{ roomId }}</p>
             </div>
           </div>
 
@@ -245,19 +237,6 @@
           </div>
         </div>
 
-        <div class="mx-4 mb-4 p-6 bg-primary/5 rounded-xl flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-primary text-2xl">content_paste</span>
-          </div>
-          <div class="flex-1">
-            <p class="text-on-surface dark:text-surface font-medium text-sm">{{ $t('toolA.crossPromoTitle') }}</p>
-            <p class="text-on-surface-variant text-xs">{{ $t('toolA.crossPromoDesc') }}</p>
-          </div>
-          <NuxtLink :to="localePath('/tools/clipboard')" class="text-primary font-bold text-sm flex items-center gap-1 hover:underline whitespace-nowrap">
-            {{ $t('toolA.crossPromoLink') }}
-            <span class="material-symbols-outlined text-lg">arrow_forward</span>
-          </NuxtLink>
-        </div>
       </template>
     </div>
 
@@ -278,12 +257,7 @@ interface WaitingMessage {
   isSelf: boolean
 }
 
-interface RecentTransferItem {
-  icon: string
-  name: string
-  desc: string
-  time: string
-}
+import type { RecentTransferItem } from '~/types/toolPages'
 
 interface DocCard {
   icon: string
@@ -334,7 +308,6 @@ const props = defineProps<{
   connectedDeviceName: string
   receivedMessages: WaitingMessage[]
   mobileRecentTransfers: RecentTransferItem[]
-  qrExpired: boolean
   roomId: string
   docCards: DocCard[]
 }>()

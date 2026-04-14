@@ -24,11 +24,11 @@ A modern AirDrop alternative for Windows should be:
 - Fast on local network
 - Free and no signup
 
-[ToolPort File Transfer](/tools/text-transfer) matches all of the above.
+[FileIO File Transfer](/text-transfer) matches all of the above.
 
 ## Fastest Workflow (Phone to Windows in Under 10 Seconds)
 
-1. Open [ToolPort File Transfer](/tools/text-transfer) on your Windows PC
+1. Open [FileIO File Transfer](/text-transfer) on your Windows PC
 2. Scan the QR code with your phone camera
 3. Select files and send
 
@@ -58,23 +58,15 @@ For confidential workflows, still follow your company policy and avoid sharing r
 | AirDrop | No | Yes | Yes | Fast (Apple only) |
 | Cloud Drive | Yes | Yes | No | Medium |
 | Messaging Apps | Yes | Yes | No | Medium/Compressed |
-| ToolPort | Yes | Yes | Yes | Fast |
+| FileIO | Yes | Yes | Yes | Fast |
 
 ## Related Workflows
 
 - Need a full walkthrough: [How to transfer files from phone to PC](/guides/file-transfer)
-- Need quick text/link sync: [Online clipboard sync](/tools/clipboard)
-- Need to share a link instantly: [Free QR code generator](/tools/qr-code?template=review)
-- Need a side-by-side decision page: [ToolPort vs AirDrop comparison](/blog/toolport-vs-airdrop-comparison)
+- Need a side-by-side decision page: [FileIO vs AirDrop comparison](/blog/fileio-vs-airdrop-comparison)
 - iPhone-focused path: [iPhone to Windows without app](/blog/iphone-to-windows-file-transfer-no-app-guide)
 - Large media transfer: [Send large video from phone to PC](/blog/send-large-video-from-phone-to-pc-guide)
 
 ## Try It
 
-Start here: [AirDrop alternative for Windows - ToolPort](/tools/text-transfer)
-
-## One-Click Companion Tools
-
-- Share WiFi access quickly: [WiFi QR template](/tools/qr-code?template=wifi)
-- Share contact card in one scan: [vCard QR template](/tools/qr-code?template=vcard)
-- Share payment links: [Payment QR template](/tools/qr-code?template=payment)
+Start here: [AirDrop alternative for Windows - FileIO](/text-transfer)

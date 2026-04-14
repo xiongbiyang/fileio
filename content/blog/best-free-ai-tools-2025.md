@@ -67,43 +67,27 @@ Create professional logo designs from text descriptions. Great for startups, per
 
 Extract text from images, screenshots, handwritten notes, and scanned documents. Essential for digitizing paper documents.
 
-## What We're Building at ToolPort
+## What We're Building at FileIO
 
-At ToolPort, we're working on bringing more AI-powered tools directly to your browser — with a focus on **privacy-first processing**. Our existing tools demonstrate this approach:
+At FileIO, we're working on bringing more AI-powered tools directly to your browser — with a focus on **privacy-first processing**. Our existing tool demonstrates this approach:
 
-- [**File Transfer**](/tools/text-transfer) — End-to-end encrypted P2P transfer
-- [**QR Code Generator**](/tools/qr-code) — All generation happens locally in your browser
-- [**Online Clipboard**](/tools/clipboard) — Encrypted rooms that auto-expire in 24 hours
-
-We're currently surveying users to decide which AI tools to build next. **[Vote for the AI tools you want most](/tool-request)** — your feedback directly influences our development roadmap.
+- [**File Transfer**](/text-transfer) — End-to-end encrypted P2P transfer from phone to PC
 
 ## The Privacy Problem with AI Tools
 
-Most AI tools require you to upload data to cloud servers, create accounts, and accept broad data usage terms. At ToolPort, we believe AI tools should be:
+Most AI tools require you to upload data to cloud servers, create accounts, and accept broad data usage terms. At FileIO, we believe AI tools should be:
 
 - **Local-first** — process data in your browser when possible
 - **Transparent** — clear about what data goes where
 - **No account required** — just open and use
 - **No data retention** — your data is not stored or used for training
 
-## Stay Updated
-
-Want to know when we launch new AI tools? [Join our survey](/tool-request) and leave your email — we'll notify you when new tools go live.
-
 ---
 
-*Currently available: [File Transfer](/tools/text-transfer) | [QR Code Generator](/tools/qr-code) | [Online Clipboard](/tools/clipboard)*
+*Currently available: [File Transfer](/text-transfer)*
 
 ## Quick Actions You Can Use Right Now
 
-While we build more AI features, these ready-to-use tools can save time immediately:
+While we build more AI features, this ready-to-use tool can save time immediately:
 
-- Share files across devices: [File Transfer](/tools/text-transfer)
-- Generate a branded QR fast: [QR Code Generator](/tools/qr-code)
-- Start from high-intent templates:
-- [WiFi QR](/tools/qr-code?template=wifi)
-- [vCard QR](/tools/qr-code?template=vcard)
-- [Google Review QR](/tools/qr-code?template=review)
-- [Menu QR](/tools/qr-code?template=menu)
-- [Payment QR](/tools/qr-code?template=payment)
-- Sync text snippets live: [Online Clipboard](/tools/clipboard)
+- Share files across devices: [File Transfer](/text-transfer)

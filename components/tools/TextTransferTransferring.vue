@@ -112,10 +112,7 @@
 </template>
 
 <script setup lang="ts">
-interface TransferFileSummary {
-  name: string
-  size: string
-}
+import type { TransferFileSummary } from '~/types/toolPages'
 
 defineProps<{
   currentFile: TransferFileSummary

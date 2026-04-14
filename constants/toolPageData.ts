@@ -1,32 +1,9 @@
 import type {
   DeviceHistoryItem,
   RecentTransferItem,
-  RoomMember,
-  SearchFilter,
   SecurityLogItem,
   TransferHistoryItem,
-  VoteFeature,
 } from '~/types/toolPages'
-
-export const clipboardSearchFilters: SearchFilter[] = [
-  { key: 'all', label: 'All' },
-  { key: 'texts', label: 'Texts' },
-  { key: 'links', label: 'Links' },
-  { key: 'images', label: 'Images' },
-]
-
-export const clipboardRoomMembers: RoomMember[] = [
-  { name: 'Sarah Chen', initials: 'SC', role: 'Room Admin', isAdmin: true, avatarClass: 'bg-primary text-on-primary' },
-  { name: 'Alex Rivera', initials: 'AR', role: 'Active now', isAdmin: false, avatarClass: 'bg-secondary-container text-on-secondary-container' },
-  { name: 'Jordan Lee', initials: 'JL', role: 'Active 2m ago', isAdmin: false, avatarClass: 'bg-primary-fixed text-on-primary-fixed-variant' },
-  { name: 'Guest User', initials: 'GU', role: 'Viewing only', isAdmin: false, avatarClass: 'bg-surface-container-high text-on-surface-variant' },
-]
-
-export const clipboardVoteFeatures: VoteFeature[] = [
-  { icon: 'history_toggle_off', title: '30-Day History', votes: '42%', desc: 'Extended message retention for teams.' },
-  { icon: 'link', title: 'Custom Room URLs', votes: '28%', desc: 'Branded, memorable room links.' },
-  { icon: 'lock', title: 'Password Lock', votes: '19%', desc: 'Extra security layer for rooms.' },
-]
 
 export const textTransferRecentTransfers: RecentTransferItem[] = [
   { icon: 'image', name: 'IMG_2024_03_12.png', desc: '2.4 MB - Sent to PC', time: '2m' },

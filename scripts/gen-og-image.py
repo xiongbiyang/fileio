@@ -1,10 +1,10 @@
-"""Generate og-image.png for ToolPort (1200x630px)"""
+"""Generate og-image.png for FileIO (1200x630px)"""
 from PIL import Image, ImageDraw, ImageFont
 import os
 
 W, H = 1200, 630
 
-# Colors (ToolPort brand)
+# Colors (FileIO brand)
 BG_TOP    = (0, 81, 71)    # #005147
 BG_BOT    = (0, 107, 94)   # #006b5e
 CARD_BG   = (255, 255, 255, 26)  # white 10%
@@ -73,7 +73,7 @@ except:
     fnt_sub   = fnt_title
     fnt_tag   = fnt_title
 
-draw.text((240, 295), "ToolPort", font=fnt_title, fill=WHITE, anchor="lm")
+draw.text((240, 295), "FileIO", font=fnt_title, fill=WHITE, anchor="lm")
 draw.text((244, 365), "Simple tools, done right.", font=fnt_sub, fill=(255, 255, 255, 200), anchor="lm")
 
 # Divider
@@ -94,7 +94,7 @@ for feat in features:
     fx += fw + 20
 
 # Domain badge bottom right
-draw.text((1120, 580), "toolport.dev", font=fnt_sub, fill=(255, 255, 255, 120), anchor="rm")
+draw.text((1120, 580), "fileio.top", font=fnt_sub, fill=(255, 255, 255, 120), anchor="rm")
 
 # Save
 out = os.path.join(os.path.dirname(__file__), "..", "public", "og-image.png")
