@@ -41,7 +41,7 @@ useJsonLd({
   url: 'https://fileio.top/terms',
 })
 
-const sectionKeys = ['acceptance', 'description', 'responsibilities', 'privacy', 'ip', 'disclaimer', 'changes'] as const
+const sectionKeys = ['acceptance', 'description', 'responsibilities', 'privacy', 'usercontent', 'ip', 'disclaimer', 'changes'] as const
 
 const sections = computed(() =>
   sectionKeys.map(key => ({

@@ -53,6 +53,61 @@
       </div>
     </section>
 
+    <!-- Two Tools comparison -->
+    <section class="max-w-6xl mx-auto px-8 pb-12">
+      <div class="mb-10">
+        <h2 class="font-headline text-3xl md:text-4xl font-extrabold text-on-surface dark:text-surface tracking-tight">
+          {{ $t('about.toolsCompareTitle') }}
+        </h2>
+        <p class="text-on-surface-variant mt-3 max-w-2xl leading-relaxed">
+          {{ $t('about.toolsCompareDesc') }}
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <NuxtLink
+          :to="localePath('/text-transfer')"
+          class="bg-surface-container-low dark:bg-surface-container rounded-4xl p-8 md:p-10 group hover:shadow-ambient transition-shadow"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">swap_horiz</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-container/20 text-primary-container text-xs font-bold uppercase tracking-wider">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">verified_user</span>
+              {{ $t('about.toolA_badge') }}
+            </span>
+          </div>
+          <h3 class="font-headline text-xl font-extrabold text-on-surface dark:text-surface mb-3">{{ $t('about.toolA_name') }}</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">{{ $t('about.toolA_card') }}</p>
+          <span class="mt-6 inline-flex items-center gap-1 text-sm font-bold text-primary group-hover:translate-x-1 transition-transform">
+            {{ $t('common.openTool') }}
+            <span class="material-symbols-outlined text-base">arrow_right_alt</span>
+          </span>
+        </NuxtLink>
+
+        <NuxtLink
+          :to="localePath('/share')"
+          class="bg-surface-container-low dark:bg-surface-container rounded-4xl p-8 md:p-10 group hover:shadow-ambient transition-shadow"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">cloud_upload</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">
+              <span class="material-symbols-outlined text-sm">schedule</span>
+              {{ $t('about.toolB_badge') }}
+            </span>
+          </div>
+          <h3 class="font-headline text-xl font-extrabold text-on-surface dark:text-surface mb-3">{{ $t('about.toolB_name') }}</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">{{ $t('about.toolB_card') }}</p>
+          <span class="mt-6 inline-flex items-center gap-1 text-sm font-bold text-primary group-hover:translate-x-1 transition-transform">
+            {{ $t('common.openTool') }}
+            <span class="material-symbols-outlined text-base">arrow_right_alt</span>
+          </span>
+        </NuxtLink>
+      </div>
+    </section>
+
     <!-- Security Promise -->
     <section class="max-w-6xl mx-auto px-8 pb-24">
       <div class="bg-surface-container-high dark:bg-surface-container rounded-5xl p-12 shadow-ambient text-center">

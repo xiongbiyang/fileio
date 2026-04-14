@@ -1,14 +1,13 @@
 # FileIO
 
-Privacy-first browser file transfer: P2P encrypted phone-to-PC sharing with QR-code pairing.
+Two privacy-first browser file-transfer tools. No app install, no signup.
 
 **Live:** [fileio.top](https://fileio.top)
 
 ## Features
 
-- **File & Text Transfer** — P2P encrypted transfer between phone and PC via WebRTC with QR-code pairing
-
-Runs entirely in the browser. No files are uploaded to any server.
+- **Text & File Transfer** — WebRTC peer-to-peer transfer between phone and PC with QR-code pairing. Files never touch our servers — the signaling host only relays the pairing handshake.
+- **Quick Share** — Temporary file drop: upload a file (up to 100 MB), get a download link and QR code. Files are stored on Cloudflare R2 and self-destruct after first download or within 3 days (whichever comes first). Turnstile-protected; single-use or unlimited downloads within the expiry window.
 
 ## Tech Stack
 

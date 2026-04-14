@@ -13,7 +13,8 @@
     "roomConnectFailed": "Could not connect right now",
     "transferFailed": "Transfer failed",
     "clear": "Clear",
-    "qrFailed": "Could not generate the QR code"
+    "qrFailed": "Could not generate the QR code",
+    "openTool": "Open tool"
   },
   "nav": {
     "about": "About",
@@ -46,7 +47,15 @@
     "securityDesc": "All cross-device file and text transfers use AES-256-GCM end-to-end encryption over WebRTC peer-to-peer connections. Pairing happens via QR code in the browser. Sessions are ephemeral and we do not log, store, or analyze the content you send.",
     "badgeE2ee": "E2E encrypted",
     "badgeExpiry": "Ephemeral sessions",
-    "badgeTracking": "Zero tracking"
+    "badgeTracking": "Zero tracking",
+    "toolsCompareTitle": "Two tools, two privacy models",
+    "toolsCompareDesc": "FileIO offers two ways to move a file depending on whether both devices are online together.",
+    "toolA_name": "Text & File Transfer",
+    "toolA_card": "Direct WebRTC peer-to-peer between phone and PC. Files and text never touch our servers — the signaling host only relays the pairing handshake. Best when both sides are online at the same time.",
+    "toolA_badge": "P2P · No server storage",
+    "toolB_name": "Quick Share",
+    "toolB_card": "Async file drop. Upload now, share the link or QR code, recipient downloads later. Files sit on Cloudflare R2 for up to 3 days (single-use by default) and are permanently deleted after first download or on expiry.",
+    "toolB_badge": "Temporary server storage · Up to 3 days"
   },
   "contact": {
     "title": "Contact & Feedback",
@@ -100,7 +109,7 @@
       },
       "description": {
         "title": "Description of Service",
-        "content": "FileIO provides a free browser-based phone-to-PC file and text transfer tool with QR-code pairing. The tool operates primarily on the client side with minimal server interaction."
+        "content": "FileIO provides two free browser-based file-transfer tools. (1) Text & File Transfer: WebRTC peer-to-peer transfer between phone and PC with QR-code pairing; content never touches our servers. (2) Quick Share: temporary server-assisted file sharing via Cloudflare R2 — uploaded files expire within 3 days or after the first download (whichever comes first) and are deleted permanently."
       },
       "responsibilities": {
         "title": "User Responsibilities",
@@ -108,7 +117,7 @@
       },
       "privacy": {
         "title": "Privacy & Data",
-        "content": "Your use of the Service is governed by our Privacy Policy. File and text transfer uses peer-to-peer encryption and ephemeral sessions. We do not collect or store personal data."
+        "content": "Your use of the Service is governed by our Privacy Policy. Text & File Transfer uses peer-to-peer encryption and ephemeral sessions — we cannot see the content. Quick Share temporarily stores the uploaded file on Cloudflare R2 until the first download or expiry (max 3 days), then deletes it. We do not scan, analyze, or sell uploaded content, and we do not collect personal data beyond standard request logs."
       },
       "ip": {
         "title": "Intellectual Property",
@@ -121,6 +130,10 @@
       "changes": {
         "title": "Changes to Terms",
         "content": "We reserve the right to update these terms at any time. Material changes will be communicated through the Service. Continued use after changes constitutes acceptance."
+      },
+      "usercontent": {
+        "title": "User-Uploaded Content (Quick Share)",
+        "content": "When you use Quick Share you are responsible for the content you upload. You must not upload: illegal material; content that infringes intellectual-property rights; malicious software, viruses, or executable payloads intended to harm others; content that violates applicable laws. We reserve the right to delete any uploaded file at any time, without notice, if we believe in good faith it violates these terms. Uploaded files are auto-deleted within 3 days regardless."
       }
     }
   },
