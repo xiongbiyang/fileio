@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3'
-import { createError, getRequestIP, useRuntimeConfig } from 'h3'
+import { createError, getRequestIP } from 'h3'
 
 const VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
