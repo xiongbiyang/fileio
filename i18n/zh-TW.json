@@ -19,7 +19,8 @@
     "about": "關于",
     "blog": "博客",
     "transfer": "傳輸",
-    "settings": "設置"
+    "settings": "設置",
+    "share": "分享"
   },
   "footer": {
     "copyright": "Copyright {year} FileIO Utility Atelier. 保留所有權利。",
@@ -341,6 +342,68 @@
       "keywords": "手機傳檔案到電腦,iPhone傳檔案到電腦,Android傳檔案到電腦,P2P傳輸教學,瀏覽器傳輸,免雲端傳輸,AirDrop替代教學",
       "ogTitle": "手機傳檔案到電腦 - P2P 傳輸教學",
       "ogDesc": "透過瀏覽器將手機檔案直傳電腦，WebRTC P2P 加密傳輸，免安裝 App 或註冊。"
+    },
+    "share": {
+      "title": "快速分享——臨時檔案傳輸（連結 + QR 碼） | FileIO",
+      "desc": "免費的臨時檔案分享工具。上傳檔案後產生下載連結與 QR 碼，首次下載後自動銷毀，最長 3 天。免註冊、人機驗證保護、單檔 100 MB。",
+      "keywords": "臨時檔案分享,快速檔案分享,file.io 替代,一次性下載連結,自毀檔案連結,匿名檔案上傳,QR 碼檔案分享,上傳檔案產生連結,臨時網盤,臨時雲端儲存",
+      "ogTitle": "快速分享——臨時檔案傳輸",
+      "ogDesc": "上傳檔案，產生下載連結和 QR 碼。下載後或 3 天內自動銷毀。"
+    }
+  },
+  "share": {
+    "title": "快速分享",
+    "subtitle": "上傳檔案，取得下載連結與 QR 碼發送給對方。檔案在 3 天內或首次下載後自動銷毀——無需帳號。",
+    "howItWorksTitle": "使用方式",
+    "step1": "上傳最大 100 MB 的檔案。",
+    "step2": "選擇過期時間與下載次數。",
+    "step3": "把連結或 QR 碼發給對方。檔案下載後或過期時自動銷毀。",
+    "dropzoneTitle": "將檔案拖到這裡",
+    "dropzoneOr": "或點擊選擇",
+    "dropzoneLimit": "最大 100 MB",
+    "dropzoneReplace": "拖入其他檔案以取代",
+    "optionsTitle": "選項",
+    "labelExpiresIn": "過期時間",
+    "expires1h": "1 小時",
+    "expires1d": "24 小時",
+    "expires3d": "3 天",
+    "labelMaxDownloads": "下載次數",
+    "downloadsOnce": "單次下載——下載後立即銷毀",
+    "downloadsUnlimited": "不限次數——直到過期",
+    "captchaHint": "完成人機驗證後才能上傳。",
+    "captchaDisabled": "人機驗證未設定——開發環境下可直接上傳。",
+    "uploadBtn": "上傳並產生連結",
+    "uploading": "上傳中 {percent}%…",
+    "resultTitle": "連結已產生",
+    "resultSubtitle": "把連結或 QR 碼發給接收者。請像對待密碼一樣保管——任何人拿到連結都能下載一次。",
+    "linkLabel": "下載連結",
+    "expiresLabel": "過期時間",
+    "downloadsLabel": "下載次數",
+    "copyLink": "複製連結",
+    "copied": "已複製",
+    "shareAnother": "再分享一個檔案",
+    "tosNotice": "上傳即表示你同意我們的 {termsLink}。禁止上傳非法、侵權或惡意內容——一經發現會被立即刪除。",
+    "tosLink": "服務條款",
+    "errFileRequired": "請先選擇檔案。",
+    "errFileTooLarge": "檔案超出 100 MB 上限。",
+    "errCaptcha": "人機驗證失敗，請重試。",
+    "errRateLimit": "上傳次數過多，請稍後再試。",
+    "errUpload": "上傳失敗，請重試。",
+    "download": {
+      "heading": "下載分享的檔案",
+      "loading": "正在載入檔案資訊……",
+      "expiresIn": "{time} 後過期",
+      "expiresNow": "即將過期",
+      "singleUse": "單次下載——下載完成後檔案會被永久刪除",
+      "unlimited": "到期前可無限次下載",
+      "downloadBtn": "下載",
+      "downloading": "下載中……",
+      "afterDownload": "檔案將在下載完成後被永久刪除。",
+      "errNotFound": "分享不存在或已被刪除。",
+      "errExpired": "分享已過期。",
+      "errConsumed": "該單次分享已經被下載過。",
+      "errGeneric": "無法載入該分享。",
+      "backHome": "返回 FileIO 首頁"
     }
   }
 }

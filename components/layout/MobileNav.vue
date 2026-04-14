@@ -15,6 +15,7 @@ const route = useRoute()
 const localePath = useLocalePath()
 const navItems = [
   { path: '/text-transfer', icon: 'swap_horiz', key: 'nav.transfer' },
+  { path: '/share', icon: 'cloud_upload', key: 'nav.share' },
   { path: '/blog', icon: 'article', key: 'nav.blog' },
   { path: '/about', icon: 'info', key: 'nav.about' },
   { path: '/settings', icon: 'settings', key: 'nav.settings' },

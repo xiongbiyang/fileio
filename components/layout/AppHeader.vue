@@ -36,6 +36,7 @@ const route = useRoute()
 const { isDark, toggle: toggleTheme } = useTheme()
 const navItems = [
   { path: '/text-transfer', key: 'nav.transfer' },
+  { path: '/share', key: 'nav.share' },
   { path: '/blog', key: 'nav.blog' },
   { path: '/about', key: 'nav.about' },
 ]

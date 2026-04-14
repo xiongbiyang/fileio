@@ -77,11 +77,12 @@ export default defineNuxtConfig({
       { label: 'URL', width: '65%' },
       { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
     ],
-    exclude: ['/settings', '/maintenance'],
+    exclude: ['/settings', '/share/**'],
     urls: [
       // English core pages
       { loc: '/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
       { loc: '/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
       { loc: '/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
@@ -91,6 +92,7 @@ export default defineNuxtConfig({
       // zh-CN core pages
       { loc: '/zh-CN', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/zh-CN/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-CN/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
       { loc: '/zh-CN/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
       { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/zh-CN/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
@@ -175,6 +177,9 @@ export default defineNuxtConfig({
     '/zh-TW': { redirect: '/zh-TW/text-transfer' },
     // text-transfer depends on ?r= query param for room joining — must NOT prerender
     '/text-transfer': { prerender: false },
+    // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
+    '/share': { prerender: false },
+    '/share/**': { prerender: false, robots: 'noindex, nofollow' },
     '/about': { prerender: true },
     '/privacy': { prerender: true },
     '/terms': { prerender: true },

@@ -19,7 +19,8 @@
     "about": "About",
     "blog": "Blog",
     "transfer": "Transfer",
-    "settings": "Settings"
+    "settings": "Settings",
+    "share": "Share"
   },
   "footer": {
     "copyright": "Copyright {year} FileIO Utility Atelier. All rights reserved.",
@@ -341,6 +342,68 @@
       "keywords": "accountless file transfer,p2p web transfer,browser-to-browser share,no cloud file transfer,how to transfer files from phone to pc,airdrop alternative for windows guide,secure p2p file transfer,qr code file transfer",
       "ogTitle": "Accountless P2P Web Transfer Guide for Phone to PC",
       "ogDesc": "Learn browser-to-browser no-cloud transfer from iPhone/Android to PC with WebRTC P2P encryption. No app install or signup."
+    },
+    "share": {
+      "title": "Quick Share — Temporary File Sharing with Link & QR | FileIO",
+      "desc": "Free temporary file sharing. Upload a file, get a download link and QR code. Files auto-delete after first download or within 3 days. No signup, Turnstile-protected, 100 MB per file.",
+      "keywords": "temporary file sharing,quick file share,file.io alternative,one-time download link,self-destruct file link,anonymous file upload,qr code file share,upload file get link,share file with qr,temporary cloud drop",
+      "ogTitle": "Quick Share — Temporary File Sharing",
+      "ogDesc": "Upload a file, get a link and QR code. Self-destructs after download or within 3 days."
+    }
+  },
+  "share": {
+    "title": "Quick Share",
+    "subtitle": "Upload a file, get a link and QR code to send. Files expire within 3 days or after first download — no account needed.",
+    "howItWorksTitle": "How it works",
+    "step1": "Upload any file up to 100 MB.",
+    "step2": "Choose expiration and download limit.",
+    "step3": "Share the link or QR code. The file self-destructs after download or expiry.",
+    "dropzoneTitle": "Drop a file here",
+    "dropzoneOr": "or click to choose",
+    "dropzoneLimit": "Up to 100 MB",
+    "dropzoneReplace": "Drop a different file to replace",
+    "optionsTitle": "Options",
+    "labelExpiresIn": "Expires in",
+    "expires1h": "1 hour",
+    "expires1d": "24 hours",
+    "expires3d": "3 days",
+    "labelMaxDownloads": "Downloads",
+    "downloadsOnce": "Single use — deleted after 1 download",
+    "downloadsUnlimited": "Unlimited — available until expiry",
+    "captchaHint": "Complete the human-verification check to enable upload.",
+    "captchaDisabled": "Captcha not configured — upload will work without verification in development.",
+    "uploadBtn": "Upload & Get Link",
+    "uploading": "Uploading {percent}%…",
+    "resultTitle": "Your link is ready",
+    "resultSubtitle": "Send this link or QR code to the recipient. Treat it like a password — anyone with the link can download once.",
+    "linkLabel": "Download link",
+    "expiresLabel": "Expires",
+    "downloadsLabel": "Downloads",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "shareAnother": "Share another file",
+    "tosNotice": "By uploading you agree to our {termsLink}. Do not upload illegal, infringing, or malicious content — it will be removed without notice.",
+    "tosLink": "Terms of Service",
+    "errFileRequired": "Please choose a file first.",
+    "errFileTooLarge": "File exceeds the 100 MB limit.",
+    "errCaptcha": "Human verification failed. Please try again.",
+    "errRateLimit": "Too many uploads. Please try again later.",
+    "errUpload": "Upload failed. Please try again.",
+    "download": {
+      "heading": "Download shared file",
+      "loading": "Loading file info…",
+      "expiresIn": "Expires in {time}",
+      "expiresNow": "Expires now",
+      "singleUse": "Single-use — file will be deleted after this download",
+      "unlimited": "Unlimited downloads until expiry",
+      "downloadBtn": "Download",
+      "downloading": "Downloading…",
+      "afterDownload": "File will be permanently deleted after the download completes.",
+      "errNotFound": "This share does not exist or has been deleted.",
+      "errExpired": "This share has expired.",
+      "errConsumed": "This single-use share has already been downloaded.",
+      "errGeneric": "Could not load this share.",
+      "backHome": "Back to FileIO"
     }
   }
 }

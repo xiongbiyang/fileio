@@ -19,7 +19,8 @@
     "about": "关于",
     "blog": "博客",
     "transfer": "传输",
-    "settings": "设置"
+    "settings": "设置",
+    "share": "分享"
   },
   "footer": {
     "copyright": "© {year} FileIO Utility Atelier. 保留所有权利。",
@@ -341,6 +342,68 @@
       "keywords": "手机传文件到电脑,iPhone传文件到电脑,安卓传文件到电脑,P2P传输教程,浏览器传输,无需云端传输,AirDrop替代教程",
       "ogTitle": "手机传文件到电脑 - P2P 传输教程",
       "ogDesc": "通过浏览器将手机文件直传电脑，WebRTC P2P 加密传输，无需安装 App 或注册。"
+    },
+    "share": {
+      "title": "快速分享——临时文件传输（链接 + 二维码） | FileIO",
+      "desc": "免费的临时文件分享工具。上传文件后生成下载链接与二维码，首次下载后自动销毁，最长 3 天。免注册、人机验证保护、单文件 100 MB。",
+      "keywords": "临时文件分享,快速文件分享,file.io 替代,一次性下载链接,自毁文件链接,匿名文件上传,二维码文件分享,上传文件生成链接,临时网盘,临时云存储",
+      "ogTitle": "快速分享——临时文件传输",
+      "ogDesc": "上传文件，生成下载链接和二维码。下载后或 3 天内自动销毁。"
+    }
+  },
+  "share": {
+    "title": "快速分享",
+    "subtitle": "上传文件，获取下载链接和二维码发给对方。文件在 3 天内或首次下载后自动销毁——无需账号。",
+    "howItWorksTitle": "工作方式",
+    "step1": "上传最大 100 MB 的文件。",
+    "step2": "选择过期时间与下载次数。",
+    "step3": "把链接或二维码发给对方。文件在下载后或过期时自动销毁。",
+    "dropzoneTitle": "把文件拖到这里",
+    "dropzoneOr": "或点击选择",
+    "dropzoneLimit": "最大 100 MB",
+    "dropzoneReplace": "拖入其他文件以替换",
+    "optionsTitle": "选项",
+    "labelExpiresIn": "过期时间",
+    "expires1h": "1 小时",
+    "expires1d": "24 小时",
+    "expires3d": "3 天",
+    "labelMaxDownloads": "下载次数",
+    "downloadsOnce": "单次下载——下载后立即销毁",
+    "downloadsUnlimited": "不限次数——直到过期",
+    "captchaHint": "完成人机验证后才能上传。",
+    "captchaDisabled": "人机验证未配置——开发环境下可直接上传。",
+    "uploadBtn": "上传并生成链接",
+    "uploading": "上传中 {percent}%…",
+    "resultTitle": "链接已生成",
+    "resultSubtitle": "把链接或二维码发给接收者。请像对待密码一样保管——任何人拿到链接都能下载一次。",
+    "linkLabel": "下载链接",
+    "expiresLabel": "过期时间",
+    "downloadsLabel": "下载次数",
+    "copyLink": "复制链接",
+    "copied": "已复制",
+    "shareAnother": "再分享一个文件",
+    "tosNotice": "上传即表示你同意我们的 {termsLink}。禁止上传非法、侵权或恶意内容——一经发现会被立即删除。",
+    "tosLink": "服务条款",
+    "errFileRequired": "请先选择文件。",
+    "errFileTooLarge": "文件超出 100 MB 上限。",
+    "errCaptcha": "人机验证失败，请重试。",
+    "errRateLimit": "上传次数过多，请稍后再试。",
+    "errUpload": "上传失败，请重试。",
+    "download": {
+      "heading": "下载分享的文件",
+      "loading": "正在加载文件信息……",
+      "expiresIn": "{time} 后过期",
+      "expiresNow": "即将过期",
+      "singleUse": "单次下载——下载完成后文件会被永久删除",
+      "unlimited": "到期前可无限次下载",
+      "downloadBtn": "下载",
+      "downloading": "下载中……",
+      "afterDownload": "文件将在下载完成后被永久删除。",
+      "errNotFound": "分享不存在或已被删除。",
+      "errExpired": "分享已过期。",
+      "errConsumed": "该单次分享已经被下载过。",
+      "errGeneric": "无法加载该分享。",
+      "backHome": "返回 FileIO 首页"
     }
   }
 }
