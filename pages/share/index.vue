@@ -129,8 +129,15 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
+
+const turnstileLang = computed(() => {
+  const l = locale.value.toLowerCase()
+  if (l === 'zh-cn') return 'zh-cn'
+  if (l === 'zh-tw') return 'zh-tw'
+  return 'en'
+})
 const runtimeConfig = useRuntimeConfig()
 const { notify } = useNotifier()
 
@@ -296,7 +303,7 @@ function clearSelectedFile() {
 
 // ── Turnstile integration ────────────────────────────────
 interface TurnstileGlobal {
-  render: (el: HTMLElement, opts: { sitekey: string; theme?: string }) => string
+  render: (el: HTMLElement, opts: { sitekey: string; theme?: string; language?: string }) => string
   reset: (id: string) => void
   getResponse: (id: string) => string | undefined
 }
@@ -313,6 +320,7 @@ function mountTurnstile() {
     if (window.turnstile && turnstileContainer.value && !turnstileWidgetId.value) {
       turnstileWidgetId.value = window.turnstile.render(turnstileContainer.value, {
         sitekey: turnstileSiteKey.value,
+        language: turnstileLang.value,
       })
       clearInterval(timer)
     }
