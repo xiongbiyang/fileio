@@ -12,6 +12,8 @@ export function useSignaling(roomId: Ref<string>) {
   const onCandidate = ref<((candidate: RTCIceCandidateInit) => void) | null>(null)
   const onPeerJoined = ref<(() => void) | null>(null)
   const onPeerLeft = ref<(() => void) | null>(null)
+  const onPeerCount = ref<((count: number) => void) | null>(null)
+  const onRoomFull = ref<(() => void) | null>(null)
 
   function getHost(): string {
     if (!import.meta.client) return 'localhost:1999'
@@ -54,6 +56,17 @@ export function useSignaling(roomId: Ref<string>) {
         case 'peer-left':
           onPeerLeft.value?.()
           break
+        case 'peer-count':
+          if (typeof msg.count === 'number') onPeerCount.value?.(msg.count)
+          break
+        case 'room-full':
+          // Tear down locally so PartySocket's auto-reconnect doesn't loop
+          // back into a room it just got rejected from. Calling close()
+          // flips `_shouldReconnect` off.
+          onRoomFull.value?.()
+          socket?.close()
+          socket = null
+          break
       }
     })
   }
@@ -80,5 +93,7 @@ export function useSignaling(roomId: Ref<string>) {
     onCandidate,
     onPeerJoined,
     onPeerLeft,
+    onPeerCount,
+    onRoomFull,
   }
 }
