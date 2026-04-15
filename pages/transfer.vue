@@ -1,6 +1,12 @@
 ﻿<template>
   <div class="p-4 md:p-8 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
 
+    <QuickShareHintBanner
+      :reason="quickShareHint"
+      @dismiss="dismissQuickShareHint"
+      @switch-to-quick-share="switchToQuickShare"
+    />
+
     <TextTransferWaiting
       v-if="state === 'waiting'"
       v-model:mobile-text-input="mobileTextInput"
@@ -250,6 +256,9 @@ const {
   transferSpeed,
   transferredSize,
   verificationDigits,
+  quickShareHint,
+  dismissQuickShareHint,
+  switchToQuickShare,
 } = useTextTransferPage()
 </script>
 
