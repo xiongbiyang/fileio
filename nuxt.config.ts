@@ -129,7 +129,11 @@ export default defineNuxtConfig({
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'tp_lang',
-      redirectOn: 'no prefix',
+      // Only auto-redirect on the landing path. Doing it on 'no prefix'
+      // strips query/hash from deep-links like /transfer?r=xxx when a
+      // foreign-locale browser hits them — which broke QR pairing for
+      // zh-CN devices scanning an EN-locale sender's QR.
+      redirectOn: 'root',
       fallbackLocale: 'en',
     },
   },
@@ -189,6 +193,12 @@ export default defineNuxtConfig({
     '/transfer': { prerender: false },
     '/zh-CN/transfer': { prerender: false },
     '/zh-TW/transfer': { prerender: false },
+    // /j/[id] is the QR-scan landing route; resolves the room id from the
+    // path and hops to /transfer?r=<id>. Must be runtime so route params
+    // are parsed per request.
+    '/j/**': { prerender: false },
+    '/zh-CN/j/**': { prerender: false },
+    '/zh-TW/j/**': { prerender: false },
     // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
     '/share': { prerender: false },
     '/share/**': { prerender: false },

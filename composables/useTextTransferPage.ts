@@ -259,7 +259,10 @@ export function useTextTransferPage() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    // Read room ID from multiple sources to survive redirects / hydration issues
+    // Read room ID from multiple sources. The canonical entry point is
+    // /j/[id] (path segment survives any redirect); this fallback chain
+    // still handles ?r= / #r= links pasted manually or emitted by older
+    // clients.
     const pickFirst = (v: unknown): string => {
       if (Array.isArray(v)) return String(v[0] ?? '')
       return typeof v === 'string' ? v : ''
@@ -268,10 +271,7 @@ export function useTextTransferPage() {
     const urlParams = new URLSearchParams(window.location.search)
     const searchRoom = urlParams.get('r') || ''
     const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1] || ''
-    // Last-ditch: scan anywhere in the raw URL for `r=<token>`
-    const hrefRoom = window.location.href.match(/[?&#]r=([A-Za-z0-9_-]+)/)?.[1] || ''
-    const joinRoom = (queryRoom || searchRoom || hashRoom || hrefRoom).trim().toLowerCase()
-    console.info('[transfer] room extraction', { href: window.location.href, queryRoom, searchRoom, hashRoom, hrefRoom, joinRoom })
+    const joinRoom = (queryRoom || searchRoom || hashRoom).trim().toLowerCase()
 
 
     if (joinRoom) {
@@ -456,7 +456,7 @@ export function useTextTransferPage() {
     const canvases = qrCanvasElements.value.filter((c): c is HTMLCanvasElement => c !== null)
     if (!canvases.length || !roomId.value) return
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath(`/j/${roomId.value}`))
       if (!url) return
       for (const canvas of canvases) {
         await renderQrCodeToCanvas(canvas, url, { width: 220, margin: 2 })
@@ -503,7 +503,7 @@ export function useTextTransferPage() {
   }
   async function copyLink() {
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath(`/j/${roomId.value}`))
       if (!url) return
       await writeToClipboard(url)
       notify(t('common.copied'))

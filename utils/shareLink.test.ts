@@ -2,18 +2,18 @@ import { describe, expect, it } from 'vitest'
 import { buildRoomJoinUrl } from './shareLink'
 
 describe('buildRoomJoinUrl', () => {
-  it('builds url with query parameter for clean path', () => {
-    const result = buildRoomJoinUrl('https://fileio.top', '/zh-CN/transfer', 'ABCD12')
-    expect(result).toBe('https://fileio.top/zh-CN/transfer?r=ABCD12#r=ABCD12')
+  it('concatenates origin and the localized join path', () => {
+    const result = buildRoomJoinUrl('https://fileio.top', '/zh-CN/j/abcd12')
+    expect(result).toBe('https://fileio.top/zh-CN/j/abcd12')
   })
 
-  it('appends parameter to path with existing query', () => {
-    const result = buildRoomJoinUrl('https://fileio.top', '/transfer?src=qr', 'ROOM-01')
-    expect(result).toBe('https://fileio.top/transfer?src=qr&r=ROOM-01#r=ROOM-01')
+  it('works for the default locale (no prefix)', () => {
+    const result = buildRoomJoinUrl('https://fileio.top', '/j/room01')
+    expect(result).toBe('https://fileio.top/j/room01')
   })
 
-  it('encodes room id safely', () => {
-    const result = buildRoomJoinUrl('https://fileio.top', '/transfer', 'A B+C')
-    expect(result).toBe('https://fileio.top/transfer?r=A%20B%2BC#r=A%20B%2BC')
+  it('returns empty string when either piece is missing', () => {
+    expect(buildRoomJoinUrl('', '/j/x')).toBe('')
+    expect(buildRoomJoinUrl('https://fileio.top', '')).toBe('')
   })
 })
