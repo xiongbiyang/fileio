@@ -5,18 +5,14 @@ pages_build_output_dir = "dist"
 
 # ── Quick Share (temporary file sharing) ─────────────────────────────────────
 # R2 bucket: stores uploaded files (purged on download / after 3 days)
-# Create:  npx wrangler r2 bucket create fileio-share
-# Lifecycle: npx wrangler r2 bucket lifecycle add fileio-share --prefix "" --expire-days 3
-# [[r2_buckets]]
-# binding = "SHARE_BUCKET"
-# bucket_name = "fileio-share"
+[[r2_buckets]]
+binding = "SHARE_BUCKET"
+bucket_name = "fileio-share"
 
 # KV namespace: rate-limit counters for upload / download per IP
-# Create:  npx wrangler kv:namespace create RATE_LIMIT_KV
-# Then paste the id below and uncomment:
-# [[kv_namespaces]]
-# binding = "RATE_LIMIT_KV"
-# id = "paste-your-kv-id-here"
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "b97174555adb43de94b68cd627b6cd6b"
 
 # ── Optional: D1 database (not used currently, reserved for future) ──────────
 # [[d1_databases]]
