@@ -1,4 +1,4 @@
-import { createError, defineEventHandler, readMultipartFormData } from 'h3'
+import { createError, defineEventHandler, getRequestHeader, readMultipartFormData } from 'h3'
 import { generateShareId } from '~/utils/shareId'
 import { getShareBucket } from '~/server/utils/r2'
 import { assertRateLimit } from '~/server/utils/rateLimit'
@@ -8,10 +8,15 @@ const MAX_FILE_BYTES = 100 * 1024 * 1024 // 100 MB
 const ALLOWED_EXPIRES_SEC = new Set([3600, 86400, 259200]) // 1h, 24h, 3d
 const ALLOWED_MAX_DOWNLOADS = new Set([0, 1]) // 0 = unlimited, 1 = single-use
 
-// Rate limit: 10 uploads and 500 MB per IP per hour
+// Rate limit: 10 uploads and 500 MB per IP per hour (world).
+// Turnstile is unreliable in mainland China (challenges.cloudflare.com is
+// throttled by GFW), so CN visitors skip the widget and rely on a tighter
+// rate limit instead — see the CF-IPCountry branch below.
 const RL_WINDOW_SEC = 3600
 const RL_MAX_UPLOADS = 10
 const RL_MAX_BYTES = 500 * 1024 * 1024
+const RL_MAX_UPLOADS_CN = 5
+const RL_MAX_BYTES_CN = 300 * 1024 * 1024
 
 function bytesToHex(buf: ArrayBuffer): string {
   const view = new Uint8Array(buf)
@@ -60,14 +65,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid max_downloads' })
   }
 
-  await assertTurnstile(event, turnstileToken)
+  const isCN = getRequestHeader(event, 'cf-ipcountry') === 'CN'
+  if (!isCN) {
+    await assertTurnstile(event, turnstileToken)
+  }
   await assertRateLimit(
     event,
-    'share-upload',
+    isCN ? 'share-upload-cn' : 'share-upload',
     RL_WINDOW_SEC,
-    RL_MAX_UPLOADS,
+    isCN ? RL_MAX_UPLOADS_CN : RL_MAX_UPLOADS,
     filePart.data.byteLength,
-    RL_MAX_BYTES,
+    isCN ? RL_MAX_BYTES_CN : RL_MAX_BYTES,
   )
 
   const bucket = getShareBucket(event)

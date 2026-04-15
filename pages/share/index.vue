@@ -92,8 +92,8 @@
         </div>
       </div>
 
-      <!-- Turnstile widget -->
-      <div class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-6">
+      <!-- Turnstile widget (hidden entirely for CN visitors — widget host is GFW-throttled) -->
+      <div v-if="!isCN" class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-6">
         <p class="text-xs text-on-surface-variant mb-3">
           {{ turnstileSiteKey ? $t('share.captchaHint') : $t('share.captchaDisabled') }}
         </p>
@@ -142,7 +142,19 @@ const runtimeConfig = useRuntimeConfig()
 const { notify } = useNotifier()
 
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
-const turnstileSiteKey = computed(() => String(runtimeConfig.public.turnstileSiteKey || ''))
+const rawTurnstileSiteKey = computed(() => String(runtimeConfig.public.turnstileSiteKey || ''))
+
+// CN visitors can't reliably reach challenges.cloudflare.com — read the
+// edge's CF-IPCountry during SSR and skip Turnstile for them. The server
+// enforces the same bypass + tighter rate limit in upload.post.ts.
+const isCN = useState('isCN', () => {
+  if (import.meta.server) {
+    const headers = useRequestHeaders(['cf-ipcountry'])
+    return headers['cf-ipcountry'] === 'CN'
+  }
+  return false
+})
+const turnstileSiteKey = computed(() => (isCN.value ? '' : rawTurnstileSiteKey.value))
 
 const canonicalUrl = computed(() =>
   new URL(localePath('/share'), siteBaseUrl.value).toString(),
