@@ -260,11 +260,18 @@ export function useTextTransferPage() {
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     // Read room ID from multiple sources to survive redirects / hydration issues
-    const queryRoom = route.query.r as string | undefined
+    const pickFirst = (v: unknown): string => {
+      if (Array.isArray(v)) return String(v[0] ?? '')
+      return typeof v === 'string' ? v : ''
+    }
+    const queryRoom = pickFirst(route.query.r)
     const urlParams = new URLSearchParams(window.location.search)
-    const searchRoom = urlParams.get('r') || undefined
-    const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1]
-    const joinRoom = (queryRoom || searchRoom || hashRoom || '').trim().toLowerCase()
+    const searchRoom = urlParams.get('r') || ''
+    const hashRoom = window.location.hash.match(/r=([^&]+)/)?.[1] || ''
+    // Last-ditch: scan anywhere in the raw URL for `r=<token>`
+    const hrefRoom = window.location.href.match(/[?&#]r=([A-Za-z0-9_-]+)/)?.[1] || ''
+    const joinRoom = (queryRoom || searchRoom || hashRoom || hrefRoom).trim().toLowerCase()
+    console.info('[transfer] room extraction', { href: window.location.href, queryRoom, searchRoom, hashRoom, hrefRoom, joinRoom })
 
 
     if (joinRoom) {
