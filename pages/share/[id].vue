@@ -72,7 +72,7 @@
       </template>
     </div>
 
-    <AdSlot v-if="loadState !== 'loading'" slot="share-download-bottom" container-class="mt-8" :min-height="120" />
+    <AdSlot v-if="loadState !== 'loading'" slot-key="share-download-bottom" container-class="mt-8" :min-height="120" />
   </AdRailWrapper>
 </template>
 
@@ -92,12 +92,19 @@ definePageMeta({ layout: 'default' })
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+const runtimeConfig = useRuntimeConfig()
 
 const id = computed(() => String(route.params.id))
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
 
-useHead({
-  title: 'Download',
-  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+useSeoMeta({
+  title: () => `${t('share.download.heading')} · ${t('share.title')}`,
+  description: () => t('share.download.afterDownload'),
+  robots: 'noindex, nofollow',
+  ogTitle: () => t('share.download.heading'),
+  ogDescription: () => t('share.download.afterDownload'),
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
+  twitterCard: 'summary_large_image',
 })
 
 const loadState = ref<'loading' | 'ready' | 'error'>('loading')

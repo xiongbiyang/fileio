@@ -211,7 +211,7 @@
             </div>
             <div class="text-on-surface-variant text-sm font-medium">
               <p>{{ $t('toolA.scanQr') }}</p>
-              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">fileio.top/text-transfer?r={{ roomId }}</p>
+              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">{{ shareHostDisplay }}/text-transfer?r={{ roomId }}</p>
             </div>
           </div>
 
@@ -251,13 +251,13 @@
 </template>
 
 <script setup lang="ts">
+import type { RecentTransferItem } from '~/types/toolPages'
+
 interface WaitingMessage {
   id: string
   content: string
   isSelf: boolean
 }
-
-import type { RecentTransferItem } from '~/types/toolPages'
 
 interface DocCard {
   icon: string
@@ -278,7 +278,11 @@ const emit = defineEmits<{
 
 const mobileTextInput = defineModel<string>('mobileTextInput', { required: true })
 const desktopTextInput = defineModel<string>('desktopTextInput', { required: true })
-const localePath = useLocalePath()
+const runtimeConfig = useRuntimeConfig()
+const shareHostDisplay = computed(() => {
+  const raw = runtimeConfig.public.siteUrl || 'https://fileio.top'
+  return raw.replace(/^https?:\/\//, '').replace(/\/$/, '')
+})
 const mobileFileInput = ref<HTMLInputElement | null>(null)
 const desktopFileInput = ref<HTMLInputElement | null>(null)
 const qrCanvas = ref<HTMLCanvasElement | null>(null)

@@ -86,9 +86,8 @@ definePageMeta({ layout: 'tool' })
 const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
-const canonicalUrl = computed(() =>
-  new URL(localePath('/contact'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
-)
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
+const canonicalUrl = computed(() => new URL(localePath('/contact'), siteBaseUrl.value).toString())
 useHead({
   title: () => t('seo.contact.title'),
   meta: [
@@ -99,7 +98,7 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.contact.title'),
   ogDescription: () => t('seo.contact.desc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
 })
 
 const form = reactive({ name: '', email: '', message: '' })

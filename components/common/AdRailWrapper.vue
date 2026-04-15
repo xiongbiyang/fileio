@@ -4,7 +4,7 @@
       <!-- Left rail — shown on xl (≥ 1280px) and up. -->
       <aside class="hidden xl:block">
         <div class="sticky top-20">
-          <AdSlot :slot="`${pageKey}-left`" :min-height="600" />
+          <AdSlot :slot-key="`${pageKey}-left`" :min-height="600" />
         </div>
       </aside>
 
@@ -16,7 +16,7 @@
       <!-- Right rail -->
       <aside class="hidden xl:block">
         <div class="sticky top-20">
-          <AdSlot :slot="`${pageKey}-right`" :min-height="600" />
+          <AdSlot :slot-key="`${pageKey}-right`" :min-height="600" />
         </div>
       </aside>
     </div>

@@ -18,9 +18,8 @@
 const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
-const canonicalUrl = computed(() =>
-  new URL(localePath('/terms'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
-)
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
+const canonicalUrl = computed(() => new URL(localePath('/terms'), siteBaseUrl.value).toString())
 useHead({
   title: () => t('seo.terms.title'),
   meta: [
@@ -31,14 +30,14 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.terms.title'),
   ogDescription: () => t('seo.terms.desc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   name: t('seo.terms.title'),
   description: t('seo.terms.desc'),
-  url: 'https://fileio.top/terms',
+  url: canonicalUrl.value,
 })
 
 const sectionKeys = ['acceptance', 'description', 'responsibilities', 'privacy', 'usercontent', 'ip', 'disclaimer', 'changes'] as const

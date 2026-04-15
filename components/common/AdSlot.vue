@@ -10,7 +10,7 @@
           class="adsbygoogle"
           :style="{ display: 'block', minHeight: minHeight + 'px' }"
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-          :data-ad-slot="slotIdForKey(slot)"
+          :data-ad-slot="slotIdForKey(slotKey)"
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
@@ -25,7 +25,7 @@
       :aria-label="$t('share.result.adSlot')"
     >
       <span class="text-xs text-on-surface-variant/50 uppercase tracking-widest font-mono">
-        AD · {{ slot }}
+        AD · {{ slotKey }}
       </span>
     </div>
   </div>
@@ -37,8 +37,9 @@ withDefaults(defineProps<{
    * Stable identifier for this placement (e.g. `share-result-bottom`).
    * Used as the lookup key when mapping to AdSense ad-slot IDs in production
    * and as the visible label in dev so designers can locate placements.
+   * Named `slotKey` (not `slot`) because `slot` is a reserved Vue attribute.
    */
-  slot: string
+  slotKey: string
   /** Wrapper class for outer spacing — caller decides margins. */
   containerClass?: string
   /**

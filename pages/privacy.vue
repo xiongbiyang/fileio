@@ -78,9 +78,8 @@
 const { t } = useI18n()
 const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
-const canonicalUrl = computed(() =>
-  new URL(localePath('/privacy'), runtimeConfig.public.siteUrl || 'https://fileio.top').toString(),
-)
+const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
+const canonicalUrl = computed(() => new URL(localePath('/privacy'), siteBaseUrl.value).toString())
 useHead({
   title: () => t('seo.privacy.title'),
   meta: [
@@ -92,14 +91,14 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.privacy.title'),
   ogDescription: () => t('seo.privacy.desc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   name: t('seo.privacy.title'),
   description: t('seo.privacy.desc'),
-  url: 'https://fileio.top/privacy',
+  url: canonicalUrl.value,
 })
 
 const toolPrivacy = computed(() => [

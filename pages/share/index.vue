@@ -122,7 +122,7 @@
       </p>
     </section>
 
-    <AdSlot slot="share-upload-bottom" container-class="mt-10" :min-height="120" />
+    <AdSlot slot-key="share-upload-bottom" container-class="mt-10" :min-height="120" />
   </AdRailWrapper>
 </template>
 
@@ -155,7 +155,7 @@ useHead(() => ({
 useSeoMeta({
   ogTitle: () => t('seo.share.ogTitle'),
   ogDescription: () => t('seo.share.ogDesc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
   ogUrl: () => canonicalUrl.value,
   twitterCard: 'summary_large_image',
   twitterTitle: () => t('seo.share.ogTitle'),
@@ -181,7 +181,7 @@ useJsonLd({
   ],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   isAccessibleForFree: true,
-  url: 'https://fileio.top/share',
+  url: `${siteBaseUrl.value}/share`,
 })
 
 useJsonLd({
@@ -230,7 +230,7 @@ useJsonLd({
   description: 'Upload a file to FileIO Quick Share and send the resulting link or QR code.',
   totalTime: 'PT1M',
   step: [
-    { '@type': 'HowToStep', name: 'Open Quick Share', text: 'Open FileIO Quick Share in your browser.', url: 'https://fileio.top/share' },
+    { '@type': 'HowToStep', name: 'Open Quick Share', text: 'Open FileIO Quick Share in your browser.', url: `${siteBaseUrl.value}/share` },
     { '@type': 'HowToStep', name: 'Upload the file', text: 'Drop a file on the page or click to select. Pick expiry and download policy.' },
     { '@type': 'HowToStep', name: 'Verify', text: 'Complete the Cloudflare Turnstile human verification.' },
     { '@type': 'HowToStep', name: 'Share the link or QR code', text: 'Copy the generated download link or show the QR code to the recipient.' },

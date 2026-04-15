@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <AdSlot slot="text-transfer-success" container-class="mt-8" :min-height="120" />
+    <AdSlot slot-key="text-transfer-success" container-class="mt-8" :min-height="120" />
   </div>
 </template>
 
@@ -74,6 +74,4 @@ defineProps<{
 defineEmits<{
   startNewTransfer: []
 }>()
-
-const localePath = useLocalePath()
 </script>

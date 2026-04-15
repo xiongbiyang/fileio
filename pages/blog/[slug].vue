@@ -30,7 +30,7 @@
       <div class="prose" v-html="sanitizedHtml" />
 
       <!-- Ad — between article body and tools/CTA -->
-      <AdSlot slot="blog-article-bottom" container-class="mt-12" :min-height="120" />
+      <AdSlot slot-key="blog-article-bottom" container-class="mt-12" :min-height="120" />
 
       <!-- Footer -->
       <footer class="mt-16 pt-8 border-t border-outline-variant/20">
@@ -402,7 +402,7 @@ if (post.value && localizedPost.value) {
     ogTitle: lp.title,
     ogDescription: lp.description,
     ogType: 'article',
-    ogImage: 'https://fileio.top/og-image.png',
+    ogImage: `${siteBaseUrl.value}/og-image.png`,
     ogUrl: blogUrl.value,
     twitterTitle: lp.title,
     twitterDescription: lp.description,
@@ -419,9 +419,9 @@ if (post.value && localizedPost.value) {
     inLanguage: langCode,
     datePublished: postPublishedDate.value,
     dateModified: postModifiedDate.value,
-    author: { '@type': 'Organization', name: 'FileIO', url: 'https://fileio.top' },
-    publisher: { '@type': 'Organization', name: 'FileIO', url: 'https://fileio.top', logo: { '@type': 'ImageObject', url: 'https://fileio.top/og-image.png' } },
-    image: 'https://fileio.top/og-image.png',
+    author: { '@type': 'Organization', name: 'FileIO', url: siteBaseUrl.value },
+    publisher: { '@type': 'Organization', name: 'FileIO', url: siteBaseUrl.value, logo: { '@type': 'ImageObject', url: `${siteBaseUrl.value}/og-image.png` } },
+    image: `${siteBaseUrl.value}/og-image.png`,
     mainEntityOfPage: { '@type': 'WebPage', '@id': blogUrl.value },
   })
   useJsonLd({

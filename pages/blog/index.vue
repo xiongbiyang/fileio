@@ -51,7 +51,7 @@
     </div>
 
     <!-- Ad — between post list and bottom CTA -->
-    <AdSlot slot="blog-list-bottom" container-class="mt-12" :min-height="120" />
+    <AdSlot slot-key="blog-list-bottom" container-class="mt-12" :min-height="120" />
 
     <!-- CTA -->
     <div class="mt-12 primary-gradient rounded-3xl p-8 md:p-10 text-center">
@@ -93,7 +93,7 @@ useHead({
 useSeoMeta({
   ogTitle: () => t('seo.blog.title'),
   ogDescription: () => t('seo.blog.ogDesc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
   ogUrl: () => canonicalUrl.value,
   twitterTitle: () => t('seo.blog.title'),
   twitterDescription: () => t('seo.blog.ogDesc'),
@@ -108,14 +108,14 @@ useJsonLd({
   publisher: {
     '@type': 'Organization',
     name: 'FileIO',
-    url: 'https://fileio.top',
+    url: siteBaseUrl.value,
   },
 })
 useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://fileio.top/' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteBaseUrl.value}/` },
     { '@type': 'ListItem', position: 2, name: 'Blog', item: canonicalUrl.value },
   ],
 })

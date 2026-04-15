@@ -116,13 +116,13 @@ useHead(() => ({
 useSeoMeta({
   ogTitle: () => t('seo.toolA.ogTitle'),
   ogDescription: () => t('seo.toolA.ogDesc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
   ogUrl: () => canonicalUrl.value,
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: () => t('seo.toolA.ogTitle'),
   twitterDescription: () => t('seo.toolA.ogDesc'),
-  twitterImage: 'https://fileio.top/og-image.png',
+  twitterImage: `${siteBaseUrl.value}/og-image.png`,
   twitterImageAlt: 'FileIO file transfer interface preview',
   robots: 'index, follow',
 })

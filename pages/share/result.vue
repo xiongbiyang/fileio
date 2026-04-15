@@ -83,7 +83,7 @@
         </NuxtLink>
       </div>
 
-      <AdSlot slot="share-result-bottom" container-class="mt-10" :min-height="120" />
+      <AdSlot slot-key="share-result-bottom" container-class="mt-10" :min-height="120" />
     </template>
   </AdRailWrapper>
 </template>
@@ -99,12 +99,17 @@ const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const { notify } = useNotifier()
 
-useHead({
-  title: 'Share ready',
-  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
-})
-
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
+
+useSeoMeta({
+  title: () => `${t('share.result.heading')} · ${t('share.title')}`,
+  description: () => t('share.resultSubtitle'),
+  robots: 'noindex, nofollow',
+  ogTitle: () => t('share.result.heading'),
+  ogDescription: () => t('share.resultSubtitle'),
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
+  twitterCard: 'summary_large_image',
+})
 
 const shareId = computed(() => {
   const raw = String(route.query.id || '').trim()

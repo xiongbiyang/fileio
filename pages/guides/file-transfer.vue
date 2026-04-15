@@ -124,7 +124,7 @@ useHead(() => ({
 useSeoMeta({
   ogTitle: () => t('seo.guideTransfer.ogTitle'),
   ogDescription: () => t('seo.guideTransfer.ogDesc'),
-  ogImage: 'https://fileio.top/og-image.png',
+  ogImage: `${siteBaseUrl.value}/og-image.png`,
   ogUrl: () => canonicalUrl.value,
   twitterTitle: () => t('seo.guideTransfer.ogTitle'),
   twitterDescription: () => t('seo.guideTransfer.ogDesc'),
@@ -166,8 +166,8 @@ useJsonLd({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://fileio.top/' },
-    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://fileio.top/tools' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteBaseUrl.value}/` },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: `${siteBaseUrl.value}/tools` },
     { '@type': 'ListItem', position: 3, name: 'File Transfer Guide', item: canonicalUrl.value },
   ],
 })
@@ -179,7 +179,7 @@ useJsonLd({
   description: 'Use FileIO to transfer files/text wirelessly between devices.',
   totalTime: 'PT3M',
   step: [
-    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open FileIO File & Text Transfer on your PC.', url: 'https://fileio.top/text-transfer' },
+    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open FileIO File & Text Transfer on your PC.', url: `${siteBaseUrl.value}/text-transfer` },
     { '@type': 'HowToStep', name: 'Pair devices', text: 'Scan QR code or enter Room ID on your phone.' },
     { '@type': 'HowToStep', name: 'Send file or text', text: 'Choose a file or input text and send through encrypted P2P session.' },
     { '@type': 'HowToStep', name: 'Receive on target device', text: 'Open or save received content on the paired device.' },

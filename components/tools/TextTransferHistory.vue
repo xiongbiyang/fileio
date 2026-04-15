@@ -57,13 +57,13 @@
 </template>
 
 <script setup lang="ts">
+import type { TransferHistoryItem } from '~/types/toolPages'
+
 interface HistoryStat {
   icon: string
   value: string
   label: string
 }
-
-import type { TransferHistoryItem } from '~/types/toolPages'
 
 defineProps<{
   historyFilter: string
