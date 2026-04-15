@@ -182,7 +182,7 @@ export default defineNuxtConfig({
     '/text-transfer': { prerender: false },
     // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
     '/share': { prerender: false },
-    '/share/**': { prerender: false, robots: 'noindex, nofollow' },
+    '/share/**': { prerender: false },
     '/about': { prerender: true },
     '/privacy': { prerender: true },
     '/terms': { prerender: true },
