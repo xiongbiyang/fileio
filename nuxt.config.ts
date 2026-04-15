@@ -129,7 +129,7 @@ export default defineNuxtConfig({
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'tp_lang',
-      redirectOn: 'root',
+      redirectOn: 'no prefix',
       fallbackLocale: 'en',
     },
   },
@@ -175,9 +175,12 @@ export default defineNuxtConfig({
   ],
 
   routeRules: {
-    '/': { redirect: '/transfer' },
-    '/zh-CN': { redirect: '/zh-CN/transfer' },
-    '/zh-TW': { redirect: '/zh-TW/transfer' },
+    // Landing pages do a runtime redirect to /transfer via pages/index.vue
+    // so @nuxtjs/i18n can detect Accept-Language first (a static redirect
+    // at the edge would bypass the middleware and lock every visitor to EN).
+    '/': { prerender: false },
+    '/zh-CN': { prerender: false },
+    '/zh-TW': { prerender: false },
     // transfer depends on ?r= query param for room joining — must NOT prerender
     '/transfer': { prerender: false },
     // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
