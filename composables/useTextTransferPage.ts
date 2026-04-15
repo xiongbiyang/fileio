@@ -1,3 +1,10 @@
+import { prefetchIceServers } from '~/composables/useWebRTC'
+import {
+  cleanupStaleOpfsFiles,
+  createFileReceiver,
+  isOpfsAvailable,
+  type FileReceiver,
+} from '~/composables/useFileReceiver'
 import { writeToClipboard } from '~/utils/clipboard'
 import { renderQrCodeToCanvas } from '~/utils/qrcode'
 import { generateRoomId } from '~/utils/roomId'
@@ -39,8 +46,32 @@ export function useTextTransferPage() {
   const { notify } = useNotifier()
   const state = ref<TransferState>('waiting')
   const roomId = ref('')
-  const verificationDigits = ref(['8', '4', '9', '2'])
+  // 4-digit Short Authentication String derived from both peers' DTLS
+  // fingerprints. Populated once the DataChannel opens. If a MITM swaps the
+  // SDP on the signaling path they'd have to use their own cert → different
+  // fingerprints → different digits on each side. Left as '----' until we
+  // actually have both fingerprints so the UI never falsely reassures the user.
+  const verificationDigits = ref(['-', '-', '-', '-'])
   const reconnectAttempt = ref(3)
+  // Quick Share hint banner. We nudge users toward Tool B (R2-backed, resumable
+  // download links) when the P2P path is a poor fit for the file they're about
+  // to send. Three triggers:
+  //   - big-file: queued a file > 500 MB (OPFS tab handles it but relay TURN
+  //     or flaky mobile network makes P2P painful at that size)
+  //   - relay:    the negotiated ICE candidate pair is `relay`, meaning all
+  //     bytes go through Cloudflare TURN. Burns our quota + typically slower.
+  //   - retry:    the connection has failed and re-established ≥2 times in
+  //     this session. Signal of an unstable network — Quick Share sidesteps it.
+  // Dismissal is remembered for the session so the banner doesn't nag.
+  const quickShareHint = ref<'big-file' | 'relay' | 'retry' | null>(null)
+  let quickShareHintDismissed = false
+  let transferFailureCount = 0
+  // Suggest Quick Share once queued file crosses 100 MB. Files 100-300 MB are
+  // the "reasonable over WebRTC but better over a download link" band —
+  // still transferable, but Quick Share's resumable URL wins if either peer
+  // has a flaky network.
+  const QUICK_SHARE_BIG_FILE_THRESHOLD = 100 * 1024 * 1024
+  const QUICK_SHARE_FAILURE_THRESHOLD = 2
   const receivedMessages = ref<Array<{ id: string, content: string, isSelf: boolean }>>([])
   const mobileTextInput = ref('')
   const desktopTextInput = ref('')
@@ -54,11 +85,37 @@ export function useTextTransferPage() {
   const fileQueue = ref<File[]>([])
   const historyFilter = ref('All')
   let incomingFileMeta: { name: string, size: number, mimeType: string } | null = null
-  let incomingFileChunks: ArrayBuffer[] = []
+  let incomingReceiver: FileReceiver | null = null
+  // Receiver creation is async (OPFS file handle + writer). Chunks that arrive
+  // between file-meta and receiver readiness must await this promise so they
+  // hit write() in the correct order.
+  let incomingReceiverReady: Promise<FileReceiver> | null = null
   let incomingReceivedBytes = 0
   let disconnectTimer: ReturnType<typeof setTimeout> | null = null
   let receiveTimeoutTimer: ReturnType<typeof setTimeout> | null = null
+  let iceWatchdogTimer: ReturnType<typeof setTimeout> | null = null
+  let reconnectBackoffTimer: ReturnType<typeof setTimeout> | null = null
+  // Current exponential-backoff delay. Doubles each failed attempt, reset on
+  // successful 'connected'. Protects against burning the retry quota on a
+  // network that's still mid-recovery.
+  const RECONNECT_BACKOFF_START_MS = 1_000
+  const RECONNECT_BACKOFF_MAX_MS = 10_000
+  let reconnectBackoffMs = RECONNECT_BACKOFF_START_MS
+  let relayFallbackUsed = false
   const RECEIVE_TIMEOUT_MS = 30_000
+  // Hard ceiling on initial ICE. If we're not 'connected' by this time, the
+  // peers likely can't find a working candidate pair (symmetric NAT, strict
+  // firewall). Fall back to a relay-only retry which forces TURN.
+  const ICE_WATCHDOG_MS = 12_000
+  // Hard cap on accepted file size. Backend-aware:
+  //  - OPFS (Chromium / Safari 15.2+ / Firefox 111+): streams to disk — 300 MB.
+  //    Usage data shows ≥95% of real transfers fit; larger files are better
+  //    served by Quick Share's R2 + resumable download link.
+  //  - Blob fallback (rare): in-memory, keep the stricter 100 MB ceiling to
+  //    protect mobile Safari 15.0/15.1 tabs from OOM.
+  const MAX_FILE_BYTES_OPFS = 300 * 1024 * 1024
+  const MAX_FILE_BYTES_BLOB = 100 * 1024 * 1024
+  const MAX_FILE_BYTES = isOpfsAvailable() ? MAX_FILE_BYTES_OPFS : MAX_FILE_BYTES_BLOB
   const transferRecords = ref<StoredTransferRecord[]>([])
   const deviceRecords = ref<StoredDeviceRecord[]>([])
   const remoteDeviceName = ref('')
@@ -76,53 +133,50 @@ export function useTextTransferPage() {
             applyRemotePeerMeta(msg.data)
           }
           else if (msg.type === 'file-meta') {
-            incomingFileMeta = { name: msg.name as string, size: msg.size as number, mimeType: msg.mimeType as string }
-            incomingFileChunks = []
+            const declaredSize = Number(msg.size)
+            const rawName = typeof msg.name === 'string' ? msg.name : ''
+            // Defend against malicious / buggy sender: bad size, path traversal
+            // in filename, or oversized payload.
+            if (
+              !rawName
+              || !Number.isFinite(declaredSize)
+              || declaredSize < 0
+              || declaredSize > MAX_FILE_BYTES
+            ) {
+              notify(t('common.transferFailed'), 'error')
+              return
+            }
+            incomingFileMeta = {
+              name: rawName.replace(/[/\\]/g, '_').slice(0, 255),
+              size: declaredSize,
+              mimeType: typeof msg.mimeType === 'string' ? msg.mimeType : '',
+            }
             incomingReceivedBytes = 0
-            currentFile.value = { name: msg.name as string, size: formatSize(msg.size as number) }
+            // Start OPFS handle acquisition eagerly. Subsequent chunk handlers
+            // await this promise so they write in arrival order even if
+            // createWritable() is still in flight when the first chunk lands.
+            incomingReceiverReady = createFileReceiver(incomingFileMeta)
+              .then((r) => { incomingReceiver = r; return r })
+              .catch(() => {
+                notify(t('common.transferFailed'), 'error')
+                resetIncomingFileState()
+                state.value = 'waiting'
+                throw new Error('receiver-init-failed')
+              })
+            currentFile.value = { name: incomingFileMeta.name, size: formatSize(declaredSize) }
             transferProgress.value = 0
             state.value = 'transferring'
             resetReceiveTimeout()
           }
           else if (msg.type === 'file-end' && incomingFileMeta) {
             clearReceiveTimeout()
-            pushTransferRecord({
-              name: incomingFileMeta.name,
-              sizeBytes: incomingFileMeta.size,
-              direction: 'received',
-              status: 'completed',
-              ...getCurrentRemoteDeviceInfo(),
-            })
-            const blob = new Blob(incomingFileChunks, { type: incomingFileMeta.mimeType || 'application/octet-stream' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = incomingFileMeta.name
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-            setTimeout(() => URL.revokeObjectURL(url), 1000)
-            // Show file in message list so both sides can see transfer history
-            receivedMessages.value.push({
-              id: crypto.randomUUID(),
-              content: `📎 ${incomingFileMeta.name} (${formatSize(incomingFileMeta.size)})`,
-              isSelf: false,
-            })
-            incomingFileMeta = null
-            incomingFileChunks = []
-            incomingReceivedBytes = 0
-            transferProgress.value = 0
-            currentFile.value = { name: '', size: '' }
-            // Return to transfer UI instead of success screen
-            state.value = 'waiting'
+            const meta = incomingFileMeta
+            void finalizeIncomingFile(meta)
           }
           else if (msg.type === 'file-cancel') {
             clearReceiveTimeout()
-            incomingFileMeta = null
-            incomingFileChunks = []
-            incomingReceivedBytes = 0
-            transferProgress.value = 0
-            currentFile.value = { name: '', size: '' }
+            void abortIncomingReceiver()
+            resetIncomingFileState()
             state.value = 'transferring'
           }
         }
@@ -131,11 +185,7 @@ export function useTextTransferPage() {
         }
       }
       else if (data instanceof ArrayBuffer && incomingFileMeta) {
-        incomingFileChunks.push(data)
-        incomingReceivedBytes += data.byteLength
-        transferProgress.value = Math.round((incomingReceivedBytes / incomingFileMeta.size) * 100)
-        transferredSize.value = formatSize(incomingReceivedBytes)
-        resetReceiveTimeout()
+        void ingestChunk(data)
       }
     },
     onError: () => {
@@ -144,11 +194,29 @@ export function useTextTransferPage() {
         attemptReconnect()
       }
     },
+    onDataChannelOpen: () => {
+      // `connectionState === 'connected'` fires before the DataChannel is guaranteed
+      // 'open' (especially on the answerer side, which receives the channel via
+      // ondatachannel). Sending peer-meta here ensures sendControl's readyState
+      // check doesn't silently drop the message.
+      sendLocalPeerMeta()
+      void computeVerificationDigits()
+      void checkRelayCandidateForHint()
+    },
     onStateChange: (connectionState) => {
       if (connectionState === 'connected') {
         clearDisconnectTimer()
+        clearIceWatchdog()
+        clearReconnectBackoff()
         markRemoteDeviceOnline(true)
-        sendLocalPeerMeta()
+        // Refill the retry budget. Without this, 3 brief network blips over
+        // an hour exhaust the counter and the 4th disconnect wedges the UI
+        // in 'reconnecting' forever with no recovery path.
+        reconnectAttempt.value = 3
+        // Only reset the failure-retry hint counter on *clean* connections.
+        // A user that keeps getting reconnected after visible failures
+        // doesn't benefit from us hiding the Quick Share nudge.
+        transferFailureCount = 0
         if (state.value === 'pairing' || state.value === 'waiting' || state.value === 'reconnecting') {
           // Keep interactive controls available after handshake.
           // Actual transfer state is entered only when sending/receiving payload.
@@ -159,13 +227,34 @@ export function useTextTransferPage() {
       else if (connectionState === 'disconnected' && state.value === 'transferring') {
         markRemoteDeviceOnline(false)
         disconnectTimer = setTimeout(() => {
-          if (webrtc.connectionState.value !== 'connected') attemptReconnect()
+          if (webrtc.connectionState.value !== 'connected') scheduleReconnect()
         }, 8000)
       }
-      else if (connectionState === 'failed' && state.value === 'transferring') {
+      else if (connectionState === 'failed') {
         clearDisconnectTimer()
+        clearIceWatchdog()
         markRemoteDeviceOnline(false)
-        attemptReconnect()
+        transferFailureCount++
+        if (transferFailureCount >= QUICK_SHARE_FAILURE_THRESHOLD) {
+          raiseQuickShareHint('retry')
+        }
+        // Mid-transfer failure → reconnect on existing path.
+        // Initial handshake failure → one-shot relay retry (forces TURN).
+        if (state.value === 'transferring') {
+          // Any in-flight receive can't be resumed across ICE restart — the
+          // sender doesn't auto-retry the same file. Drop the partial OPFS
+          // file rather than leaving orphaned bytes on disk, and tell the
+          // user so they know to resend rather than wait.
+          if (incomingFileMeta) {
+            void abortIncomingReceiver()
+            resetIncomingFileState()
+            notify(t('common.transferFailed'), 'error')
+          }
+          scheduleReconnect()
+        }
+        else {
+          void tryRelayFallback()
+        }
       }
     },
   })
@@ -256,8 +345,22 @@ export function useTextTransferPage() {
 
   onMounted(async () => {
     loadPersistedState()
+    // Warm the STUN/TURN credential cache before either peer needs it.
+    // Sender hits this path waiting for a scan; receiver hits it while the QR
+    // scanner is still handing off to the browser — by the time either calls
+    // webrtc.connect(), fetchIceServers() is either cached or well in flight.
+    prefetchIceServers()
+    // Reap orphaned OPFS files from a prior tab crash (tab closed mid-transfer
+    // before cleanup ran). Non-blocking; we don't await.
+    void cleanupStaleOpfsFiles()
     window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
     document.addEventListener('visibilitychange', handleVisibilityChange)
+    // Network Information API — not in Safari but widely supported on
+    // Android/Chrome where WiFi↔4G transitions are common.
+    const conn = (navigator as unknown as { connection?: EventTarget }).connection
+    conn?.addEventListener?.('change', handleNetworkChange)
 
     // Read room ID from multiple sources. The canonical entry point is
     // /j/[id] (path segment survives any redirect); this fallback chain
@@ -288,9 +391,19 @@ export function useTextTransferPage() {
   onUnmounted(() => {
     clearDisconnectTimer()
     clearReceiveTimeout()
+    clearIceWatchdog()
+    clearReconnectBackoff()
+    // If a transfer is in flight when user navigates away, abort the receiver
+    // so the OPFS file is removed — otherwise it sits there until the 30min
+    // stale-cleanup sweep on next mount.
+    void abortIncomingReceiver()
     markRemoteDeviceOnline(false)
     window.removeEventListener('beforeunload', handleBeforeUnload)
+    window.removeEventListener('online', handleOnline)
+    window.removeEventListener('offline', handleOffline)
     document.removeEventListener('visibilitychange', handleVisibilityChange)
+    const conn = (navigator as unknown as { connection?: EventTarget }).connection
+    conn?.removeEventListener?.('change', handleNetworkChange)
   })
 
   function attachQrCanvas(elements: (HTMLCanvasElement | null)[]) {
@@ -310,19 +423,181 @@ export function useTextTransferPage() {
     if (receiveTimeoutTimer) clearTimeout(receiveTimeoutTimer)
     receiveTimeoutTimer = setTimeout(() => {
       if (incomingFileMeta) {
-        incomingFileMeta = null
-        incomingFileChunks = []
-        incomingReceivedBytes = 0
-        transferProgress.value = 0
-        currentFile.value = { name: '', size: '' }
+        void abortIncomingReceiver()
+        resetIncomingFileState()
         attemptReconnect()
       }
     }, RECEIVE_TIMEOUT_MS)
+  }
+
+  function resetIncomingFileState() {
+    incomingFileMeta = null
+    incomingReceiver = null
+    incomingReceiverReady = null
+    incomingReceivedBytes = 0
+    transferProgress.value = 0
+    currentFile.value = { name: '', size: '' }
+  }
+
+  async function abortIncomingReceiver() {
+    const r = incomingReceiver
+    incomingReceiver = null
+    incomingReceiverReady = null
+    if (r) {
+      try { await r.abort() }
+      catch { /* best-effort */ }
+    }
+  }
+
+  async function ingestChunk(data: ArrayBuffer) {
+    if (!incomingFileMeta) return
+    const next = incomingReceivedBytes + data.byteLength
+    // Guard against a sender that under-declared size or ignores the cap.
+    // Allow 64 KB overshoot for the final-chunk rounding edge case.
+    if (next > MAX_FILE_BYTES || next > incomingFileMeta.size + 64 * 1024) {
+      clearReceiveTimeout()
+      await abortIncomingReceiver()
+      resetIncomingFileState()
+      state.value = 'waiting'
+      notify(t('common.transferFailed'), 'error')
+      return
+    }
+    try {
+      // `incomingReceiverReady` resolves to the same FileReceiver as
+      // `incomingReceiver` — await it so chunks arriving before createWritable()
+      // finishes are still written in order.
+      const r = incomingReceiver ?? (incomingReceiverReady ? await incomingReceiverReady : null)
+      if (!r) return
+      await r.write(data)
+    }
+    catch {
+      // Disk full / writer aborted / quota exceeded — drop the transfer cleanly.
+      clearReceiveTimeout()
+      await abortIncomingReceiver()
+      resetIncomingFileState()
+      state.value = 'waiting'
+      notify(t('common.transferFailed'), 'error')
+      return
+    }
+    incomingReceivedBytes = next
+    transferProgress.value = Math.round((incomingReceivedBytes / incomingFileMeta.size) * 100)
+    transferredSize.value = formatSize(incomingReceivedBytes)
+    resetReceiveTimeout()
+  }
+
+  async function finalizeIncomingFile(meta: { name: string; size: number; mimeType: string }) {
+    const receiver = incomingReceiver ?? (incomingReceiverReady ? await incomingReceiverReady.catch(() => null) : null)
+    if (!receiver) {
+      resetIncomingFileState()
+      state.value = 'waiting'
+      return
+    }
+    try {
+      const { url, cleanup } = await receiver.finalize()
+      pushTransferRecord({
+        name: meta.name,
+        sizeBytes: meta.size,
+        direction: 'received',
+        status: 'completed',
+        ...getCurrentRemoteDeviceInfo(),
+      })
+      const a = document.createElement('a')
+      a.href = url
+      a.download = meta.name
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      // Give the browser time to hand the Blob URL to its download manager
+      // before we revoke it + delete the OPFS file.
+      setTimeout(() => { void cleanup() }, 4000)
+      receivedMessages.value.push({
+        id: crypto.randomUUID(),
+        content: `📎 ${meta.name} (${formatSize(meta.size)})`,
+        isSelf: false,
+      })
+    }
+    catch {
+      notify(t('common.transferFailed'), 'error')
+      try { await receiver.abort() }
+      catch { /* best-effort */ }
+    }
+    finally {
+      incomingReceiver = null
+      incomingReceiverReady = null
+      resetIncomingFileState()
+      state.value = 'waiting'
+    }
   }
   function clearReceiveTimeout() {
     if (receiveTimeoutTimer) {
       clearTimeout(receiveTimeoutTimer)
       receiveTimeoutTimer = null
+    }
+  }
+  function startIceWatchdog() {
+    clearIceWatchdog()
+    iceWatchdogTimer = setTimeout(() => {
+      if (webrtc.connectionState.value !== 'connected') {
+        // No handshake after N seconds — treat as ICE dead-end and trigger relay retry.
+        void tryRelayFallback()
+      }
+    }, ICE_WATCHDOG_MS)
+  }
+  function clearIceWatchdog() {
+    if (iceWatchdogTimer) {
+      clearTimeout(iceWatchdogTimer)
+      iceWatchdogTimer = null
+    }
+  }
+  async function tryRelayFallback() {
+    // If we've already tried relay and it still failed, surface that to the
+    // user — they'll keep staring at a spinner otherwise. This is almost
+    // always a TURN deployment issue (credentials missing or rejected).
+    if (relayFallbackUsed || webrtc.getIceTransportPolicy() === 'relay') {
+      state.value = 'reconnecting'
+      notify(t('common.roomConnectFailed'), 'error')
+      return
+    }
+    // Only the offerer (receiver of the QR, i.e. the scanning device) drives
+    // the retry — the sender's `startSenderSignaling` listens for a fresh offer
+    // and will answer using whatever transport policy the new offer implies.
+    if (!isReceiver.value) {
+      state.value = 'reconnecting'
+      return
+    }
+    relayFallbackUsed = true
+    state.value = 'reconnecting'
+    try {
+      webrtc.disconnect()
+      signaling.disconnect()
+      pendingOffer = null
+      peerPresent = false
+      signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
+        try {
+          await webrtc.setRemoteDescription(answer)
+        }
+        catch {
+          /* ICE watchdog will catch the timeout */
+        }
+      }
+      signaling.onPeerCount.value = (count: number) => {
+        peerPresent = count >= 2
+        if (peerPresent && pendingOffer) signaling.sendSignal('offer', pendingOffer)
+      }
+      signaling.onPeerJoined.value = () => {
+        peerPresent = true
+        if (pendingOffer) signaling.sendSignal('offer', pendingOffer)
+      }
+      signaling.onRoomFull.value = handleRoomFull
+      setupTrickleIce()
+      signaling.connect()
+      const offer = await webrtc.connect(undefined, { iceTransportPolicy: 'relay' })
+      pendingOffer = offer
+      if (peerPresent) signaling.sendSignal('offer', offer)
+      startIceWatchdog()
+    }
+    catch {
+      notify(t('common.roomConnectFailed'), 'error')
     }
   }
   function loadPersistedState() {
@@ -371,6 +646,52 @@ export function useTextTransferPage() {
       icon: meta.icon,
     })
   }
+  function raiseQuickShareHint(reason: 'big-file' | 'relay' | 'retry') {
+    if (quickShareHintDismissed) return
+    // Priority: retry > relay > big-file. Don't overwrite a higher-signal
+    // hint with a lower one (big-file while user is failing to connect is
+    // less actionable than "connection keeps failing").
+    const rank = (r: typeof reason | null) => r === 'retry' ? 3 : r === 'relay' ? 2 : r === 'big-file' ? 1 : 0
+    if (rank(reason) <= rank(quickShareHint.value)) return
+    quickShareHint.value = reason
+  }
+  function dismissQuickShareHint() {
+    quickShareHintDismissed = true
+    quickShareHint.value = null
+  }
+  function switchToQuickShare() {
+    quickShareHintDismissed = true
+    quickShareHint.value = null
+    void navigateTo(localePath('/share'))
+  }
+  async function checkRelayCandidateForHint() {
+    // Give ICE a moment to actually select the nominated pair before asking —
+    // getStats() may not have the transport report populated right at DC open.
+    await new Promise(r => setTimeout(r, 300))
+    const type = await webrtc.getSelectedCandidatePairType()
+    if (type === 'relay') raiseQuickShareHint('relay')
+  }
+  async function computeVerificationDigits() {
+    // Hash both fingerprints in a deterministic order so both peers arrive
+    // at the same 4 digits. If a MITM swapped the SDP on the signaling wire
+    // they'd need their own DTLS cert → the two sides would show different
+    // digits, letting the user abort.
+    const fp = webrtc.getDtlsFingerprints()
+    if (!fp) return
+    const canonical = [fp.local, fp.remote].sort().join('|')
+    try {
+      const bytes = new TextEncoder().encode(canonical)
+      const digest = await crypto.subtle.digest('SHA-256', bytes)
+      const view = new DataView(digest)
+      // Take first 4 bytes as a uint32 → 4 decimal digits (0000–9999).
+      const num = view.getUint32(0) % 10000
+      verificationDigits.value = num.toString().padStart(4, '0').split('')
+    }
+    catch {
+      // crypto.subtle not available (very old / insecure context) — leave dashes
+      // rather than silently fabricate a plausible-looking code.
+    }
+  }
   function applyRemotePeerMeta(raw: unknown) {
     if (!raw || typeof raw !== 'object') return
     const payload = raw as Record<string, unknown>
@@ -417,31 +738,96 @@ export function useTextTransferPage() {
   function handleVisibilityChange() {
     if (document.visibilityState === 'visible' && state.value === 'transferring' && webrtc.connectionState.value !== 'connected') {
       clearDisconnectTimer()
-      attemptReconnect()
+      scheduleReconnect()
     }
+  }
+  function handleOffline() {
+    // OS-level offline — stop waiting for WebRTC's 30s consent-freshness
+    // timeout and reflect the state immediately in the UI.
+    if (state.value === 'transferring' || isConnected.value) {
+      clearDisconnectTimer()
+      state.value = 'reconnecting'
+    }
+  }
+  function handleOnline() {
+    // System came back online. If WebRTC hasn't already noticed (very common
+    // on WiFi↔4G swaps), proactively retry rather than wait for 'failed'.
+    if (state.value === 'reconnecting' || webrtc.connectionState.value !== 'connected') {
+      clearDisconnectTimer()
+      scheduleReconnect()
+    }
+  }
+  function handleNetworkChange() {
+    // navigator.connection fires when the effective network type changes
+    // (WiFi → cellular, new SSID, etc.). The old ICE candidate pair is
+    // instantly stale — trigger a restart instead of waiting for it to fail.
+    if (webrtc.connectionState.value === 'connected') {
+      // Active session on a new network — force restart.
+      void attemptReconnect()
+    }
+    else if (state.value === 'reconnecting') {
+      // Already in the reconnect loop — kick it sooner than the backoff.
+      clearReconnectBackoff()
+      scheduleReconnect()
+    }
+  }
+  function scheduleReconnect() {
+    if (reconnectBackoffTimer) return
+    const delay = reconnectBackoffMs
+    reconnectBackoffMs = Math.min(reconnectBackoffMs * 2, RECONNECT_BACKOFF_MAX_MS)
+    reconnectBackoffTimer = setTimeout(() => {
+      reconnectBackoffTimer = null
+      void attemptReconnect()
+    }, delay)
+  }
+  function clearReconnectBackoff() {
+    if (reconnectBackoffTimer) {
+      clearTimeout(reconnectBackoffTimer)
+      reconnectBackoffTimer = null
+    }
+    reconnectBackoffMs = RECONNECT_BACKOFF_START_MS
   }
   async function attemptReconnect() {
     if (reconnectAttempt.value <= 0) {
+      state.value = 'reconnecting'
+      notify(t('common.transferFailed'), 'error')
+      return
+    }
+    // If we're offline at the OS level, don't burn an attempt — wait for the
+    // 'online' handler to resume us once the network actually comes back.
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
       state.value = 'reconnecting'
       return
     }
     reconnectAttempt.value--
     state.value = 'reconnecting'
     try {
+      signaling.onRoomFull.value = handleRoomFull
       if (!isReceiver.value) {
+        // SDP exchange only — do NOT close signaling here. Trickle ICE
+        // candidates still need the channel until `connected` fires
+        // (onStateChange handles the eventual close).
         signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
-          await webrtc.setRemoteDescription(answer)
-          signaling.disconnect()
+          try {
+            await webrtc.setRemoteDescription(answer)
+          }
+          catch {
+            /* retry loop in onStateChange will trip eventually */
+          }
         }
         signaling.connect()
         const restartOffer = await webrtc.restartIce()
-        await signaling.sendSignal('offer', restartOffer)
+        signaling.sendSignal('offer', restartOffer)
       }
       else {
         signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
-          const answer = await webrtc.receiveRestartOffer(offer)
-          await signaling.sendSignal('answer', answer)
-          signaling.disconnect()
+          try {
+            const answer = await webrtc.receiveRestartOffer(offer)
+            signaling.sendSignal('answer', answer)
+          }
+          catch {
+            /* ditto */
+          }
         }
         signaling.connect()
       }
@@ -479,23 +865,78 @@ export function useTextTransferPage() {
   }
   function startSenderSignaling() {
     setupTrickleIce()
-    signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
+    // Named so we can re-arm after a bad offer without self-referential tricks.
+    const handleIncomingOffer = async (offer: RTCSessionDescriptionInit) => {
       signaling.onOffer.value = null
-      const answer = await webrtc.connect(offer)
-      signaling.sendSignal('answer', answer)
+      try {
+        const answer = await webrtc.connect(offer)
+        signaling.sendSignal('answer', answer)
+      }
+      catch {
+        // Malformed / hostile SDP — surface the error and re-arm for a
+        // legitimate retry instead of wedging silently.
+        notify(t('common.roomConnectFailed'), 'error')
+        signaling.onOffer.value = handleIncomingOffer
+      }
     }
+    signaling.onOffer.value = handleIncomingOffer
+    signaling.onRoomFull.value = handleRoomFull
     signaling.connect()
   }
+
+  function handleRoomFull() {
+    // Server told us this room already has 2 peers. Don't retry — surface
+    // a dedicated message and move to reconnecting (user will typically
+    // refresh the QR to mint a new room id).
+    clearIceWatchdog()
+    state.value = 'reconnecting'
+    notify(t('common.roomFull'), 'error')
+  }
+  // Stash the current offer so we can (re)send it whenever the sender is
+  // confirmed present. Avoids two races:
+  //  1. Receiver joins an empty room (sender not connected yet) → the first
+  //     offer is broadcast to zero peers and is lost forever.
+  //  2. Sender briefly loses its WS and re-joins → it missed the earlier offer.
+  let pendingOffer: RTCSessionDescriptionInit | null = null
+  let peerPresent = false
+
   async function initReceiverMode() {
     isReceiver.value = true
+    relayFallbackUsed = false
+    pendingOffer = null
+    peerPresent = false
     try {
       signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
-        await webrtc.setRemoteDescription(answer)
+        try {
+          await webrtc.setRemoteDescription(answer)
+        }
+        catch {
+          // Malformed answer — let the ICE watchdog handle the timeout path.
+        }
       }
+      // peer-count arrives immediately on signaling connect. If sender is
+      // already in the room (the common case) we flush the offer right away;
+      // otherwise we wait for peer-joined.
+      signaling.onPeerCount.value = (count: number) => {
+        peerPresent = count >= 2
+        if (peerPresent && pendingOffer) signaling.sendSignal('offer', pendingOffer)
+      }
+      signaling.onPeerJoined.value = () => {
+        peerPresent = true
+        if (pendingOffer) signaling.sendSignal('offer', pendingOffer)
+      }
+      signaling.onPeerLeft.value = () => {
+        // Sender vanished mid-handshake. Next peer-joined will trigger a
+        // resend of the current offer — stay idempotent.
+        peerPresent = false
+      }
+      signaling.onRoomFull.value = handleRoomFull
       setupTrickleIce()
       signaling.connect()
       const offer = await webrtc.connect()
-      signaling.sendSignal('offer', offer)
+      pendingOffer = offer
+      if (peerPresent) signaling.sendSignal('offer', offer)
+      startIceWatchdog()
     }
     catch {
       notify(t('common.roomConnectFailed'), 'error')
@@ -516,6 +957,9 @@ export function useTextTransferPage() {
     state.value = 'waiting'
     roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
     reconnectAttempt.value = 3
+    relayFallbackUsed = false
+    verificationDigits.value = ['-', '-', '-', '-']
+    clearIceWatchdog()
     markRemoteDeviceOnline(false)
     webrtc.disconnect()
     signaling.disconnect()
@@ -548,8 +992,28 @@ export function useTextTransferPage() {
   function goToWaitingState() {
     state.value = 'waiting'
   }
+  // Receiver-side caps are enforced again on arrival — this is a UX-level
+  // pre-check so oversize files are rejected before the sender spends time
+  // reading chunks off disk and the receiver has to abort mid-stream.
+  // Use the most permissive cap (OPFS path) on the sender: the receiver will
+  // apply its own stricter Blob cap if needed and reject on file-meta.
+  function filterAcceptableFiles(files: File[]): File[] {
+    const ok: File[] = []
+    let hasBigFile = false
+    for (const file of files) {
+      if (file.size > MAX_FILE_BYTES_OPFS) {
+        notify(t('common.fileTooLarge', { name: file.name }), 'error')
+        continue
+      }
+      if (file.size > QUICK_SHARE_BIG_FILE_THRESHOLD) hasBigFile = true
+      ok.push(file)
+    }
+    if (hasBigFile) raiseQuickShareHint('big-file')
+    return ok
+  }
+
   function addFilesToQueue(files: File[]) {
-    fileQueue.value.push(...files)
+    fileQueue.value.push(...filterAcceptableFiles(files))
   }
   function clearFileQueue() {
     fileQueue.value = []
@@ -614,12 +1078,9 @@ export function useTextTransferPage() {
   function cancelTransfer() {
     webrtc.cancelSend()
     clearReceiveTimeout()
-    incomingFileMeta = null
-    incomingFileChunks = []
-    incomingReceivedBytes = 0
-    transferProgress.value = 0
+    void abortIncomingReceiver()
+    resetIncomingFileState()
     transferredSize.value = '0 B'
-    currentFile.value = { name: '', size: '' }
     fileQueue.value = []
     state.value = 'waiting'
   }
@@ -639,7 +1100,9 @@ export function useTextTransferPage() {
   }
   function handleDesktopFileSelect(files: File[]) {
     if (!files.length || !isConnected.value) return
-    fileQueue.value = files
+    const acceptable = filterAcceptableFiles(files)
+    if (!acceptable.length) return
+    fileQueue.value = acceptable
     startTransfer()
   }
   async function handleMobileFileSelect(event: Event) {
@@ -647,6 +1110,10 @@ export function useTextTransferPage() {
     if (!input.files?.[0] || !isConnected.value) return
     const file = input.files[0]
     input.value = ''
+    if (file.size > MAX_FILE_BYTES_OPFS) {
+      notify(t('common.fileTooLarge', { name: file.name }), 'error')
+      return
+    }
     currentFile.value = { name: file.name, size: formatSize(file.size) }
     transferProgress.value = 0
     transferredSize.value = '0 B'
@@ -701,6 +1168,7 @@ export function useTextTransferPage() {
     mobileSend, mobileTextInput, queuedFiles, receivedMessages, reconnectAttempt,
     refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
     timeRemaining, transferHistoryItems, transferProgress, transferSpeed, transferredSize, verificationDigits,
+    quickShareHint, dismissQuickShareHint, switchToQuickShare,
   }
 }
 
