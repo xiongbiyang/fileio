@@ -181,11 +181,21 @@ export default defineNuxtConfig({
     '/': { prerender: false },
     '/zh-CN': { prerender: false },
     '/zh-TW': { prerender: false },
-    // transfer depends on ?r= query param for room joining — must NOT prerender
+    // transfer depends on ?r= query param for room joining — must NOT prerender.
+    // Localized paths need explicit rules: i18n doesn't propagate routeRules
+    // across locales, so without these, /zh-CN/transfer gets prerendered and
+    // Cloudflare Pages 308-redirects `/zh-CN/transfer` → `/zh-CN/transfer/`
+    // which drops the URL hash (#r=...) that scanners like to preserve.
     '/transfer': { prerender: false },
+    '/zh-CN/transfer': { prerender: false },
+    '/zh-TW/transfer': { prerender: false },
     // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
     '/share': { prerender: false },
     '/share/**': { prerender: false },
+    '/zh-CN/share': { prerender: false },
+    '/zh-CN/share/**': { prerender: false },
+    '/zh-TW/share': { prerender: false },
+    '/zh-TW/share/**': { prerender: false },
     '/about': { prerender: true },
     '/privacy': { prerender: true },
     '/terms': { prerender: true },
