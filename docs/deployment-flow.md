@@ -34,6 +34,11 @@ Or deploy manually: `npx wrangler pages deploy dist`
 Required:
 
 ```bash
+# Canonical site URL — drives canonical tags, JSON-LD URLs, og:image.
+# Must be the exact public origin (no trailing slash).
+NUXT_PUBLIC_SITE_URL=https://fileio.top
+
+# PartyKit host for WebRTC signaling (see §4)
 NUXT_PUBLIC_PARTYKIT_HOST=your-app.your-name.partykit.dev
 ```
 
@@ -88,7 +93,7 @@ For local development you may use Cloudflare's always-pass Turnstile test keys:
 ## 3c. Ad system (optional — Google AdSense)
 
 All ad placements share two reusable components and a single feature flag:
-- `components/common/AdSlot.vue` — a single ad placeholder; takes a `slot`
+- `components/common/AdSlot.vue` — a single ad placeholder; takes a `slot-key`
   identifier (e.g. `share-result-bottom`) and a `min-height` for CLS reservation
 - `components/common/AdRailWrapper.vue` — desktop-only sticky left+right rails
   (160px on `xl`, 300px on `2xl`); auto-hides on `<xl` viewports
