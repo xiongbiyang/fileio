@@ -56,4 +56,4 @@ FileIO is more practical when your daily workflow includes frequent small transf
 
 ## Start a Faster Transfer Workflow
 
-Try [FileIO File Transfer](/text-transfer) if you want a no-install, browser-based workflow for everyday phone-to-PC sharing.
+Try [FileIO File Transfer](/transfer) if you want a no-install, browser-based workflow for everyday phone-to-PC sharing.

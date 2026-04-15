@@ -6,7 +6,7 @@ test('home page loads', async ({ page }) => {
   await expect(page.locator('body')).toContainText(/FileIO/i)
 })
 
-test('text-transfer tool page is reachable', async ({ page }) => {
-  await page.goto('/text-transfer')
-  await expect(page).toHaveURL(/\/text-transfer/)
+test('transfer tool page is reachable', async ({ page }) => {
+  await page.goto('/transfer')
+  await expect(page).toHaveURL(/\/transfer/)
 })

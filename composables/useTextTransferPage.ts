@@ -449,7 +449,7 @@ export function useTextTransferPage() {
     const canvases = qrCanvasElements.value.filter((c): c is HTMLCanvasElement => c !== null)
     if (!canvases.length || !roomId.value) return
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/text-transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/transfer'), roomId.value)
       if (!url) return
       for (const canvas of canvases) {
         await renderQrCodeToCanvas(canvas, url, { width: 220, margin: 2 })
@@ -496,7 +496,7 @@ export function useTextTransferPage() {
   }
   async function copyLink() {
     try {
-      const url = buildRoomJoinUrl(window.location.origin, localePath('/text-transfer'), roomId.value)
+      const url = buildRoomJoinUrl(window.location.origin, localePath('/transfer'), roomId.value)
       if (!url) return
       await writeToClipboard(url)
       notify(t('common.copied'))

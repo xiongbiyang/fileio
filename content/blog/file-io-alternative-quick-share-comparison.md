@@ -64,9 +64,9 @@ FileIO Quick Share lets you pick:
 | Private one-off file handoff with QR | [FileIO Quick Share](/share) |
 | Sending a 1 GB+ file that expires in a week | WeTransfer free |
 | Quick anonymous drop (no QR needed) | file.io free |
-| **Two-device realtime transfer** (phone ↔ PC, no server) | [FileIO Text & File Transfer](/text-transfer) |
+| **Two-device realtime transfer** (phone ↔ PC, no server) | [FileIO Text & File Transfer](/transfer) |
 
-For the realtime case FileIO has a separate [peer-to-peer transfer tool](/text-transfer) that uses WebRTC direct — files never touch a server. Quick Share is the async complement when both sides are not online at the same time.
+For the realtime case FileIO has a separate [peer-to-peer transfer tool](/transfer) that uses WebRTC direct — files never touch a server. Quick Share is the async complement when both sides are not online at the same time.
 
 ## Try it
 

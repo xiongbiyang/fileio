@@ -101,7 +101,7 @@ const localePath = useLocalePath()
 const runtimeConfig = useRuntimeConfig()
 const siteBaseUrl = computed(() => runtimeConfig.public.siteUrl || 'https://fileio.top')
 const canonicalUrl = computed(() =>
-  new URL(localePath('/text-transfer'), siteBaseUrl.value).toString(),
+  new URL(localePath('/transfer'), siteBaseUrl.value).toString(),
 )
 
 definePageMeta({ layout: 'tool' })

@@ -14,7 +14,7 @@ If you need **iphone to windows file transfer no app**, the fastest path is brow
 
 ## How to Transfer from iPhone to Windows Without App
 
-1. Open [FileIO File Transfer](/text-transfer) on your Windows device
+1. Open [FileIO File Transfer](/transfer) on your Windows device
 2. Scan the QR code with your iPhone
 3. Select photos, videos, or files on iPhone
 4. Send and receive on Windows instantly
@@ -34,4 +34,4 @@ If you need **iphone to windows file transfer no app**, the fastest path is brow
 
 ## Start Transfer Now
 
-Use the free [iPhone to Windows transfer tool](/text-transfer).
+Use the free [iPhone to Windows transfer tool](/transfer).

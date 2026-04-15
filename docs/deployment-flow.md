@@ -130,10 +130,10 @@ Then paste the resulting domain into the Cloudflare Pages env var `NUXT_PUBLIC_P
 
 ## 5. Post-deploy verification
 
-1. Site is reachable: `/` (redirects), `/text-transfer`, `/blog`, `/about`
-2. zh-CN / zh-TW reachable: `/zh-CN/text-transfer`, `/zh-TW/text-transfer`
+1. Site is reachable: `/` (redirects), `/transfer`, `/blog`, `/about`
+2. zh-CN / zh-TW reachable: `/zh-CN/transfer`, `/zh-TW/transfer`
 3. SEO files: `/robots.txt`, `/sitemap_index.xml`, `/__sitemap__/en-US.xml`
-4. Cross-device pairing works (open text-transfer on PC, scan QR with phone)
+4. Cross-device pairing works (open transfer on PC, scan QR with phone)
 
 ## 6. Common issues
 

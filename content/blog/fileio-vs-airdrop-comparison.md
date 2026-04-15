@@ -56,4 +56,4 @@ AirDrop is often faster to start because it is built into the system UX.
 
 ## Start a Cross-Platform Transfer
 
-Try [FileIO File Transfer](/text-transfer) if your devices are not all in the Apple ecosystem.
+Try [FileIO File Transfer](/transfer) if your devices are not all in the Apple ecosystem.

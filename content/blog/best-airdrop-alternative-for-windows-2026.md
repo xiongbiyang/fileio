@@ -24,11 +24,11 @@ A modern AirDrop alternative for Windows should be:
 - Fast on local network
 - Free and no signup
 
-[FileIO File Transfer](/text-transfer) matches all of the above.
+[FileIO File Transfer](/transfer) matches all of the above.
 
 ## Fastest Workflow (Phone to Windows in Under 10 Seconds)
 
-1. Open [FileIO File Transfer](/text-transfer) on your Windows PC
+1. Open [FileIO File Transfer](/transfer) on your Windows PC
 2. Scan the QR code with your phone camera
 3. Select files and send
 
@@ -70,4 +70,4 @@ For confidential workflows, still follow your company policy and avoid sharing r
 
 ## Try It
 
-Start here: [AirDrop alternative for Windows - FileIO](/text-transfer)
+Start here: [AirDrop alternative for Windows - FileIO](/transfer)

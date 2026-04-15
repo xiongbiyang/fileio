@@ -1,7 +1,7 @@
 <template>
   <header class="fixed top-0 w-full z-50 px-8 h-16 glass-panel">
     <div class="max-w-[1800px] mx-auto h-full flex items-center justify-between">
-      <NuxtLink :to="localePath('/text-transfer')" class="flex items-center gap-2">
+      <NuxtLink :to="localePath('/transfer')" class="flex items-center gap-2">
         <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-surface font-headline">FileIO</span>
       </NuxtLink>
       <nav class="hidden md:flex items-center gap-1 font-headline">
@@ -35,7 +35,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const { isDark, toggle: toggleTheme } = useTheme()
 const navItems = [
-  { path: '/text-transfer', key: 'nav.transfer' },
+  { path: '/transfer', key: 'nav.transfer' },
   { path: '/share', key: 'nav.share' },
   { path: '/blog', key: 'nav.blog' },
   { path: '/about', key: 'nav.about' },

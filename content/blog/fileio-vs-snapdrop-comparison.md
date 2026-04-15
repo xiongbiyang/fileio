@@ -55,4 +55,4 @@ FileIO is the better fit when you often switch between files and links/text in o
 
 ## Start Cross-Device Sharing
 
-Try [FileIO File Transfer](/text-transfer) if you want a browser-based sharing workflow that works well for everyday phone-to-PC use.
+Try [FileIO File Transfer](/transfer) if you want a browser-based sharing workflow that works well for everyday phone-to-PC use.

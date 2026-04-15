@@ -14,7 +14,7 @@ If you want to **transfer files from phone to laptop without usb**, QR pairing i
 
 ## How to Transfer Without USB
 
-1. Open [FileIO File Transfer](/text-transfer) on laptop
+1. Open [FileIO File Transfer](/transfer) on laptop
 2. Scan QR with phone camera
 3. Select files and send
 4. Confirm transfer result on laptop
@@ -33,4 +33,4 @@ If you want to **transfer files from phone to laptop without usb**, QR pairing i
 
 ## Try It Now
 
-Start with the free [wireless transfer tool](/text-transfer).
+Start with the free [wireless transfer tool](/transfer).

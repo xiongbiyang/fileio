@@ -211,7 +211,7 @@
             </div>
             <div class="text-on-surface-variant text-sm font-medium">
               <p>{{ $t('toolA.scanQr') }}</p>
-              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">{{ shareHostDisplay }}/text-transfer?r={{ roomId }}</p>
+              <p class="mt-1 px-3 py-1 bg-surface-container-high dark:bg-surface-container rounded text-primary font-mono text-sm">{{ shareHostDisplay }}/transfer?r={{ roomId }}</p>
             </div>
           </div>
 

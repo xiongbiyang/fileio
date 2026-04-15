@@ -23,7 +23,7 @@ npm run build
 
 - Always run `npm run lint:i18n` before pushing.
 - For high-traffic entry pages, verify localized copy renders as expected:
-  - `/` (redirects to `/text-transfer`)
-  - `/text-transfer`
+  - `/` (redirects to `/transfer`)
+  - `/transfer`
   - `/blog`
   - `/about`

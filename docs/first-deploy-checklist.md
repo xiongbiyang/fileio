@@ -109,11 +109,11 @@ Cloudflare adds the CNAME records automatically if DNS is on Cloudflare.
 
 Open the production URL and verify:
 
-- [ ] `/` redirects to `/text-transfer`
-- [ ] Scan the QR on `/text-transfer` from a phone → devices pair (PartyKit ✓)
+- [ ] `/` redirects to `/transfer`
+- [ ] Scan the QR on `/transfer` from a phone → devices pair (PartyKit ✓)
 - [ ] `/share` upload a small file → get link → download once → 2nd download 404 (R2 + KV + Turnstile ✓)
 - [ ] `/robots.txt` and `/sitemap_index.xml` load
-- [ ] `/zh-CN/text-transfer` and `/zh-TW/text-transfer` load
+- [ ] `/zh-CN/transfer` and `/zh-TW/transfer` load
 - [ ] `/blog`, `/about`, `/privacy`, `/terms` load
 
 ## 8. Ongoing maintenance

@@ -71,7 +71,7 @@ Extract text from images, screenshots, handwritten notes, and scanned documents.
 
 At FileIO, we're working on bringing more AI-powered tools directly to your browser — with a focus on **privacy-first processing**. Our existing tool demonstrates this approach:
 
-- [**File Transfer**](/text-transfer) — End-to-end encrypted P2P transfer from phone to PC
+- [**File Transfer**](/transfer) — End-to-end encrypted P2P transfer from phone to PC
 
 ## The Privacy Problem with AI Tools
 
@@ -84,10 +84,10 @@ Most AI tools require you to upload data to cloud servers, create accounts, and 
 
 ---
 
-*Currently available: [File Transfer](/text-transfer)*
+*Currently available: [File Transfer](/transfer)*
 
 ## Quick Actions You Can Use Right Now
 
 While we build more AI features, this ready-to-use tool can save time immediately:
 
-- Share files across devices: [File Transfer](/text-transfer)
+- Share files across devices: [File Transfer](/transfer)

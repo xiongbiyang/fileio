@@ -58,7 +58,7 @@
       <h2 class="font-headline text-2xl font-extrabold text-on-primary mb-3">{{ $t('blog.ctaTitle') }}</h2>
       <p class="text-on-primary/80 mb-6 max-w-lg mx-auto">{{ $t('blog.ctaDesc') }}</p>
       <div class="flex flex-wrap justify-center gap-3">
-        <NuxtLink :to="localePath('/text-transfer')" class="inline-block px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
+        <NuxtLink :to="localePath('/transfer')" class="inline-block px-6 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
           {{ $t('blog.ctaTools') }}
         </NuxtLink>
         <NuxtLink :to="localePath('/share')" class="inline-block px-6 py-3 bg-on-primary/10 text-on-primary rounded-xl font-bold text-sm hover:bg-on-primary/20 transition-colors">

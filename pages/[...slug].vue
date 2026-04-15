@@ -74,6 +74,6 @@ useHead({
 })
 
 const quickLinks = computed(() => [
-  { path: '/text-transfer', icon: 'devices', label: t('error404.linkTransfer') },
+  { path: '/transfer', icon: 'devices', label: t('error404.linkTransfer') },
 ])
 </script>

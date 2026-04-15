@@ -217,7 +217,7 @@ useJsonLd({
       name: 'What is the maximum file size?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: '100 MB per file. If you need to transfer larger files and both devices are online at the same time, use the peer-to-peer tool at /text-transfer which has no size limit.',
+        text: '100 MB per file. If you need to transfer larger files and both devices are online at the same time, use the peer-to-peer tool at /transfer which has no size limit.',
       },
     },
   ],

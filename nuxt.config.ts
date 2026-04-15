@@ -84,7 +84,7 @@ export default defineNuxtConfig({
     urls: [
       // English core pages
       { loc: '/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
       { loc: '/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
       { loc: '/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
@@ -94,7 +94,7 @@ export default defineNuxtConfig({
       { loc: '/terms', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
       // zh-CN core pages
       { loc: '/zh-CN', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-CN/text-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-CN/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
       { loc: '/zh-CN/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
       { loc: '/zh-CN/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
       { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
@@ -175,11 +175,11 @@ export default defineNuxtConfig({
   ],
 
   routeRules: {
-    '/': { redirect: '/text-transfer' },
-    '/zh-CN': { redirect: '/zh-CN/text-transfer' },
-    '/zh-TW': { redirect: '/zh-TW/text-transfer' },
-    // text-transfer depends on ?r= query param for room joining — must NOT prerender
-    '/text-transfer': { prerender: false },
+    '/': { redirect: '/transfer' },
+    '/zh-CN': { redirect: '/zh-CN/transfer' },
+    '/zh-TW': { redirect: '/zh-TW/transfer' },
+    // transfer depends on ?r= query param for room joining — must NOT prerender
+    '/transfer': { prerender: false },
     // Quick Share pages depend on runtime R2 + Turnstile — must NOT prerender
     '/share': { prerender: false },
     '/share/**': { prerender: false },

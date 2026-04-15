@@ -65,7 +65,7 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <NuxtLink
-          :to="localePath('/text-transfer')"
+          :to="localePath('/transfer')"
           class="bg-surface-container-low dark:bg-surface-container rounded-4xl p-8 md:p-10 group hover:shadow-ambient transition-shadow"
         >
           <div class="flex items-center gap-3 mb-4">

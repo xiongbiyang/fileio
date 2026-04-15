@@ -1,6 +1,6 @@
 ﻿<template>
   <article class="max-w-2xl mx-auto px-6 py-12">
-    <NuxtLink :to="localePath('/text-transfer')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
+    <NuxtLink :to="localePath('/transfer')" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       {{ c.back }}
     </NuxtLink>
@@ -57,7 +57,7 @@
     </section>
 
     <NuxtLink
-      :to="localePath('/text-transfer')"
+      :to="localePath('/transfer')"
       class="inline-flex items-center gap-2 px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
     >
       {{ c.cta }}
@@ -179,7 +179,7 @@ useJsonLd({
   description: 'Use FileIO to transfer files/text wirelessly between devices.',
   totalTime: 'PT3M',
   step: [
-    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open FileIO File & Text Transfer on your PC.', url: `${siteBaseUrl.value}/text-transfer` },
+    { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Open FileIO File & Text Transfer on your PC.', url: `${siteBaseUrl.value}/transfer` },
     { '@type': 'HowToStep', name: 'Pair devices', text: 'Scan QR code or enter Room ID on your phone.' },
     { '@type': 'HowToStep', name: 'Send file or text', text: 'Choose a file or input text and send through encrypted P2P session.' },
     { '@type': 'HowToStep', name: 'Receive on target device', text: 'Open or save received content on the paired device.' },
@@ -187,9 +187,9 @@ useJsonLd({
 })
 
 const relatedLinks = [
-  { to: '/text-transfer', label: 'accountless file transfer' },
-  { to: '/text-transfer', label: 'p2p web transfer' },
-  { to: '/text-transfer', label: 'zero-knowledge file drop' },
+  { to: '/transfer', label: 'accountless file transfer' },
+  { to: '/transfer', label: 'p2p web transfer' },
+  { to: '/transfer', label: 'zero-knowledge file drop' },
 ]
 </script>
 

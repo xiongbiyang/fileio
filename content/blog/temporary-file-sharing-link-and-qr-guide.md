@@ -32,7 +32,7 @@ No signup. No tracking. No ad network during upload. The file lives on Cloudflar
 - **Sending sensitive content**: tax docs, IDs, signed contracts, passport scans. Single-use + short expiry means even if the link leaks, the file is gone.
 - **Giving a one-off file to a colleague** without inviting them into a shared folder.
 - **Public hand-off**: post a QR code on a printed flyer so people can grab a PDF menu / brochure without you tracking them.
-- **Cross-device transfer when only one side is online**: unlike [P2P transfer tools](/text-transfer), the sender can upload and close their laptop — the recipient downloads later.
+- **Cross-device transfer when only one side is online**: unlike [P2P transfer tools](/transfer), the sender can upload and close their laptop — the recipient downloads later.
 
 ## Privacy model
 
@@ -49,7 +49,7 @@ A SHA-256 hash of the content is stored in object metadata for potential abuse-b
 - **Short expiry + single-use** is the safest combo for sensitive files.
 - **QR code** is convenient when the recipient is in the room with you; just show your screen and they scan it.
 - **Share the link via signal / encrypted channel**, not SMS, if the content is truly private.
-- **100 MB limit**: if you need to send more, use [P2P transfer](/text-transfer) which has no size limit (both devices must be online at the same time).
+- **100 MB limit**: if you need to send more, use [P2P transfer](/transfer) which has no size limit (both devices must be online at the same time).
 
 ## Related workflows
 

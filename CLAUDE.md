@@ -27,8 +27,8 @@
 ```
 transfer/
 ├── pages/
-│   ├── index.vue                    # Redirects to /text-transfer
-│   ├── text-transfer.vue            # Tool A — WebRTC P2P (SoftwareApplication JSON-LD)
+│   ├── index.vue                    # Redirects to /transfer
+│   ├── transfer.vue            # Tool A — WebRTC P2P (SoftwareApplication JSON-LD)
 │   ├── share/
 │   │   ├── index.vue                # Tool B — Quick Share upload page
 │   │   ├── result.vue               # Tool B — post-upload result (link + QR, noindex)
@@ -92,8 +92,8 @@ transfer/
 
 | Path | Notes |
 |------|-------|
-| `/` | 301 redirect to `/text-transfer` (via routeRules) |
-| `/text-transfer` | Tool A — NOT prerendered (needs `?r=` query) |
+| `/` | 301 redirect to `/transfer` (via routeRules) |
+| `/transfer` | Tool A — NOT prerendered (needs `?r=` query) |
 | `/share` | Tool B upload page — NOT prerendered (runtime R2 + Turnstile) |
 | `/share/[id]` | Tool B download page — noindex, NOT prerendered |
 | `/blog`, `/blog/[slug]` | Prerendered |
@@ -115,7 +115,7 @@ Run `npm run lint:i18n` to verify en/zh-CN/zh-TW key parity.
 
 ## Key Invariants
 
-- `/text-transfer`, `/share`, `/share/:id` all `prerender: false` (reason differs per page — see routeRules comments).
+- `/transfer`, `/share`, `/share/:id` all `prerender: false` (reason differs per page — see routeRules comments).
 - `useWebRTC` sends plaintext through the DataChannel; encryption is DTLS at the transport layer (browser-provided), not the `useCrypto` helper (which exists but is currently unreferenced).
 - Tool B uploads are hashed with SHA-256 into R2 custom metadata for future abuse-blocklist lookups.
 - Single-use share (`max_downloads=1`) deletes the R2 object via `waitUntil()` after the response body is handed to the client; an R2 bucket lifecycle rule wipes anything older than 3 days as a safety net.

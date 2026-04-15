@@ -54,4 +54,4 @@ FileIO is more practical for mixed daily workflow beyond pure file sending.
 
 ## Start a No-Install Transfer
 
-Try [FileIO File Transfer](/text-transfer) if you want instant cross-device sharing directly in the browser.
+Try [FileIO File Transfer](/transfer) if you want instant cross-device sharing directly in the browser.

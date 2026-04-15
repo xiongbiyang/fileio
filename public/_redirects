@@ -1,2 +1,7 @@
 # Cloudflare Pages redirects
-/r/*  /text-transfer?room=:splat  302
+/r/*  /transfer?room=:splat  302
+
+# Legacy path — kept for any inbound link created before the rename
+/text-transfer           /transfer           301
+/zh-CN/text-transfer     /zh-CN/transfer     301
+/zh-TW/text-transfer     /zh-TW/transfer     301

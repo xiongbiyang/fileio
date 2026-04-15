@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <AdSlot slot-key="text-transfer-success" container-class="mt-8" :min-height="120" />
+    <AdSlot slot-key="transfer-success" container-class="mt-8" :min-height="120" />
   </div>
 </template>
 

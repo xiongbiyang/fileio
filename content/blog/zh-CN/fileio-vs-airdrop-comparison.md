@@ -56,4 +56,4 @@ AirDrop 启动通常更快，因为它内置于系统交互中。
 
 ## 开始跨平台传输
 
-如果你的设备不全在 Apple 生态中，试试 [FileIO 文件传输](/text-transfer)。
+如果你的设备不全在 Apple 生态中，试试 [FileIO 文件传输](/transfer)。

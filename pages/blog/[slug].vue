@@ -296,8 +296,8 @@ function buildHowToForPost(p: NonNullable<typeof post.value>) {
       description: p.description,
       totalTime: 'PT3M',
       step: [
-        { '@type': 'HowToStep', name: 'Open FileIO', text: 'Open FileIO in your browser.', url: `${baseUrl}/text-transfer` },
-        { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Go to the phone-to-PC transfer tool.', url: `${baseUrl}/text-transfer` },
+        { '@type': 'HowToStep', name: 'Open FileIO', text: 'Open FileIO in your browser.', url: `${baseUrl}/transfer` },
+        { '@type': 'HowToStep', name: 'Open transfer tool', text: 'Go to the phone-to-PC transfer tool.', url: `${baseUrl}/transfer` },
         { '@type': 'HowToStep', name: 'Pair devices', text: 'Use QR pairing between phone and computer.' },
         { '@type': 'HowToStep', name: 'Send data', text: 'Transfer files or text securely in your browser.' },
       ],
@@ -445,7 +445,7 @@ if (post.value && localizedPost.value) {
 }
 
 const tools = [
-  { path: '/text-transfer', icon: 'swap_horiz', name: t('blog.toolTransfer') },
+  { path: '/transfer', icon: 'swap_horiz', name: t('blog.toolTransfer') },
   { path: '/share', icon: 'cloud_upload', name: t('blog.toolShare') },
 ]
 
