@@ -24,6 +24,9 @@ pages_build_output_dir = "dist"
 # database_name = "fileio-db"
 # database_id = "paste-your-id-here"
 
-# Environment variables
+# Environment variables (public only — NUXT_TURNSTILE_SECRET_KEY is a Pages encrypted secret)
 [vars]
 NUXT_PUBLIC_SITE_URL = "https://fileio.top"
+NUXT_PUBLIC_PARTYKIT_HOST = "placeholder.partykit.dev"
+NUXT_PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAAC92lcIhvgLdN6RF"
+NUXT_PUBLIC_ADS_ENABLED = "false"
