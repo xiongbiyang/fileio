@@ -27,7 +27,7 @@
           <div v-for="msg in receivedMessages" :key="msg.id" class="flex" :class="msg.isSelf ? 'justify-end' : 'justify-start'">
             <div class="max-w-[85%] px-4 py-3 rounded-2xl text-sm" :class="msg.isSelf ? 'primary-gradient text-on-primary rounded-tr-none' : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface dark:text-surface rounded-tl-none'">
               <p>{{ msg.content }}</p>
-              <a v-if="msg.downloadUrl" :href="msg.downloadUrl" :download="msg.downloadName" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs">
+              <a v-if="msg.downloadUrl" :href="msg.downloadUrl" :download="msg.downloadName" target="_blank" rel="noopener" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs">
                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">download</span>
                 {{ $t('toolA.tapToSave') }}
               </a>
@@ -159,7 +159,7 @@
               <div v-for="msg in receivedMessages" :key="msg.id" class="flex" :class="msg.isSelf ? 'justify-end' : 'justify-start'">
                 <div class="max-w-[80%] px-4 py-3 rounded-2xl text-sm" :class="msg.isSelf ? 'primary-gradient text-on-primary rounded-tr-none' : 'bg-surface-container dark:bg-surface-container-highest text-on-surface dark:text-surface rounded-tl-none'">
                   <p>{{ msg.content }}</p>
-                  <a v-if="msg.downloadUrl" :href="msg.downloadUrl" :download="msg.downloadName" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs">
+                  <a v-if="msg.downloadUrl" :href="msg.downloadUrl" :download="msg.downloadName" target="_blank" rel="noopener" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs">
                     <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">download</span>
                     {{ $t('toolA.tapToSave') }}
                   </a>
