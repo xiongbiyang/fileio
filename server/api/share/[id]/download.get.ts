@@ -75,28 +75,48 @@ export default defineEventHandler(async (event) => {
 
   const body = obj.body
 
-  // Single-use share: schedule delete after the response is handed off.
-  // Cloudflare Workers' waitUntil keeps the promise alive past the Worker
-  // response boundary. For max_downloads === 0 (unlimited), the object is
-  // left in place until the 3-day lifecycle rule sweeps it.
+  // Single-use share semantics (max_downloads === 1):
+  //
+  // We delete the R2 object AFTER the client finishes consuming the stream,
+  // not at request start. The previous behavior (schedule delete immediately
+  // via waitUntil) broke slow-network recipients: large files (300 MB+) on
+  // weak links often got interrupted mid-download, and the retry saw 404
+  // because the delete had already fired.
+  //
+  // New behavior: pipe the R2 body through a pass-through TransformStream
+  // and observe `pipeTo`'s completion. On success — the client received the
+  // full body — delete the object. On failure (client disconnect, network
+  // error) — leave the object so the recipient can retry within the expiry
+  // window. Once expiresAt passes, the next request's expiry check will
+  // clean it up anyway, so the worst abuse window is one expiry period.
+  //
+  // For max_downloads === 0 (unlimited) the object stays until lifecycle
+  // rules sweep it (or expiry check on any subsequent GET).
   //
   // IMPORTANT: do NOT destructure waitUntil — it is a bound method on the
   // execution context. Calling a bare reference triggers "Illegal invocation"
   // in workerd. Always invoke it via the owning object.
-  if (maxDownloads === 1) {
-    const cf = event.context.cloudflare as
-      | { context?: { waitUntil?: (p: Promise<unknown>) => void } }
-      | undefined
-    if (cf?.context?.waitUntil) {
-      cf.context.waitUntil(bucket.delete(id).catch(() => {}))
-    }
-    else {
-      // Fallback for local dev without a cloudflare execution context —
-      // fire-and-forget. The delete may or may not complete before the
-      // process hands control back, which is acceptable for dev.
-      void bucket.delete(id).catch(() => {})
-    }
+  if (maxDownloads !== 1) {
+    return body
   }
 
-  return body
+  const { readable, writable } = new TransformStream()
+  const deleteAfterDelivery = body.pipeTo(writable).then(
+    () => bucket.delete(id).catch(() => {}),
+    () => { /* stream aborted — preserve for retry; expiry will GC */ },
+  )
+
+  const cf = event.context.cloudflare as
+    | { context?: { waitUntil?: (p: Promise<unknown>) => void } }
+    | undefined
+  if (cf?.context?.waitUntil) {
+    cf.context.waitUntil(deleteAfterDelivery)
+  }
+  else {
+    // Local dev without a cloudflare execution context — attach the promise
+    // to something so it's not dropped by the event loop early.
+    void deleteAfterDelivery
+  }
+
+  return readable
 })
