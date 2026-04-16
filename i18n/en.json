@@ -398,6 +398,8 @@
     "captchaDisabled": "Captcha not configured — upload will work without verification in development.",
     "uploadBtn": "Upload & Get Link",
     "uploading": "Uploading {percent}%…",
+    "uploadEta": "{eta} left",
+    "uploadStarting": "Starting upload…",
     "resultTitle": "Your link is ready",
     "resultSubtitle": "Send this link or QR code to the recipient. Treat it like a password — anyone with the link can download once.",
     "fileLabel": "File",

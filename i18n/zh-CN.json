@@ -398,6 +398,8 @@
     "captchaDisabled": "人机验证未配置——开发环境下可直接上传。",
     "uploadBtn": "上传并生成链接",
     "uploading": "上传中 {percent}%…",
+    "uploadEta": "剩余 {eta}",
+    "uploadStarting": "正在开始上传…",
     "resultTitle": "链接已生成",
     "resultSubtitle": "把链接或二维码发给接收者。请像对待密码一样保管——任何人拿到链接都能下载一次。",
     "fileLabel": "文件",

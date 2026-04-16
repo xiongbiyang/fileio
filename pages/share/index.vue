@@ -120,6 +120,26 @@
         {{ isUploading ? $t('share.uploading', { percent: uploadProgress }) : $t('share.uploadBtn') }}
       </button>
 
+      <!-- Upload progress bar + rate/ETA line. Only shown while uploading. -->
+      <div v-if="isUploading" class="space-y-2">
+        <div class="h-1.5 rounded-full bg-surface-container-high dark:bg-surface-container overflow-hidden">
+          <div
+            class="h-full primary-gradient transition-[width] duration-200 ease-out"
+            :style="{ width: `${uploadProgress}%` }"
+          />
+        </div>
+        <p class="text-xs text-on-surface-variant text-center tabular-nums">
+          <template v-if="uploadSpeed">
+            <span>{{ uploadSpeed }}</span>
+            <span v-if="uploadEta"> · {{ $t('share.uploadEta', { eta: uploadEta }) }}</span>
+            <span v-if="uploadDone"> · {{ uploadDone }}</span>
+          </template>
+          <template v-else>
+            {{ $t('share.uploadStarting') }}
+          </template>
+        </p>
+      </div>
+
       <!-- ToS notice -->
       <p class="text-xs text-on-surface-variant text-center leading-relaxed">
         <i18n-t keypath="share.tosNotice" tag="span">
@@ -137,6 +157,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatSpeed, formatTime } from '~/utils/transferFormat'
+
 definePageMeta({ layout: 'default' })
 
 const { t, locale } = useI18n()
@@ -274,6 +296,12 @@ const expiresIn = ref(86400) // 24h default
 const maxDownloads = ref(1) // single-use default
 const isUploading = ref(false)
 const uploadProgress = ref(0)
+// Upload-rate / ETA telemetry. Populated by xhr.upload.onprogress using the
+// same "sample every 500 ms" rhythm as Transfer's sendFile so the display
+// doesn't jitter on every packet.
+const uploadSpeed = ref('')
+const uploadEta = ref('')
+const uploadDone = ref('')
 const turnstileContainer = ref<HTMLElement | null>(null)
 const turnstileWidgetId = ref<string | null>(null)
 
@@ -414,6 +442,9 @@ async function handleUpload() {
   const file = selectedFile.value
   isUploading.value = true
   uploadProgress.value = 0
+  uploadSpeed.value = ''
+  uploadEta.value = ''
+  uploadDone.value = ''
 
   // Phase 1: ask the Worker to validate + mint a presigned R2 PUT URL.
   let presigned: PresignResponse
@@ -459,9 +490,22 @@ async function handleUpload() {
       // and R2's signature validation uses the same value we signed.
     }
   }
+  // Track rate over a short rolling window. Sample every ~500 ms so the
+  // displayed speed doesn't twitch on every TCP ack.
+  let lastBytes = 0
+  let lastTime = Date.now()
   xhr.upload.onprogress = (e) => {
-    if (e.lengthComputable) {
-      uploadProgress.value = Math.round((e.loaded / e.total) * 100)
+    if (!e.lengthComputable) return
+    uploadProgress.value = Math.round((e.loaded / e.total) * 100)
+    const now = Date.now()
+    const dt = (now - lastTime) / 1000
+    if (dt >= 0.5) {
+      const speed = (e.loaded - lastBytes) / dt
+      uploadSpeed.value = formatSpeed(speed)
+      uploadEta.value = speed > 0 ? formatTime((e.total - e.loaded) / speed) : ''
+      uploadDone.value = `${formatBytes(e.loaded)} / ${formatBytes(e.total)}`
+      lastBytes = e.loaded
+      lastTime = now
     }
   }
   xhr.onload = () => {

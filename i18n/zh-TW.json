@@ -398,6 +398,8 @@
     "captchaDisabled": "人機驗證未設定——開發環境下可直接上傳。",
     "uploadBtn": "上傳並產生連結",
     "uploading": "上傳中 {percent}%…",
+    "uploadEta": "剩餘 {eta}",
+    "uploadStarting": "正在開始上傳…",
     "resultTitle": "連結已產生",
     "resultSubtitle": "把連結或 QR 碼發給接收者。請像對待密碼一樣保管——任何人拿到連結都能下載一次。",
     "fileLabel": "檔案",
