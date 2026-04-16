@@ -42,6 +42,32 @@ const RL_MAX_BYTES_CN = Math.floor(1.5 * 1024 * 1024 * 1024)
 
 const PRESIGN_TTL_SEC = 600 // 10 min — enough to start, short enough to prevent reuse
 
+// Browser Origins allowed to hit the presign endpoint. CN visitors bypass
+// Turnstile, so without this check a third-party site could CSRF a CN user
+// into burning their rate-limit quota. Non-browser clients can forge Origin,
+// but Turnstile catches them on the non-CN path; on the CN path, rate-limit
+// by IP is still the backstop.
+const ALLOWED_ORIGINS = new Set<string>([
+  'https://fileio.top',
+  'https://www.fileio.top',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+])
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.has(origin)) return true
+  // Cloudflare Pages preview deployments: <hash>.transfer.pages.dev
+  try {
+    const u = new URL(origin)
+    if (u.protocol === 'https:' && u.hostname.endsWith('.pages.dev')) return true
+  }
+  catch {
+    return false
+  }
+  return false
+}
+
 interface PresignRequestBody {
   filename?: string
   size?: number
@@ -61,10 +87,23 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 503, statusMessage: 'Upload service not configured' })
   }
 
+  // Origin gate: block third-party sites from initiating uploads on the
+  // visitor's behalf (relevant especially on the CN path where Turnstile
+  // is skipped). Browsers send Origin truthfully on POST requests.
+  const origin = getRequestHeader(event, 'origin') ?? null
+  if (!isAllowedOrigin(origin)) {
+    throw createError({ statusCode: 403, statusMessage: 'Forbidden origin' })
+  }
+
   const body = await readBody<PresignRequestBody>(event)
   const filename = String(body?.filename ?? '').trim().slice(0, 255)
   const size = Number(body?.size)
-  const contentType = String(body?.contentType ?? 'application/octet-stream').slice(0, 255)
+  const rawContentType = String(body?.contentType ?? '').slice(0, 255)
+  // Accept only RFC-6838-ish `type/subtype(;params)` shape so a malicious
+  // client can't stash arbitrary strings (or header-injection attempts)
+  // in x-amz-meta-mime. Anything weird falls back to octet-stream.
+  const MIME_RE = /^[a-zA-Z][a-zA-Z0-9.+-]*\/[a-zA-Z0-9.+_-]+(;\s*[a-zA-Z0-9-]+=[^\s;]+)*$/
+  const contentType = MIME_RE.test(rawContentType) ? rawContentType : 'application/octet-stream'
   const expiresInSec = Number(body?.expiresInSec)
   const maxDownloads = Number(body?.maxDownloads)
   const turnstileToken = String(body?.turnstileToken ?? '')
@@ -123,8 +162,16 @@ export default defineEventHandler(async (event) => {
 
   // The exact header set the client must send. Values are baked into the
   // signature — the client cannot alter them without invalidating the URL.
+  //
+  // Content-Length here is the *critical* field. aws4fetch's `allHeaders:
+  // true` forces it into the signature; the browser auto-populates it from
+  // the actual body size when the XHR PUT runs. If the two disagree, R2
+  // rejects the request with 403 SignatureDoesNotMatch — so the client
+  // physically cannot upload a larger body than the presigned size.
+  // Without this, the rate-limit byte quota is trivially bypassed.
   const uploadHeaders: Record<string, string> = {
     'Content-Type': contentType,
+    'Content-Length': String(size),
     'x-amz-meta-filename': encodedFilename,
     'x-amz-meta-mime': contentType,
     'x-amz-meta-size': String(size),
@@ -139,7 +186,7 @@ export default defineEventHandler(async (event) => {
     headers: uploadHeaders,
     aws: {
       signQuery: true,
-      allHeaders: true, // include x-amz-meta-* in the signature
+      allHeaders: true, // include x-amz-meta-* AND content-length in signature
     },
   })
 

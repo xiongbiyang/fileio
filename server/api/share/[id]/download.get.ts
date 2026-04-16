@@ -65,12 +65,22 @@ export default defineEventHandler(async (event) => {
     filename = rawFilename
   }
   const mime = meta.mime ?? obj.httpMetadata?.contentType ?? 'application/octet-stream'
-  const size = metaNum('size', 'size') || obj.size
+  // obj.size is R2's own count of the body bytes — authoritative. The
+  // declared x-amz-meta-size is sender-supplied and used only as a fall-
+  // back for legacy objects where R2 didn't surface a size (it always
+  // does now, but defense in depth). Using obj.size as primary prevents
+  // a sender that lied about size from truncating the download response.
+  const size = obj.size || metaNum('size', 'size')
 
   setHeader(event, 'Content-Type', mime)
   setHeader(event, 'Content-Length', size)
   setHeader(event, 'Content-Disposition', encodeContentDisposition(filename))
   setHeader(event, 'Cache-Control', 'no-store')
+  // Prevent browsers from MIME-sniffing the body. Without this, a user who
+  // somehow bypasses the attachment disposition (e.g. opens the download URL
+  // directly in a new tab) could have HTML/JS uploaded by a malicious sender
+  // executed in our origin. Stored-XSS belt-and-suspenders.
+  setHeader(event, 'X-Content-Type-Options', 'nosniff')
   setResponseStatus(event, 200)
 
   const body = obj.body
