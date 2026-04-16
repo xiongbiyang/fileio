@@ -91,6 +91,8 @@ export function useTextTransferPage() {
   // hit write() in the correct order.
   let incomingReceiverReady: Promise<FileReceiver> | null = null
   let incomingReceivedBytes = 0
+  let incomingLastBytes = 0
+  let incomingLastTime = 0
   let disconnectTimer: ReturnType<typeof setTimeout> | null = null
   let receiveTimeoutTimer: ReturnType<typeof setTimeout> | null = null
   let iceWatchdogTimer: ReturnType<typeof setTimeout> | null = null
@@ -152,6 +154,8 @@ export function useTextTransferPage() {
               mimeType: typeof msg.mimeType === 'string' ? msg.mimeType : '',
             }
             incomingReceivedBytes = 0
+            incomingLastBytes = 0
+            incomingLastTime = Date.now()
             // Start OPFS handle acquisition eagerly. Subsequent chunk handlers
             // await this promise so they write in arrival order even if
             // createWritable() is still in flight when the first chunk lands.
@@ -165,6 +169,9 @@ export function useTextTransferPage() {
               })
             currentFile.value = { name: incomingFileMeta.name, size: formatSize(declaredSize) }
             transferProgress.value = 0
+            transferredSize.value = '0 B'
+            transferSpeed.value = '--'
+            timeRemaining.value = '--'
             state.value = 'transferring'
             resetReceiveTimeout()
           }
@@ -482,6 +489,15 @@ export function useTextTransferPage() {
     incomingReceivedBytes = next
     transferProgress.value = Math.round((incomingReceivedBytes / incomingFileMeta.size) * 100)
     transferredSize.value = formatSize(incomingReceivedBytes)
+    const now = Date.now()
+    const dt = (now - incomingLastTime) / 1000
+    if (dt >= 0.5) {
+      const speed = (incomingReceivedBytes - incomingLastBytes) / dt
+      transferSpeed.value = formatSpeed(speed)
+      timeRemaining.value = speed > 0 ? formatTime((incomingFileMeta.size - incomingReceivedBytes) / speed) : '--'
+      incomingLastBytes = incomingReceivedBytes
+      incomingLastTime = now
+    }
     resetReceiveTimeout()
   }
 
@@ -501,6 +517,18 @@ export function useTextTransferPage() {
         status: 'completed',
         ...getCurrentRemoteDeviceInfo(),
       })
+      receivedMessages.value.push({
+        id: crypto.randomUUID(),
+        content: `📎 ${meta.name} (${formatSize(meta.size)})`,
+        isSelf: false,
+      })
+      // Transition to 'waiting' BEFORE triggering the download so that mobile
+      // browsers showing a share/open-with sheet don't see state==='transferring'
+      // when visibility returns, which would spuriously kick the reconnect loop.
+      incomingReceiver = null
+      incomingReceiverReady = null
+      resetIncomingFileState()
+      state.value = 'waiting'
       const a = document.createElement('a')
       a.href = url
       a.download = meta.name
@@ -510,18 +538,11 @@ export function useTextTransferPage() {
       // Give the browser time to hand the Blob URL to its download manager
       // before we revoke it + delete the OPFS file.
       setTimeout(() => { void cleanup() }, 4000)
-      receivedMessages.value.push({
-        id: crypto.randomUUID(),
-        content: `📎 ${meta.name} (${formatSize(meta.size)})`,
-        isSelf: false,
-      })
     }
     catch {
       notify(t('common.transferFailed'), 'error')
       try { await receiver.abort() }
       catch { /* best-effort */ }
-    }
-    finally {
       incomingReceiver = null
       incomingReceiverReady = null
       resetIncomingFileState()
@@ -650,11 +671,11 @@ export function useTextTransferPage() {
   function markRemoteDeviceOnline(online: boolean) {
     upsertRemoteDevice(online)
   }
+  const localDeviceInfo = inferLocalDeviceInfo()
   function sendLocalPeerMeta() {
-    const meta = inferLocalDeviceInfo()
     webrtc.sendControl('peer-meta', {
-      name: meta.name,
-      icon: meta.icon,
+      name: localDeviceInfo.name,
+      icon: localDeviceInfo.icon,
     })
   }
   function raiseQuickShareHint(reason: 'big-file' | 'relay' | 'retry') {
@@ -1193,9 +1214,9 @@ export function useTextTransferPage() {
   return {
     addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, copyLink,
     connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, disconnectAndRefresh, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
-    historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
+    historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, localDeviceInfo, mobileRecentTransfers,
     mobileSend, mobileTextInput, queuedFiles, receivedMessages, reconnectAttempt,
-    refreshQr, removeQueuedFile, roomId, securityLogs, startTransfer, state,
+    refreshQr, remoteDeviceIcon, removeQueuedFile, roomId, securityLogs, startTransfer, state,
     timeRemaining, transferHistoryItems, transferProgress, transferSpeed, transferredSize, verificationDigits,
     quickShareHint, dismissQuickShareHint, switchToQuickShare,
   }

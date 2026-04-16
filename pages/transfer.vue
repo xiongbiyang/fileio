@@ -41,6 +41,10 @@
     <TextTransferTransferring
       v-else-if="state === 'transferring'"
       :current-file="currentFile"
+      :local-device-icon="localDeviceInfo.icon"
+      :local-device-name="localDeviceInfo.name"
+      :remote-device-icon="remoteDeviceIcon"
+      :remote-device-name="connectedDeviceName"
       :time-remaining="timeRemaining"
       :transfer-progress="transferProgress"
       :transfer-speed="transferSpeed"
@@ -222,6 +226,7 @@ const {
   isConnected,
   isReceiver,
   keyFingerprint,
+  localDeviceInfo,
   mobileRecentTransfers,
   mobileSend,
   mobileTextInput,
@@ -229,6 +234,7 @@ const {
   receivedMessages,
   reconnectAttempt,
   refreshQr,
+  remoteDeviceIcon,
   removeQueuedFile,
   roomId,
   securityLogs,

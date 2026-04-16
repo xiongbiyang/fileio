@@ -82,14 +82,14 @@
       <div class="bg-surface-container dark:bg-surface-container-high space-y-4 rounded-2xl p-6">
         <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">{{ $t('toolA.connectionNodes') }}</span>
         <div class="flex items-center gap-3">
-          <div class="bg-surface-container-lowest flex h-10 w-10 items-center justify-center rounded-lg"><span class="material-symbols-outlined text-primary">laptop_mac</span></div>
-          <div><p class="truncate text-sm font-bold text-on-surface dark:text-surface">MacBook Pro</p><p class="text-xs text-on-surface-variant">Local</p></div>
+          <div class="bg-surface-container-lowest flex h-10 w-10 items-center justify-center rounded-lg"><span class="material-symbols-outlined text-primary">{{ localDeviceIcon }}</span></div>
+          <div><p class="truncate text-sm font-bold text-on-surface dark:text-surface">{{ localDeviceName }}</p><p class="text-xs text-on-surface-variant">Local</p></div>
           <span class="ml-auto h-2 w-2 rounded-full bg-primary" />
         </div>
         <div class="flex justify-center"><span class="material-symbols-outlined text-outline-variant">sync_alt</span></div>
         <div class="flex items-center gap-3">
-          <div class="bg-surface-container-lowest flex h-10 w-10 items-center justify-center rounded-lg"><span class="material-symbols-outlined text-primary">smartphone</span></div>
-          <div><p class="truncate text-sm font-bold text-on-surface dark:text-surface">iPhone 15</p><p class="text-xs text-on-surface-variant">Remote</p></div>
+          <div class="bg-surface-container-lowest flex h-10 w-10 items-center justify-center rounded-lg"><span class="material-symbols-outlined text-primary">{{ remoteDeviceIcon }}</span></div>
+          <div><p class="truncate text-sm font-bold text-on-surface dark:text-surface">{{ remoteDeviceName }}</p><p class="text-xs text-on-surface-variant">Remote</p></div>
           <span class="ml-auto h-2 w-2 rounded-full bg-primary" />
         </div>
       </div>
@@ -116,10 +116,14 @@ import type { TransferFileSummary } from '~/types/toolPages'
 
 defineProps<{
   currentFile: TransferFileSummary
-  transferProgress: number
-  transferredSize: string
-  transferSpeed: string
+  localDeviceIcon: string
+  localDeviceName: string
+  remoteDeviceIcon: string
+  remoteDeviceName: string
   timeRemaining: string
+  transferProgress: number
+  transferSpeed: string
+  transferredSize: string
 }>()
 
 defineEmits<{
