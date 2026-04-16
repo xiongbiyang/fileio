@@ -274,6 +274,7 @@
     "statusDetails": "Status Details",
     "connectedNode": "Connected Node",
     "noMessagesYet": "No messages yet - type below to send",
+    "tapToSave": "Tap to save",
     "askPcToRefresh": "Connection failed. Please ask the PC side to refresh the QR code and re-scan.",
     "leaveWarning": "You have an active connection. Leaving this page will disconnect from the other device.",
     "leaveTitle": "Leave this page?",

@@ -274,6 +274,7 @@
     "statusDetails": "状态详情",
     "connectedNode": "连接节点",
     "noMessagesYet": "暂无消息 — 在下方输入后发送",
+    "tapToSave": "点击保存",
     "askPcToRefresh": "连接失败，请让对方（电脑端）刷新二维码后重新扫码。",
     "leaveWarning": "当前有活跃的连接，离开此页面将断开与对方设备的连接。",
     "leaveTitle": "离开此页面？",

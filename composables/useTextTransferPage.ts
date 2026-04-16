@@ -72,7 +72,7 @@ export function useTextTransferPage() {
   // has a flaky network.
   const QUICK_SHARE_BIG_FILE_THRESHOLD = 100 * 1024 * 1024
   const QUICK_SHARE_FAILURE_THRESHOLD = 2
-  const receivedMessages = ref<Array<{ id: string, content: string, isSelf: boolean }>>([])
+  const receivedMessages = ref<Array<{ id: string, content: string, isSelf: boolean, downloadUrl?: string, downloadName?: string }>>([])
   const mobileTextInput = ref('')
   const desktopTextInput = ref('')
   const isReceiver = ref(false)
@@ -517,27 +517,29 @@ export function useTextTransferPage() {
         status: 'completed',
         ...getCurrentRemoteDeviceInfo(),
       })
-      receivedMessages.value.push({
-        id: crypto.randomUUID(),
-        content: `📎 ${meta.name} (${formatSize(meta.size)})`,
-        isSelf: false,
-      })
-      // Transition to 'waiting' BEFORE triggering the download so that mobile
-      // browsers showing a share/open-with sheet don't see state==='transferring'
-      // when visibility returns, which would spuriously kick the reconnect loop.
+      // Transition to 'waiting' before adding the message so that any
+      // state-dependent guards (visibility change, disconnected) already see
+      // the idle state by the time the message appears in the UI.
       incomingReceiver = null
       incomingReceiverReady = null
       resetIncomingFileState()
       state.value = 'waiting'
-      const a = document.createElement('a')
-      a.href = url
-      a.download = meta.name
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      // Give the browser time to hand the Blob URL to its download manager
-      // before we revoke it + delete the OPFS file.
-      setTimeout(() => { void cleanup() }, 4000)
+      // Render the file as a tappable download link in the message bubble.
+      // Auto-clicking a.click() on mobile navigates the page to the blob URL
+      // (iOS Safari ignores `download` attribute for blobs) — pressing Back
+      // after that tears down the Vue component and closes the WebRTC connection.
+      // A user-initiated tap on <a download> is handled correctly on all platforms.
+      receivedMessages.value.push({
+        id: crypto.randomUUID(),
+        content: `📎 ${meta.name} (${formatSize(meta.size)})`,
+        isSelf: false,
+        downloadUrl: url,
+        downloadName: meta.name,
+      })
+      // Keep the blob URL alive for 5 minutes so the user has time to tap it.
+      // The OPFS stale-file reaper (cleanupStaleOpfsFiles on next mount) will
+      // handle anything the 5-min timer misses.
+      setTimeout(() => { void cleanup() }, 5 * 60 * 1000)
     }
     catch {
       notify(t('common.transferFailed'), 'error')

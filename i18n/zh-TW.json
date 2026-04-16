@@ -274,6 +274,7 @@
     "statusDetails": "狀態詳情",
     "connectedNode": "連接節點",
     "noMessagesYet": "暫無消息 — 在下方輸入后發送",
+    "tapToSave": "點擊儲存",
     "askPcToRefresh": "連線失敗，請通知電腦端重新整理QR 碼後再掃描一次。",
     "leaveWarning": "目前有活躍的連線，離開此頁面將中斷與對方裝置的連線。",
     "leaveTitle": "離開此頁面？",
