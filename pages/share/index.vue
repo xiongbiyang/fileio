@@ -56,20 +56,30 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant block mb-2">{{ $t('share.labelExpiresIn') }}</label>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-4 gap-2">
               <button
                 v-for="opt in expiryOptions"
                 :key="opt.value"
                 type="button"
+                :disabled="opt.disabled"
                 class="px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors"
-                :class="expiresIn === opt.value
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface-variant hover:text-on-surface'"
-                @click="expiresIn = opt.value"
+                :class="[
+                  expiresIn === opt.value && !opt.disabled
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface-variant hover:text-on-surface',
+                  opt.disabled ? 'opacity-40 cursor-not-allowed hover:text-on-surface-variant' : '',
+                ]"
+                @click="!opt.disabled && (expiresIn = opt.value)"
               >
                 {{ opt.label }}
               </button>
             </div>
+            <p
+              v-if="isBigFile"
+              class="text-xs text-on-surface-variant mt-2"
+            >
+              {{ $t('share.bigFileExpiryHint') }}
+            </p>
           </div>
 
           <div>
@@ -188,7 +198,7 @@ useJsonLd({
   name: 'FileIO Quick Share',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Web, Android, iOS, Windows, macOS',
-  description: 'Temporary file sharing with a link and QR code. Upload a file, get a self-destructing download link that expires after first download or within 3 days. 100 MB per file, no signup, Turnstile-protected.',
+  description: 'Temporary file sharing with a link and QR code. Upload a file, get a self-destructing download link that expires after first download or within 3 days. Up to 1 GB per file (files over 300 MB expire in 30 minutes), no signup, Turnstile-protected.',
   featureList: [
     'No app install required',
     'No signup or account needed',
@@ -236,7 +246,7 @@ useJsonLd({
       name: 'What is the maximum file size?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: '100 MB per file. If you need to transfer larger files and both devices are online at the same time, use the peer-to-peer tool at /transfer which has no size limit.',
+        text: 'Up to 1 GB per file. Files over 300 MB can only be kept for 30 minutes. If both devices are online at the same time and the file is under 300 MB, the peer-to-peer tool at /transfer is even faster.',
       },
     },
   ],
@@ -267,24 +277,35 @@ const uploadProgress = ref(0)
 const turnstileContainer = ref<HTMLElement | null>(null)
 const turnstileWidgetId = ref<string | null>(null)
 
-const MAX_BYTES = 100 * 1024 * 1024
+const MAX_BYTES = 1 * 1024 * 1024 * 1024 // 1 GB — matches server presign cap
+const BIG_FILE_THRESHOLD = 300 * 1024 * 1024 // 300 MB — only 30 min expiry allowed above this
 
-const expiryOptions = computed(() => [
-  { value: 3600, label: t('share.expires1h') },
-  { value: 86400, label: t('share.expires1d') },
-  { value: 259200, label: t('share.expires3d') },
-])
+// Expiry options. When a big file is selected only the 30 min option remains
+// selectable — others are displayed but disabled so the user sees the full
+// menu and understands why the long options were removed.
+const expiryOptions = computed(() => {
+  const file = selectedFile.value
+  const restricted = !!file && file.size > BIG_FILE_THRESHOLD
+  return [
+    { value: 1800, label: t('share.expires30m'), disabled: false },
+    { value: 3600, label: t('share.expires1h'), disabled: restricted },
+    { value: 86400, label: t('share.expires1d'), disabled: restricted },
+    { value: 259200, label: t('share.expires3d'), disabled: restricted },
+  ]
+})
 const downloadOptions = computed(() => [
   { value: 1, label: t('share.downloadsOnce') },
   { value: 0, label: t('share.downloadsUnlimited') },
 ])
 
 const canSubmit = computed(() => !!selectedFile.value && selectedFile.value.size <= MAX_BYTES)
+const isBigFile = computed(() => !!selectedFile.value && selectedFile.value.size > BIG_FILE_THRESHOLD)
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+  return `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
 function handleFileChange(event: Event) {
@@ -306,6 +327,12 @@ function setSelectedFile(file: File | null) {
     return
   }
   selectedFile.value = file
+  // Big files are forced to 30 min expiry to keep R2 storage bounded —
+  // auto-pick that option so the user doesn't have to hunt for a non-
+  // greyed button.
+  if (file.size > BIG_FILE_THRESHOLD) {
+    expiresIn.value = 1800
+  }
 }
 
 function clearSelectedFile() {
@@ -361,7 +388,15 @@ onMounted(() => {
 })
 
 // ── upload ───────────────────────────────────────────────
-function handleUpload() {
+interface PresignResponse {
+  id: string
+  uploadUrl: string
+  uploadHeaders: Record<string, string>
+  expiresAt: number
+  maxDownloads: number
+}
+
+async function handleUpload() {
   if (!selectedFile.value) {
     notify(t('share.errFileRequired'), 'error')
     return
@@ -376,17 +411,54 @@ function handleUpload() {
     return
   }
 
+  const file = selectedFile.value
   isUploading.value = true
   uploadProgress.value = 0
 
-  const form = new FormData()
-  form.append('file', selectedFile.value)
-  form.append('turnstileToken', token)
-  form.append('expires_in', String(expiresIn.value))
-  form.append('max_downloads', String(maxDownloads.value))
+  // Phase 1: ask the Worker to validate + mint a presigned R2 PUT URL.
+  let presigned: PresignResponse
+  try {
+    presigned = await $fetch<PresignResponse>('/api/share/presign', {
+      method: 'POST',
+      body: {
+        filename: file.name,
+        size: file.size,
+        contentType: file.type || 'application/octet-stream',
+        expiresInSec: expiresIn.value,
+        maxDownloads: maxDownloads.value,
+        turnstileToken: token,
+      },
+    })
+  }
+  catch (err) {
+    const status = (err as { statusCode?: number; status?: number }).statusCode ?? (err as { status?: number }).status ?? 0
+    if (status === 403) notify(t('share.errCaptcha'), 'error')
+    else if (status === 413) notify(t('share.errFileTooLarge'), 'error')
+    else if (status === 429) notify(t('share.errRateLimit'), 'error')
+    else if (status === 400) notify(t('share.errBigFileExpiry'), 'error')
+    else notify(t('share.errUpload'), 'error')
+    isUploading.value = false
+    resetTurnstile()
+    return
+  }
 
+  // Phase 2: stream the file bytes directly to R2 with the presigned URL.
+  // Use XHR (not fetch) so we can surface upload progress to the user.
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/api/share/upload')
+  xhr.open('PUT', presigned.uploadUrl)
+  // Replay every header that was signed — R2 rejects the request if any of
+  // them are missing or mismatched. Omit any header whose value might be
+  // auto-filled by the browser and would collide (not an issue for our set).
+  for (const [name, value] of Object.entries(presigned.uploadHeaders)) {
+    try {
+      xhr.setRequestHeader(name, value)
+    }
+    catch {
+      // Some browsers forbid setting certain headers (e.g. Content-Length),
+      // and will throw. Silently ignore — the browser will set them itself
+      // and R2's signature validation uses the same value we signed.
+    }
+  }
   xhr.upload.onprogress = (e) => {
     if (e.lengthComputable) {
       uploadProgress.value = Math.round((e.loaded / e.total) * 100)
@@ -394,24 +466,12 @@ function handleUpload() {
   }
   xhr.onload = () => {
     if (xhr.status >= 200 && xhr.status < 300) {
-      try {
-        const data = JSON.parse(xhr.responseText) as { id: string; expiresAt: number; maxDownloads: number }
-        const target = `${localePath('/share/result')}?id=${encodeURIComponent(data.id)}&exp=${data.expiresAt}&max=${data.maxDownloads}`
-        // Use a full navigation so we don't depend on the Nuxt SPA router
-        // surviving inside an XHR callback — simpler and more reliable.
-        window.location.assign(target)
-        return
-      }
-      catch (err) {
-        console.error('[share] result parse failed', err, xhr.responseText)
-        notify(t('share.errUpload'), 'error')
-      }
+      const target = `${localePath('/share/result')}?id=${encodeURIComponent(presigned.id)}&exp=${presigned.expiresAt}&max=${presigned.maxDownloads}`
+      window.location.assign(target)
+      return
     }
-    else if (xhr.status === 403) notify(t('share.errCaptcha'), 'error')
-    else if (xhr.status === 413) notify(t('share.errFileTooLarge'), 'error')
-    else if (xhr.status === 429) notify(t('share.errRateLimit'), 'error')
-    else notify(t('share.errUpload'), 'error')
-
+    console.error('[share] R2 PUT failed', xhr.status, xhr.responseText)
+    notify(t('share.errUpload'), 'error')
     isUploading.value = false
     resetTurnstile()
   }
@@ -420,6 +480,6 @@ function handleUpload() {
     notify(t('share.errUpload'), 'error')
     resetTurnstile()
   }
-  xhr.send(form)
+  xhr.send(file)
 }
 </script>
