@@ -41,7 +41,7 @@
               <p class="font-semibold text-on-surface dark:text-surface truncate">{{ selectedFile.name }}</p>
               <p class="text-xs text-on-surface-variant">{{ formatBytes(selectedFile.size) }}</p>
             </div>
-            <button class="p-2 rounded-lg hover:bg-surface-container transition-colors" @click.stop="clearSelectedFile">
+            <button class="p-2 rounded-lg hover:bg-surface-container transition-colors" @click.stop="handleCloseClick">
               <span class="material-symbols-outlined text-on-surface-variant">close</span>
             </button>
           </div>
@@ -163,6 +163,7 @@ definePageMeta({ layout: 'default' })
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const { confirm: showConfirm } = useConfirmDialog()
 
 const turnstileLang = computed(() => {
   const l = locale.value.toLowerCase()
@@ -383,6 +384,24 @@ function clearSelectedFile() {
   uploadEta.value = ''
   uploadDone.value = ''
   if (fileInput.value) fileInput.value.value = ''
+}
+
+async function handleCloseClick() {
+  // Clearing a not-yet-uploaded selection is cheap — no confirmation needed.
+  // Aborting an in-flight upload discards real progress (bandwidth already
+  // spent, rate-limit quota already debited), so we prompt first to avoid
+  // misclicks. If the user confirms, clearSelectedFile does the actual abort.
+  if (!isUploading.value) {
+    clearSelectedFile()
+    return
+  }
+  const confirmed = await showConfirm({
+    title: t('share.cancelUploadTitle'),
+    message: t('share.cancelUploadMessage'),
+    confirmText: t('share.cancelUploadConfirm'),
+    cancelText: t('share.cancelUploadDismiss'),
+  })
+  if (confirmed) clearSelectedFile()
 }
 
 // ── Turnstile integration ────────────────────────────────
