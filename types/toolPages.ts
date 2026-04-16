@@ -37,4 +37,4 @@ export interface TransferFileSummary {
   size: string
 }
 
-export type TransferState = 'waiting' | 'pairing' | 'transferring' | 'success' | 'reconnecting' | 'fileQueue' | 'deviceHistory' | 'transferHistory' | 'e2eeAudit'
+export type TransferState = 'waiting' | 'transferring' | 'reconnecting' | 'fileQueue' | 'deviceHistory' | 'transferHistory' | 'e2eeAudit'

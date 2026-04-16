@@ -7,34 +7,35 @@
       @switch-to-quick-share="switchToQuickShare"
     />
 
-    <TextTransferWaiting
-      v-if="state === 'waiting'"
-      v-model:mobile-text-input="mobileTextInput"
-      v-model:desktop-text-input="desktopTextInput"
-      :connected-device-name="connectedDeviceName"
-      :doc-cards="docCards"
-      :is-connected="isConnected"
-      :is-receiver="isReceiver"
-      :mobile-recent-transfers="mobileRecentTransfers"
-      :received-messages="receivedMessages"
-      :room-id="roomId"
-      @copy-link="copyLink"
-      @desktop-file-select="handleDesktopFileSelect"
-      @desktop-send="desktopSend"
-      @disconnect="disconnectAndRefresh"
-      @mobile-file-select="handleMobileFileSelect"
-      @mobile-send="mobileSend"
-      @qr-canvas-ready="attachQrCanvas"
-      @refresh-qr="refreshQr"
-    />
-
-    <!-- ==================== STATE: PAIRING ==================== -->
-    <TextTransferPairing
-      v-else-if="state === 'pairing'"
-      :verification-digits="verificationDigits"
-      @confirm-pairing="confirmPairing"
-      @deny-pairing="denyPairing"
-    />
+    <!-- waiting + reconnecting share the same underlying Waiting component so the
+         QR canvas stays mounted and visible through the reconnect overlay. -->
+    <div v-if="state === 'waiting' || state === 'reconnecting'" class="relative w-full max-w-4xl">
+      <TextTransferWaiting
+        v-model:mobile-text-input="mobileTextInput"
+        v-model:desktop-text-input="desktopTextInput"
+        :connected-device-name="connectedDeviceName"
+        :doc-cards="docCards"
+        :is-connected="isConnected"
+        :is-receiver="isReceiver"
+        :mobile-recent-transfers="mobileRecentTransfers"
+        :received-messages="receivedMessages"
+        :room-id="roomId"
+        @copy-link="copyLink"
+        @desktop-file-select="handleDesktopFileSelect"
+        @desktop-send="desktopSend"
+        @disconnect="disconnectAndRefresh"
+        @mobile-file-select="handleMobileFileSelect"
+        @mobile-send="mobileSend"
+        @qr-canvas-ready="attachQrCanvas"
+        @refresh-qr="refreshQr"
+      />
+      <TextTransferReconnecting
+        v-if="state === 'reconnecting'"
+        :is-receiver="isReceiver"
+        :reconnect-attempt="reconnectAttempt"
+        @refresh-qr="refreshQr"
+      />
+    </div>
 
     <!-- ==================== STATE: TRANSFERRING ==================== -->
     <TextTransferTransferring
@@ -45,21 +46,6 @@
       :transfer-speed="transferSpeed"
       :transferred-size="transferredSize"
       @cancel-transfer="cancelTransfer"
-    />
-
-    <!-- ==================== STATE: SUCCESS ==================== -->
-    <TextTransferSuccess
-      v-else-if="state === 'success'"
-      :current-file="currentFile"
-      @start-new-transfer="startNewTransfer"
-    />
-
-    <!-- ==================== STATE: RECONNECTING ==================== -->
-    <TextTransferReconnecting
-      v-else-if="state === 'reconnecting'"
-      :is-receiver="isReceiver"
-      :reconnect-attempt="reconnectAttempt"
-      @refresh-qr="refreshQr"
     />
 
     <!-- ==================== STATE: FILE QUEUE ==================== -->
@@ -95,6 +81,7 @@
       v-else-if="state === 'e2eeAudit'"
       :key-fingerprint="keyFingerprint"
       :security-logs="securityLogs"
+      :verification-digits="verificationDigits"
       @go-back="goToWaitingState"
     />
 
@@ -219,7 +206,6 @@ const {
   attachQrCanvas,
   cancelTransfer,
   clearFileQueue,
-  confirmPairing,
   connectedDeviceName,
   copyLink,
   currentFile,
@@ -227,7 +213,6 @@ const {
   desktopTextInput,
   devices,
   disconnectAndRefresh,
-  denyPairing,
   docCards,
   goToWaitingState,
   handleDesktopFileSelect,
@@ -247,7 +232,6 @@ const {
   removeQueuedFile,
   roomId,
   securityLogs,
-  startNewTransfer,
   startTransfer,
   state,
   timeRemaining,

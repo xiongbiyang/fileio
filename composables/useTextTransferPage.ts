@@ -177,7 +177,7 @@ export function useTextTransferPage() {
             clearReceiveTimeout()
             void abortIncomingReceiver()
             resetIncomingFileState()
-            state.value = 'transferring'
+            state.value = 'waiting'
           }
         }
         catch {
@@ -217,7 +217,7 @@ export function useTextTransferPage() {
         // A user that keeps getting reconnected after visible failures
         // doesn't benefit from us hiding the Quick Share nudge.
         transferFailureCount = 0
-        if (state.value === 'pairing' || state.value === 'waiting' || state.value === 'reconnecting') {
+        if (state.value === 'waiting' || state.value === 'reconnecting') {
           // Keep interactive controls available after handshake.
           // Actual transfer state is entered only when sending/receiving payload.
           state.value = 'waiting'
@@ -332,7 +332,7 @@ export function useTextTransferPage() {
 
   const { confirm: showConfirm } = useConfirmDialog()
   onBeforeRouteLeave(async () => {
-    if (isConnected.value || state.value === 'transferring') {
+    if (isConnected.value || state.value === 'transferring' || state.value === 'reconnecting') {
       const leave = await showConfirm({
         title: t('toolA.leaveTitle'),
         message: t('toolA.leaveWarning'),
@@ -559,10 +559,21 @@ export function useTextTransferPage() {
       return
     }
     // Only the offerer (receiver of the QR, i.e. the scanning device) drives
-    // the retry — the sender's `startSenderSignaling` listens for a fresh offer
-    // and will answer using whatever transport policy the new offer implies.
+    // the retry. The sender stays as answerer but must re-arm its onOffer
+    // handler: startSenderSignaling() nulled it after the first offer, so the
+    // receiver's relay-retry offer would otherwise be silently dropped.
     if (!isReceiver.value) {
       state.value = 'reconnecting'
+      signaling.onOffer.value = async (offer: RTCSessionDescriptionInit) => {
+        try {
+          setupTrickleIce()
+          const answer = await webrtc.connect(offer)
+          signaling.sendSignal('answer', answer)
+        }
+        catch {
+          notify(t('common.roomConnectFailed'), 'error')
+        }
+      }
       return
     }
     relayFallbackUsed = true
@@ -730,7 +741,7 @@ export function useTextTransferPage() {
     saveTransferRecords()
   }
   function handleBeforeUnload(event: BeforeUnloadEvent) {
-    if (isConnected.value || state.value === 'transferring') {
+    if (isConnected.value || state.value === 'transferring' || state.value === 'reconnecting') {
       event.preventDefault()
       event.returnValue = ''
     }
@@ -750,9 +761,12 @@ export function useTextTransferPage() {
     }
   }
   function handleOnline() {
-    // System came back online. If WebRTC hasn't already noticed (very common
-    // on WiFi↔4G swaps), proactively retry rather than wait for 'failed'.
-    if (state.value === 'reconnecting' || webrtc.connectionState.value !== 'connected') {
+    // System came back online. Only retry if we are already in the reconnect
+    // loop — 'waiting' (no peer yet) and other idle states have nothing to
+    // restart, and the old `connectionState !== 'connected'` guard mistakenly
+    // fired when pc was still null ('new'/'closed'), wasting a retry budget
+    // and flipping state to 'reconnecting' while the user was just showing QR.
+    if (state.value === 'reconnecting') {
       clearDisconnectTimer()
       scheduleReconnect()
     }
@@ -789,8 +803,18 @@ export function useTextTransferPage() {
   }
   async function attemptReconnect() {
     if (reconnectAttempt.value <= 0) {
-      state.value = 'reconnecting'
+      // All ICE-restart attempts exhausted — the remote peer has most likely
+      // left permanently. Mint a fresh room so the sender can display a new
+      // QR and accept a new connection without requiring a manual page reload.
       notify(t('common.transferFailed'), 'error')
+      if (!isReceiver.value) {
+        isReceiver.value = false
+        refreshQr()
+      }
+      else {
+        // Receiver can't generate a new QR — tell them to ask the sender.
+        state.value = 'reconnecting'
+      }
       return
     }
     // If we're offline at the OS level, don't burn an attempt — wait for the
@@ -804,9 +828,11 @@ export function useTextTransferPage() {
     try {
       signaling.onRoomFull.value = handleRoomFull
       if (!isReceiver.value) {
-        // SDP exchange only — do NOT close signaling here. Trickle ICE
-        // candidates still need the channel until `connected` fires
-        // (onStateChange handles the eventual close).
+        // Sender becomes the ICE-restart offerer. Use the same pending-offer
+        // pattern as initReceiverMode() so the restart offer is (re)sent once
+        // the receiver's signaling socket lands in the room — both peers
+        // reconnect independently and either may arrive first.
+        let pendingRestartOffer: RTCSessionDescriptionInit | null = null
         signaling.onAnswer.value = async (answer: RTCSessionDescriptionInit) => {
           try {
             await webrtc.setRemoteDescription(answer)
@@ -815,8 +841,16 @@ export function useTextTransferPage() {
             /* retry loop in onStateChange will trip eventually */
           }
         }
+        signaling.onPeerCount.value = (count: number) => {
+          if (count >= 2 && pendingRestartOffer) signaling.sendSignal('offer', pendingRestartOffer)
+        }
+        signaling.onPeerJoined.value = () => {
+          if (pendingRestartOffer) signaling.sendSignal('offer', pendingRestartOffer)
+        }
         signaling.connect()
         const restartOffer = await webrtc.restartIce()
+        pendingRestartOffer = restartOffer
+        // Also try sending immediately — receiver may already be in the room.
         signaling.sendSignal('offer', restartOffer)
       }
       else {
@@ -871,6 +905,11 @@ export function useTextTransferPage() {
       try {
         const answer = await webrtc.connect(offer)
         signaling.sendSignal('answer', answer)
+        // Start watchdog so relay fallback fires if ICE gets stuck in
+        // 'checking' on the sender side (some mobile browsers never fire
+        // 'failed' themselves; the receiver drives relay but only if the
+        // sender also times out and re-arms its offer handler via tryRelayFallback).
+        startIceWatchdog()
       }
       catch {
         // Malformed / hostile SDP — surface the error and re-arm for a
@@ -960,6 +999,7 @@ export function useTextTransferPage() {
     relayFallbackUsed = false
     verificationDigits.value = ['-', '-', '-', '-']
     clearIceWatchdog()
+    clearReconnectBackoff()
     markRemoteDeviceOnline(false)
     webrtc.disconnect()
     signaling.disconnect()
@@ -977,17 +1017,6 @@ export function useTextTransferPage() {
       isReceiver.value = false
       refreshQr()
     }
-  }
-  function confirmPairing() {
-    if (webrtc.connectionState.value !== 'connected') return
-    state.value = 'waiting'
-  }
-  function denyPairing() {
-    state.value = 'waiting'
-  }
-  function startNewTransfer() {
-    state.value = 'waiting'
-    refreshQr()
   }
   function goToWaitingState() {
     state.value = 'waiting'
@@ -1162,11 +1191,11 @@ export function useTextTransferPage() {
   }
 
   return {
-    addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, confirmPairing, copyLink,
-    connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, denyPairing, disconnectAndRefresh, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
+    addFilesToQueue, attachQrCanvas, cancelTransfer, clearFileQueue, copyLink,
+    connectedDeviceName, currentFile, desktopSend, desktopTextInput, devices, disconnectAndRefresh, docCards, goToWaitingState, handleDesktopFileSelect, handleMobileFileSelect,
     historyFilter, historyStats, isConnected, isReceiver, keyFingerprint, mobileRecentTransfers,
     mobileSend, mobileTextInput, queuedFiles, receivedMessages, reconnectAttempt,
-    refreshQr, removeQueuedFile, roomId, securityLogs, startNewTransfer, startTransfer, state,
+    refreshQr, removeQueuedFile, roomId, securityLogs, startTransfer, state,
     timeRemaining, transferHistoryItems, transferProgress, transferSpeed, transferredSize, verificationDigits,
     quickShareHint, dismissQuickShareHint, switchToQuickShare,
   }

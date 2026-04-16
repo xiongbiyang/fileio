@@ -36,6 +36,18 @@
         <button class="text-xs font-bold uppercase tracking-widest text-primary hover:underline">{{ $t('toolA.reAuthenticate') }}</button>
       </div>
 
+      <!-- Live SAS verification code derived from both peers' DTLS fingerprints.
+           Shows dashes until the DataChannel is open (verificationDigits default). -->
+      <div class="bg-surface-container-lowest dark:bg-surface-container-high rounded-xl p-8 md:col-span-3">
+        <span class="mb-1 block text-xs font-bold uppercase tracking-widest text-on-surface-variant">{{ $t('toolA.verifyConnection') }}</span>
+        <p class="mb-4 text-xs text-on-surface-variant">{{ $t('toolA.checkDeviceCode') }}</p>
+        <div class="grid grid-cols-4 gap-4">
+          <div v-for="(digit, i) in verificationDigits" :key="i" class="bg-surface-container dark:bg-surface-container rounded-lg p-4 text-center">
+            <span class="font-mono text-2xl font-black tracking-widest" :class="digit === '-' ? 'text-outline' : 'text-primary'">{{ digit }}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="bg-surface-container-lowest dark:bg-surface-container-high rounded-xl p-8 md:col-span-3">
         <span class="mb-4 block text-xs font-bold uppercase tracking-widest text-on-surface-variant">{{ $t('toolA.keyFingerprint') }}</span>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -64,6 +76,7 @@ import type { SecurityLogItem } from '~/types/toolPages'
 defineProps<{
   keyFingerprint: string[]
   securityLogs: SecurityLogItem[]
+  verificationDigits: string[]
 }>()
 
 defineEmits<{
