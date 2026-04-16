@@ -126,6 +126,9 @@ useSeoMeta({
 // share id never makes it to Referer headers / analytics logs. Fragments
 // aren't available during SSR — hydrated is flipped in onMounted so we
 // render a neutral skeleton during SSR instead of a brief "no data" flash.
+// After hydration we verify the share ID against /api/share/:id/meta so a
+// crafted fragment URL (e.g. fake ID / spoofed filename) shows "no data"
+// instead of a plausible-looking but hollow success page.
 const hydrated = ref(false)
 const shareId = ref('')
 const expiresAt = ref(0)
@@ -170,11 +173,35 @@ async function copyLink() {
 onMounted(async () => {
   const hp = new URLSearchParams(window.location.hash.slice(1))
   const rawId = String(hp.get('id') ?? '').trim()
-  if (/^[a-zA-Z0-9]{10}$/.test(rawId)) shareId.value = rawId
-  expiresAt.value = Number.parseInt(String(hp.get('exp') ?? '0'), 10) || 0
-  maxDownloads.value = Number.parseInt(String(hp.get('max') ?? '1'), 10) || 1
-  fileName.value = String(hp.get('name') ?? '').slice(0, 255)
-  fileSize.value = Number.parseInt(String(hp.get('size') ?? '0'), 10) || 0
+  const validId = /^[a-zA-Z0-9]{10}$/.test(rawId) ? rawId : ''
+
+  if (validId) {
+    // Verify that the share actually exists before rendering the success UI.
+    // Without this check, anyone can craft a URL like
+    //   /share/result#id=aaaaaaaaaa&name=invoice.pdf&size=99999
+    // and get a branded "file ready" page without ever uploading anything.
+    // The meta call returns server-authoritative data, so filename/size/expiry
+    // shown to the user also can't be spoofed via fragment manipulation.
+    try {
+      const meta = await $fetch<{
+        filename: string
+        size: number
+        expiresAt: number
+        maxDownloads: number
+      }>(`/api/share/${validId}/meta`)
+      // Only expose the share ID once the server confirms the object exists.
+      shareId.value = validId
+      fileName.value = meta.filename
+      fileSize.value = meta.size
+      expiresAt.value = meta.expiresAt
+      maxDownloads.value = meta.maxDownloads
+    }
+    catch {
+      // 404 (never existed / spoofed) or 410 (expired / consumed) →
+      // leave shareId empty so the "no data" branch renders instead.
+    }
+  }
+
   hydrated.value = true
 
   if (!shareUrl.value) return

@@ -83,10 +83,7 @@ export default defineNuxtConfig({
 
   sitemap: {
     zeroRuntime: true,
-    xslColumns: [
-      { label: 'URL', width: '65%' },
-      { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
-    ],
+    xsl: false,
     exclude: ['/settings', '/share/**'],
     urls: [
       // English core pages
@@ -107,6 +104,14 @@ export default defineNuxtConfig({
       { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
       { loc: '/zh-CN/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
       { loc: '/zh-CN/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
+      // zh-TW core pages
+      { loc: '/zh-TW', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-TW/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
+      { loc: '/zh-TW/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
+      { loc: '/zh-TW/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
+      { loc: '/zh-TW/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
+      { loc: '/zh-TW/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
+      { loc: '/zh-TW/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
       // Blog URLs (en + zh-CN)
       ...blogSitemapUrls,
     ],
@@ -243,7 +248,14 @@ export default defineNuxtConfig({
     },
     prerender: {
       crawlLinks: true,
-      routes: ['/blog', '/guides/file-transfer'],
+      routes: [
+        '/sitemap.xml',
+        '/__sitemap__/en-US.xml',
+        '/__sitemap__/zh-CN.xml',
+        '/__sitemap__/zh-TW.xml',
+        '/blog',
+        '/guides/file-transfer',
+      ],
     },
   },
 })

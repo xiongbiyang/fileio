@@ -107,6 +107,12 @@ export function useTextTransferPage() {
   const RECONNECT_BACKOFF_MAX_MS = 10_000
   let reconnectBackoffMs = RECONNECT_BACKOFF_START_MS
   let relayFallbackUsed = false
+  // Set true the first time we reach 'connected', reset in refreshQr().
+  // Used to distinguish "initial handshake never succeeded" (→ tryRelayFallback)
+  // from "connection was established but dropped mid-session" (→ scheduleReconnect
+  // / ICE restart). Without this, a mid-session drop in 'waiting' state incorrectly
+  // triggers the relay-only retry path which tears down the PeerConnection entirely.
+  let connectionEverEstablished = false
   const RECEIVE_TIMEOUT_MS = 30_000
   // Hard ceiling on initial ICE. If we're not 'connected' by this time, the
   // peers likely can't find a working candidate pair (symmetric NAT, strict
@@ -126,13 +132,22 @@ export function useTextTransferPage() {
   const remoteDeviceName = ref('')
   const remoteDeviceIcon = ref('devices')
 
+  // Guards async .then() callbacks (e.g. refreshQr → startSenderSignaling)
+  // from firing after the component unmounts and its cleanup has already run.
+  let mounted = false
+
   const webrtc = useWebRTC({
     onMessage: (data) => {
       if (typeof data === 'string') {
         try {
           const msg = JSON.parse(data)
           if (msg.type === 'text') {
-            receivedMessages.value.push({ id: crypto.randomUUID(), content: msg.data as string, isSelf: false })
+            const raw = typeof msg.data === 'string' ? msg.data : ''
+            // Cap at 10 KB — a malicious peer sending a huge string would grow
+            // the DOM unboundedly. Anything over 10 KB is silently truncated.
+            const content = raw.length > 10_000 ? raw.slice(0, 10_000) : raw
+            if (receivedMessages.value.length >= 200) receivedMessages.value.shift()
+            receivedMessages.value.push({ id: crypto.randomUUID(), content, isSelf: false })
           }
           else if (msg.type === 'peer-meta') {
             applyRemotePeerMeta(msg.data)
@@ -145,7 +160,7 @@ export function useTextTransferPage() {
             if (
               !rawName
               || !Number.isFinite(declaredSize)
-              || declaredSize < 0
+              || declaredSize <= 0
               || declaredSize > MAX_FILE_BYTES
             ) {
               notify(t('common.transferFailed'), 'error')
@@ -193,6 +208,10 @@ export function useTextTransferPage() {
             // Remote peer intentionally ended the session. Mirror their action
             // so both sides land on the QR screen instead of the receiver
             // being stuck in the reconnect loop waiting for ICE to time out.
+            // Abort any in-flight transfer first so the OPFS partial file is
+            // cleaned up — refreshQr() only closes the WebRTC connection, it
+            // does not go through the ICE state handlers that call abortOngoingTransfer().
+            abortOngoingTransfer()
             receivedMessages.value = []
             isReceiver.value = false
             refreshQr()
@@ -207,10 +226,11 @@ export function useTextTransferPage() {
       }
     },
     onError: () => {
-      if (state.value === 'transferring') {
-        clearDisconnectTimer()
-        attemptReconnect()
-      }
+      // DataChannel error — treat the same as a connection drop: abort
+      // the transfer immediately. The ICE state change handlers (disconnected/
+      // failed) will drive any subsequent reconnect attempt.
+      clearDisconnectTimer()
+      abortOngoingTransfer()
     },
     onDataChannelOpen: () => {
       // `connectionState === 'connected'` fires before the DataChannel is guaranteed
@@ -227,6 +247,7 @@ export function useTextTransferPage() {
         clearIceWatchdog()
         clearReconnectBackoff()
         markRemoteDeviceOnline(true)
+        connectionEverEstablished = true
         // Refill the retry budget. Without this, 3 brief network blips over
         // an hour exhaust the counter and the 4th disconnect wedges the UI
         // in 'reconnecting' forever with no recovery path.
@@ -242,11 +263,22 @@ export function useTextTransferPage() {
         }
         signaling.disconnect()
       }
-      else if (connectionState === 'disconnected' && state.value === 'transferring') {
+      else if (connectionState === 'disconnected') {
         markRemoteDeviceOnline(false)
-        disconnectTimer = setTimeout(() => {
-          if (webrtc.connectionState.value !== 'connected') scheduleReconnect()
-        }, 8000)
+        // Abort any in-flight transfer immediately — no grace period.
+        // Partial files can't be resumed across an ICE restart and a frozen
+        // progress bar is worse UX than a clear error.
+        abortOngoingTransfer()
+        // Regardless of whether a transfer was running, give the connection
+        // 3 s to self-heal before kicking an ICE restart. Only do this when
+        // the connection was previously established — initial ICE failures
+        // should fall through to 'failed' → tryRelayFallback().
+        if (connectionEverEstablished) {
+          clearDisconnectTimer()
+          disconnectTimer = setTimeout(() => {
+            if (webrtc.connectionState.value !== 'connected') scheduleReconnect()
+          }, 3000)
+        }
       }
       else if (connectionState === 'failed') {
         clearDisconnectTimer()
@@ -256,18 +288,13 @@ export function useTextTransferPage() {
         if (transferFailureCount >= QUICK_SHARE_FAILURE_THRESHOLD) {
           raiseQuickShareHint('retry')
         }
-        // Mid-transfer failure → reconnect on existing path.
+        // Safety net: some browsers skip 'disconnected' and jump straight to
+        // 'failed'. abortOngoingTransfer() is idempotent so calling it here
+        // costs nothing when the 'disconnected' handler already ran.
+        abortOngoingTransfer()
+        // Mid-session failure → ICE restart on existing path.
         // Initial handshake failure → one-shot relay retry (forces TURN).
-        if (state.value === 'transferring') {
-          // Any in-flight receive can't be resumed across ICE restart — the
-          // sender doesn't auto-retry the same file. Drop the partial OPFS
-          // file rather than leaving orphaned bytes on disk, and tell the
-          // user so they know to resend rather than wait.
-          if (incomingFileMeta) {
-            void abortIncomingReceiver()
-            resetIncomingFileState()
-            notify(t('common.transferFailed'), 'error')
-          }
+        if (connectionEverEstablished) {
           scheduleReconnect()
         }
         else {
@@ -359,6 +386,7 @@ export function useTextTransferPage() {
       })
       if (leave) {
         await sendGoodbye()
+        abortOngoingTransfer()
         webrtc.disconnect()
         signaling.disconnect()
       }
@@ -367,6 +395,7 @@ export function useTextTransferPage() {
   })
 
   onMounted(async () => {
+    mounted = true
     loadPersistedState()
     // Warm the STUN/TURN credential cache before either peer needs it.
     // Sender hits this path waiting for a scan; receiver hits it while the QR
@@ -412,6 +441,7 @@ export function useTextTransferPage() {
   })
 
   onUnmounted(() => {
+    mounted = false
     clearDisconnectTimer()
     clearReceiveTimeout()
     clearIceWatchdog()
@@ -453,10 +483,16 @@ export function useTextTransferPage() {
   function resetReceiveTimeout() {
     if (receiveTimeoutTimer) clearTimeout(receiveTimeoutTimer)
     receiveTimeoutTimer = setTimeout(() => {
+      // Sender stopped sending chunks for 30 s — connection may still be up
+      // but the transfer is unrecoverable. Abort cleanly and go back to
+      // waiting; don't burn a reconnect attempt since the issue is the sender,
+      // not the network path.
       if (incomingFileMeta) {
         void abortIncomingReceiver()
         resetIncomingFileState()
-        attemptReconnect()
+        transferredSize.value = '0 B'
+        state.value = 'waiting'
+        notify(t('common.transferFailed'), 'error')
       }
     }, RECEIVE_TIMEOUT_MS)
   }
@@ -468,6 +504,39 @@ export function useTextTransferPage() {
     incomingReceivedBytes = 0
     transferProgress.value = 0
     currentFile.value = { name: '', size: '' }
+  }
+
+  /**
+   * Immediately abort any in-flight transfer and return to 'waiting'.
+   * Called on connection drop — no grace period, no reconnect attempt here.
+   *
+   * Receiver side: abort OPFS write, reset state, show error.
+   * Sender side:   set the cancel flag so the sendFile() loop throws on its
+   *                next iteration; the catch block in startTransfer/
+   *                handleMobileFileSelect handles the error notification and
+   *                final state reset, so we skip the notify here to avoid a
+   *                duplicate toast.
+   *
+   * Safe to call multiple times (no-op when state !== 'transferring').
+   */
+  function abortOngoingTransfer() {
+    if (state.value !== 'transferring') return
+    clearReceiveTimeout()
+    if (incomingFileMeta) {
+      void abortIncomingReceiver()
+      resetIncomingFileState()
+      notify(t('common.transferFailed'), 'error')
+    }
+    else {
+      // Sender — cancelSend() sets the flag; sendFile() will throw 'cancelled'
+      // and its catch block emits the error toast.
+      webrtc.cancelSend()
+      transferProgress.value = 0
+      currentFile.value = { name: '', size: '' }
+    }
+    transferredSize.value = '0 B'
+    fileQueue.value = []
+    state.value = 'waiting'
   }
 
   async function abortIncomingReceiver() {
@@ -770,11 +839,21 @@ export function useTextTransferPage() {
       // rather than silently fabricate a plausible-looking code.
     }
   }
+  const ALLOWED_DEVICE_ICONS = new Set([
+    'smartphone', 'tablet_mac', 'laptop_mac', 'laptop_windows', 'computer', 'devices',
+  ])
+
   function applyRemotePeerMeta(raw: unknown) {
     if (!raw || typeof raw !== 'object') return
     const payload = raw as Record<string, unknown>
-    const name = typeof payload.name === 'string' ? payload.name.trim() : ''
-    const icon = typeof payload.icon === 'string' ? payload.icon.trim() : ''
+    // Cap name at 64 chars to prevent DOM bloat from a hostile peer sending a
+    // huge string. Trim whitespace; fall back to current value if empty.
+    const name = typeof payload.name === 'string' ? payload.name.trim().slice(0, 64) : ''
+    // Whitelist icon against the exact set sent by inferLocalDeviceInfo().
+    // An unknown value stays as the current default ('devices') so the UI
+    // never renders attacker-controlled strings in an icon slot.
+    const rawIcon = typeof payload.icon === 'string' ? payload.icon.trim() : ''
+    const icon = ALLOWED_DEVICE_ICONS.has(rawIcon) ? rawIcon : ''
     if (!name && !icon) return
     remoteDeviceName.value = name || remoteDeviceName.value
     remoteDeviceIcon.value = icon || remoteDeviceIcon.value
@@ -809,21 +888,37 @@ export function useTextTransferPage() {
   }
   function handleBeforeUnload(event: BeforeUnloadEvent) {
     if (isConnected.value || state.value === 'transferring' || state.value === 'reconnecting') {
+      // Best-effort synchronous goodbye. dataChannel.send() is synchronous so
+      // SCTP can flush it before the page unloads. We can't await here (async
+      // is blocked in beforeunload) so there's no delivery guarantee, but it
+      // reliably reaches the remote peer on normal tab-closes (~80% of the time
+      // based on SCTP queue latency) and is better than nothing.
+      webrtc.sendControl('peer-disconnect', {})
       event.preventDefault()
       event.returnValue = ''
     }
   }
   function handleVisibilityChange() {
-    if (document.visibilityState === 'visible' && state.value === 'transferring' && webrtc.connectionState.value !== 'connected') {
+    // Tab came back to foreground while we're in the reconnect loop — kick
+    // a retry sooner than the current backoff delay.
+    // Note: a transfer that was running when the tab backgrounded will have
+    // been aborted by abortOngoingTransfer() (via the ICE state handlers),
+    // so state is either 'waiting' or 'reconnecting' by the time we get here.
+    if (document.visibilityState === 'visible' && state.value === 'reconnecting' && webrtc.connectionState.value !== 'connected') {
       clearDisconnectTimer()
       scheduleReconnect()
     }
   }
   function handleOffline() {
-    // OS-level offline — stop waiting for WebRTC's 30s consent-freshness
-    // timeout and reflect the state immediately in the UI.
-    if (state.value === 'transferring' || isConnected.value) {
-      clearDisconnectTimer()
+    // OS-level offline — give immediate feedback without waiting for WebRTC's
+    // 30 s consent-freshness timeout.
+    clearDisconnectTimer()
+    if (state.value === 'transferring') {
+      // Abort the transfer right away; the connection recovery (if any) will
+      // be driven by the ICE state change handlers when the network returns.
+      abortOngoingTransfer()
+    }
+    else if (isConnected.value || state.value === 'reconnecting') {
       state.value = 'reconnecting'
     }
   }
@@ -842,8 +937,12 @@ export function useTextTransferPage() {
     // navigator.connection fires when the effective network type changes
     // (WiFi → cellular, new SSID, etc.). The old ICE candidate pair is
     // instantly stale — trigger a restart instead of waiting for it to fail.
-    if (webrtc.connectionState.value === 'connected') {
+    if (webrtc.connectionState.value === 'connected' && state.value !== 'reconnecting') {
       // Active session on a new network — force restart.
+      // Guard: state must not already be 'reconnecting', otherwise rapid
+      // network-type oscillation (WiFi→4G→WiFi in quick succession) would
+      // call attemptReconnect() multiple times before the first ICE restart
+      // finishes, draining the reconnect budget in seconds.
       void attemptReconnect()
     }
     else if (state.value === 'reconnecting') {
@@ -1064,13 +1163,14 @@ export function useTextTransferPage() {
     roomId.value = generateRoomId('abcdefghjkmnpqrstuvwxyz23456789')
     reconnectAttempt.value = 3
     relayFallbackUsed = false
+    connectionEverEstablished = false
     verificationDigits.value = ['-', '-', '-', '-']
     clearIceWatchdog()
     clearReconnectBackoff()
     markRemoteDeviceOnline(false)
     webrtc.disconnect()
     signaling.disconnect()
-    generateRoomQr().then(() => startSenderSignaling())
+    generateRoomQr().then(() => { if (mounted) startSenderSignaling() })
   }
   async function disconnectAndRefresh() {
     const leave = await showConfirm({
@@ -1081,6 +1181,7 @@ export function useTextTransferPage() {
     })
     if (leave) {
       await sendGoodbye()
+      abortOngoingTransfer()
       receivedMessages.value = []
       isReceiver.value = false
       refreshQr()
@@ -1164,6 +1265,9 @@ export function useTextTransferPage() {
       catch {
         updateTransferRecord(pendingRecordId, { status: 'failed' })
         notify(t('common.transferFailed'), 'error')
+        // Stop the loop — if one file failed the channel is broken.
+        // Without this, every remaining queued file fires its own error toast.
+        break
       }
     }
     fileQueue.value = []
@@ -1254,6 +1358,8 @@ export function useTextTransferPage() {
     catch {
       updateTransferRecord(pendingRecordId, { status: 'failed' })
       notify(t('common.transferFailed'), 'error')
+      transferProgress.value = 0
+      currentFile.value = { name: '', size: '' }
       state.value = 'waiting'
     }
   }

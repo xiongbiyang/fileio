@@ -87,46 +87,27 @@ export default defineEventHandler(async (event) => {
 
   // Single-use share semantics (max_downloads === 1):
   //
-  // We delete the R2 object AFTER the client finishes consuming the stream,
-  // not at request start. The previous behavior (schedule delete immediately
-  // via waitUntil) broke slow-network recipients: large files (300 MB+) on
-  // weak links often got interrupted mid-download, and the retry saw 404
-  // because the delete had already fired.
+  // Delete the R2 object BEFORE streaming the body to the client.
+  // The previous approach deleted after successful delivery, which left a
+  // race window equal to the entire download duration: two concurrent
+  // requests both called bucket.get() before any delete fired, both saw
+  // downloadsRemaining > 0, and both received the full file.
   //
-  // New behavior: pipe the R2 body through a pass-through TransformStream
-  // and observe `pipeTo`'s completion. On success — the client received the
-  // full body — delete the object. On failure (client disconnect, network
-  // error) — leave the object so the recipient can retry within the expiry
-  // window. Once expiresAt passes, the next request's expiry check will
-  // clean it up anyway, so the worst abuse window is one expiry period.
+  // Deleting before streaming shrinks the race window to R2's internal
+  // write-propagation latency (~ms). A second concurrent request that
+  // already called bucket.get() may still succeed (unavoidable without
+  // Durable Objects), but any request that arrives after the delete sees
+  // 404 immediately.
+  //
+  // Trade-off: a mid-stream failure is not retryable. For single-use
+  // semantics that is the correct behaviour — "one download" means one
+  // attempt. The 3-day expiry lifecycle rule sweeps any orphaned objects.
   //
   // For max_downloads === 0 (unlimited) the object stays until lifecycle
   // rules sweep it (or expiry check on any subsequent GET).
-  //
-  // IMPORTANT: do NOT destructure waitUntil — it is a bound method on the
-  // execution context. Calling a bare reference triggers "Illegal invocation"
-  // in workerd. Always invoke it via the owning object.
-  if (maxDownloads !== 1) {
-    return body
+  if (maxDownloads === 1) {
+    await bucket.delete(id).catch(() => {})
   }
 
-  const { readable, writable } = new TransformStream()
-  const deleteAfterDelivery = body.pipeTo(writable).then(
-    () => bucket.delete(id).catch(() => {}),
-    () => { /* stream aborted — preserve for retry; expiry will GC */ },
-  )
-
-  const cf = event.context.cloudflare as
-    | { context?: { waitUntil?: (p: Promise<unknown>) => void } }
-    | undefined
-  if (cf?.context?.waitUntil) {
-    cf.context.waitUntil(deleteAfterDelivery)
-  }
-  else {
-    // Local dev without a cloudflare execution context — attach the promise
-    // to something so it's not dropped by the event loop early.
-    void deleteAfterDelivery
-  }
-
-  return readable
+  return body
 })
