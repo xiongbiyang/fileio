@@ -5,8 +5,14 @@
       {{ $t('nav.share') }}
     </NuxtLink>
 
-    <!-- No query / invalid state -->
-    <div v-if="!shareId" class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-8 text-center">
+    <!-- SSR placeholder while we're reading the URL fragment (fragments are
+         not sent to the server, so we can't know the share id until hydrate) -->
+    <div v-if="!hydrated" class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-8 text-center">
+      <span class="material-symbols-outlined text-3xl text-on-surface-variant animate-pulse mb-3 block">hourglass_top</span>
+    </div>
+
+    <!-- No fragment / invalid state -->
+    <div v-else-if="!shareId" class="bg-surface-container-low dark:bg-surface-container rounded-2xl p-8 text-center">
       <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">info</span>
       <p class="text-on-surface-variant mb-6">{{ $t('share.result.noData') }}</p>
       <NuxtLink :to="localePath('/share')" class="inline-block px-6 py-3 primary-gradient text-on-primary rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform">
@@ -40,6 +46,12 @@
 
           <!-- Link + meta -->
           <div class="space-y-5 min-w-0">
+            <div v-if="fileName">
+              <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">{{ $t('share.fileLabel') }}</p>
+              <p class="font-medium text-on-surface dark:text-surface break-all">{{ fileName }}</p>
+              <p v-if="fileSize" class="text-xs text-on-surface-variant mt-1">{{ formatBytes(fileSize) }}</p>
+            </div>
+
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">{{ $t('share.linkLabel') }}</p>
               <div class="flex items-center gap-2">
@@ -95,7 +107,6 @@ definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const { notify } = useNotifier()
 
@@ -111,12 +122,16 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-const shareId = computed(() => {
-  const raw = String(route.query.id || '').trim()
-  return /^[a-zA-Z0-9]{10}$/.test(raw) ? raw : ''
-})
-const expiresAt = computed(() => Number.parseInt(String(route.query.exp || '0'), 10) || 0)
-const maxDownloads = computed(() => Number.parseInt(String(route.query.max || '1'), 10) || 1)
+// All state lives on the URL fragment (see index.vue upload flow) so the
+// share id never makes it to Referer headers / analytics logs. Fragments
+// aren't available during SSR — hydrated is flipped in onMounted so we
+// render a neutral skeleton during SSR instead of a brief "no data" flash.
+const hydrated = ref(false)
+const shareId = ref('')
+const expiresAt = ref(0)
+const maxDownloads = ref(1)
+const fileName = ref('')
+const fileSize = ref(0)
 
 const shareUrl = computed(() =>
   shareId.value
@@ -128,6 +143,14 @@ const expiresText = computed(() => {
   if (!expiresAt.value) return '—'
   return new Date(expiresAt.value).toLocaleString()
 })
+
+function formatBytes(bytes: number): string {
+  if (!bytes) return ''
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+  return `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`
+}
 
 const qrCanvas = ref<HTMLCanvasElement | null>(null)
 const copiedFlash = ref(false)
@@ -145,6 +168,15 @@ async function copyLink() {
 }
 
 onMounted(async () => {
+  const hp = new URLSearchParams(window.location.hash.slice(1))
+  const rawId = String(hp.get('id') ?? '').trim()
+  if (/^[a-zA-Z0-9]{10}$/.test(rawId)) shareId.value = rawId
+  expiresAt.value = Number.parseInt(String(hp.get('exp') ?? '0'), 10) || 0
+  maxDownloads.value = Number.parseInt(String(hp.get('max') ?? '1'), 10) || 1
+  fileName.value = String(hp.get('name') ?? '').slice(0, 255)
+  fileSize.value = Number.parseInt(String(hp.get('size') ?? '0'), 10) || 0
+  hydrated.value = true
+
   if (!shareUrl.value) return
   await nextTick()
   if (qrCanvas.value) {

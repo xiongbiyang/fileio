@@ -1,4 +1,4 @@
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
 import { getShareBucket } from '~/server/utils/r2'
 import { assertRateLimit } from '~/server/utils/rateLimit'
 import { isShareIdShape } from '~/utils/shareId'
@@ -11,6 +11,11 @@ export default defineEventHandler(async (event) => {
 
   // Light rate limit (100 / hour / IP) — prevents mass enumeration
   await assertRateLimit(event, 'share-meta', 3600, 100)
+
+  // Never cache meta responses. A single-use share's state changes the
+  // moment a download begins — a stale 200 cached at the edge would lead
+  // the recipient to click Download and hit 410 unexpectedly.
+  setHeader(event, 'Cache-Control', 'no-store')
 
   const bucket = getShareBucket(event)
   const info = await bucket.head(id)

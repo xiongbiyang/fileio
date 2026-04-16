@@ -400,6 +400,7 @@
     "uploading": "上傳中 {percent}%…",
     "resultTitle": "連結已產生",
     "resultSubtitle": "把連結或 QR 碼發給接收者。請像對待密碼一樣保管——任何人拿到連結都能下載一次。",
+    "fileLabel": "檔案",
     "linkLabel": "下載連結",
     "expiresLabel": "過期時間",
     "downloadsLabel": "下載次數",

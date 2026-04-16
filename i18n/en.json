@@ -400,6 +400,7 @@
     "uploading": "Uploading {percent}%…",
     "resultTitle": "Your link is ready",
     "resultSubtitle": "Send this link or QR code to the recipient. Treat it like a password — anyone with the link can download once.",
+    "fileLabel": "File",
     "linkLabel": "Download link",
     "expiresLabel": "Expires",
     "downloadsLabel": "Downloads",

@@ -466,7 +466,17 @@ async function handleUpload() {
   }
   xhr.onload = () => {
     if (xhr.status >= 200 && xhr.status < 300) {
-      const target = `${localePath('/share/result')}?id=${encodeURIComponent(presigned.id)}&exp=${presigned.expiresAt}&max=${presigned.maxDownloads}`
+      // Carry all state on the URL fragment rather than the query string
+      // so the share id never lands in Referer headers, browser history's
+      // searchable text, or edge / analytics request logs.
+      const hashParams = new URLSearchParams({
+        id: presigned.id,
+        exp: String(presigned.expiresAt),
+        max: String(presigned.maxDownloads),
+        name: file.name,
+        size: String(file.size),
+      })
+      const target = `${localePath('/share/result')}#${hashParams.toString()}`
       window.location.assign(target)
       return
     }

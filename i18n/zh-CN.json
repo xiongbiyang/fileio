@@ -400,6 +400,7 @@
     "uploading": "上传中 {percent}%…",
     "resultTitle": "链接已生成",
     "resultSubtitle": "把链接或二维码发给接收者。请像对待密码一样保管——任何人拿到链接都能下载一次。",
+    "fileLabel": "文件",
     "linkLabel": "下载链接",
     "expiresLabel": "过期时间",
     "downloadsLabel": "下载次数",
