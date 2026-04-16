@@ -93,6 +93,9 @@ export function useTextTransferPage() {
   let incomingReceivedBytes = 0
   let incomingLastBytes = 0
   let incomingLastTime = 0
+  // Tracks cancel functions for the 5-min blob-cleanup timers so onUnmounted
+  // can run them immediately instead of leaving OPFS files dangling.
+  const pendingFileCleanupCancels: Array<() => void> = []
   let disconnectTimer: ReturnType<typeof setTimeout> | null = null
   let receiveTimeoutTimer: ReturnType<typeof setTimeout> | null = null
   let iceWatchdogTimer: ReturnType<typeof setTimeout> | null = null
@@ -346,6 +349,12 @@ export function useTextTransferPage() {
         confirmText: t('toolA.leaveConfirm'),
         cancelText: t('toolA.leaveCancel'),
       })
+      if (leave) {
+        // Close immediately so the remote peer notices right away instead of
+        // waiting ~30 s for ICE keepalives to expire.
+        webrtc.disconnect()
+        signaling.disconnect()
+      }
       return leave
     }
   })
@@ -404,7 +413,15 @@ export function useTextTransferPage() {
     // so the OPFS file is removed — otherwise it sits there until the 30min
     // stale-cleanup sweep on next mount.
     void abortIncomingReceiver()
+    // Run any pending download-blob cleanup immediately instead of letting
+    // the 5-min timers fire after the component is gone.
+    for (const cancel of pendingFileCleanupCancels) cancel()
+    pendingFileCleanupCancels.length = 0
     markRemoteDeviceOnline(false)
+    // Explicitly close connections so the remote peer notices immediately
+    // (otherwise they wait ~30 s for ICE keepalives to expire).
+    webrtc.disconnect()
+    signaling.disconnect()
     window.removeEventListener('beforeunload', handleBeforeUnload)
     window.removeEventListener('online', handleOnline)
     window.removeEventListener('offline', handleOffline)
@@ -537,9 +554,18 @@ export function useTextTransferPage() {
         downloadName: meta.name,
       })
       // Keep the blob URL alive for 5 minutes so the user has time to tap it.
-      // The OPFS stale-file reaper (cleanupStaleOpfsFiles on next mount) will
-      // handle anything the 5-min timer misses.
-      setTimeout(() => { void cleanup() }, 5 * 60 * 1000)
+      // Register a cancel function so onUnmounted can run cleanup immediately
+      // if the user navigates away before the timer fires.
+      const cleanupTimer = setTimeout(() => {
+        const idx = pendingFileCleanupCancels.indexOf(cancelCleanup)
+        if (idx >= 0) pendingFileCleanupCancels.splice(idx, 1)
+        void cleanup()
+      }, 5 * 60 * 1000)
+      function cancelCleanup() {
+        clearTimeout(cleanupTimer)
+        void cleanup()
+      }
+      pendingFileCleanupCancels.push(cancelCleanup)
     }
     catch {
       notify(t('common.transferFailed'), 'error')
