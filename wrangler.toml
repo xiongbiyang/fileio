@@ -20,7 +20,22 @@ id = "b97174555adb43de94b68cd627b6cd6b"
 # database_name = "fileio-db"
 # database_id = "paste-your-id-here"
 
-# Environment variables (public only — NUXT_TURNSTILE_SECRET_KEY is a Pages encrypted secret)
+# Environment variables.
+#
+# Public (committed here):
+#   NUXT_PUBLIC_*
+#
+# Server-only secrets (set via Cloudflare Pages Dashboard → Settings →
+# Environment variables, NEVER here):
+#   NUXT_TURNSTILE_SECRET_KEY        — Turnstile verify secret
+#   NUXT_CLOUDFLARE_TURN_KEY_ID      — R2 TURN/STUN credential key id
+#   NUXT_CLOUDFLARE_TURN_API_TOKEN   — R2 TURN/STUN credential API token
+#   NUXT_R2_ACCOUNT_ID               — Cloudflare account id (R2 overview page)
+#   NUXT_R2_ACCESS_KEY_ID            — R2 S3 API token access key id
+#   NUXT_R2_SECRET_ACCESS_KEY        — R2 S3 API token secret (ENCRYPTED)
+# R2 S3 credentials are used by /api/share/presign.post.ts to mint presigned
+# PUT URLs so the browser can stream uploads (up to 1 GB) directly to R2,
+# bypassing the Worker's 100 MB request-body cap.
 [vars]
 NUXT_PUBLIC_SITE_URL = "https://fileio.top"
 NUXT_PUBLIC_PARTYKIT_HOST = "transfer.xiongbiyang.partykit.dev"

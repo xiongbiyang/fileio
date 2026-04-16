@@ -51,6 +51,13 @@ export default defineNuxtConfig({
     cloudflareTurnKeyId: process.env.NUXT_CLOUDFLARE_TURN_KEY_ID || '',
     cloudflareTurnApiToken: process.env.NUXT_CLOUDFLARE_TURN_API_TOKEN || '',
     turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || '',
+    // R2 S3-compatible API credentials. Required for Quick Share's direct-
+    // to-R2 presigned uploads (bypasses the Worker 100 MB request body limit).
+    // Create via Cloudflare Dashboard → R2 → Manage R2 API Tokens.
+    r2AccountId: process.env.NUXT_R2_ACCOUNT_ID || '',
+    r2AccessKeyId: process.env.NUXT_R2_ACCESS_KEY_ID || '',
+    r2SecretAccessKey: process.env.NUXT_R2_SECRET_ACCESS_KEY || '',
+    r2BucketName: process.env.NUXT_R2_BUCKET_NAME || 'fileio-share',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://fileio.top',
       // Development: leave empty (defaults to localhost:1999)
@@ -145,7 +152,7 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       meta: [
-        { name: 'description', content: 'FileIO — two privacy-first browser tools: WebRTC peer-to-peer text & file transfer with QR-code pairing, plus Quick Share, a temporary file drop with auto-expiring download links. No app install, no signup, up to 300 MB per file.' },
+        { name: 'description', content: 'FileIO — two privacy-first browser tools: WebRTC peer-to-peer text & file transfer with QR-code pairing, plus Quick Share, a temporary file drop with auto-expiring download links. No app install, no signup, up to 1 GB per file via Quick Share.' },
         { name: 'keywords', content: 'cross-device file transfer,temporary file sharing,quick file share,online clipboard,phone to pc transfer,qr code pairing,one-time download link,self-destruct file link,airdrop alternative for windows,no app file transfer,browser file transfer,p2p file sharing' },
         { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
         { name: 'googlebot', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },

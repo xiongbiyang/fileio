@@ -23,6 +23,7 @@
     "@nuxtjs/sitemap": "^8.0.11",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@vueuse/core": "^12.0.0",
+    "aws4fetch": "^1.0.20",
     "marked": "^17.0.5",
     "nuxt": "^3.15.0",
     "partysocket": "^1.1.16",

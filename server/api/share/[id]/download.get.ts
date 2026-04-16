@@ -32,24 +32,40 @@ export default defineEventHandler(async (event) => {
   }
 
   const meta = obj.customMetadata ?? {}
-  const expiresAt = Number.parseInt(meta.expiresAt ?? '0', 10)
+  // New uploads go through the S3 API (presigned PUT), which normalizes
+  // x-amz-meta-* header names to lowercase. Old uploads went through the
+  // R2 binding with camelCase keys. Read both, preferring the new shape.
+  const metaNum = (lower: string, camel: string): number =>
+    Number.parseInt(meta[lower] ?? meta[camel] ?? '0', 10)
+
+  const expiresAt = metaNum('expiresat', 'expiresAt')
   if (!expiresAt || Date.now() > expiresAt) {
     await bucket.delete(id).catch(() => {})
     throw createError({ statusCode: 410, statusMessage: 'Share expired' })
   }
 
-  const maxDownloads = Number.parseInt(meta.maxDownloads ?? '0', 10)
+  const maxDownloads = metaNum('maxdownloads', 'maxDownloads')
   const downloadsRemaining = maxDownloads === 0
     ? -1
-    : Number.parseInt(meta.downloadsRemaining ?? '0', 10)
+    : metaNum('downloadsremaining', 'downloadsRemaining')
   if (maxDownloads > 0 && downloadsRemaining <= 0) {
     await bucket.delete(id).catch(() => {})
     throw createError({ statusCode: 410, statusMessage: 'Share already consumed' })
   }
 
-  const filename = meta.filename ?? 'download.bin'
+  // New uploads (presigned R2 PUT) percent-encode Unicode filenames because
+  // the S3 API only carries ASCII in x-amz-meta-*. Try to decode; fall back
+  // to the raw string for legacy objects from the old Worker-mediated path.
+  const rawFilename = meta.filename ?? 'download.bin'
+  let filename: string
+  try {
+    filename = decodeURIComponent(rawFilename)
+  }
+  catch {
+    filename = rawFilename
+  }
   const mime = meta.mime ?? obj.httpMetadata?.contentType ?? 'application/octet-stream'
-  const size = Number.parseInt(meta.size ?? String(obj.size), 10)
+  const size = metaNum('size', 'size') || obj.size
 
   setHeader(event, 'Content-Type', mime)
   setHeader(event, 'Content-Length', size)

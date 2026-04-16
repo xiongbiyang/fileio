@@ -19,27 +19,42 @@ export default defineEventHandler(async (event) => {
   }
 
   const meta = info.customMetadata ?? {}
-  const expiresAt = Number.parseInt(meta.expiresAt ?? '0', 10)
+  // New uploads go through the S3 API (presigned PUT), which lowercases all
+  // x-amz-meta-* header names. Legacy uploads (via the R2 binding) used
+  // camelCase. Read lowercase first, then fall back.
+  const metaNum = (lower: string, camel: string): number =>
+    Number.parseInt(meta[lower] ?? meta[camel] ?? '0', 10)
+
+  const expiresAt = metaNum('expiresat', 'expiresAt')
   if (!expiresAt || Date.now() > expiresAt) {
     await bucket.delete(id).catch(() => {})
     throw createError({ statusCode: 410, statusMessage: 'Share expired' })
   }
 
-  const maxDownloads = Number.parseInt(meta.maxDownloads ?? '0', 10)
+  const maxDownloads = metaNum('maxdownloads', 'maxDownloads')
   const downloadsRemaining = maxDownloads === 0
     ? -1 // unlimited sentinel
-    : Number.parseInt(meta.downloadsRemaining ?? '0', 10)
+    : metaNum('downloadsremaining', 'downloadsRemaining')
 
   if (maxDownloads > 0 && downloadsRemaining <= 0) {
     await bucket.delete(id).catch(() => {})
     throw createError({ statusCode: 410, statusMessage: 'Share already consumed' })
   }
 
+  const rawFilename = meta.filename ?? 'file'
+  let filename: string
+  try {
+    filename = decodeURIComponent(rawFilename)
+  }
+  catch {
+    filename = rawFilename
+  }
+
   return {
     id,
-    filename: meta.filename ?? 'file',
+    filename,
     mime: meta.mime ?? 'application/octet-stream',
-    size: Number.parseInt(meta.size ?? String(info.size), 10),
+    size: metaNum('size', 'size') || info.size,
     expiresAt,
     maxDownloads,
     downloadsRemaining,
