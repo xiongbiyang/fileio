@@ -189,6 +189,14 @@ export function useTextTransferPage() {
             resetIncomingFileState()
             state.value = 'waiting'
           }
+          else if (msg.type === 'peer-disconnect') {
+            // Remote peer intentionally ended the session. Mirror their action
+            // so both sides land on the QR screen instead of the receiver
+            // being stuck in the reconnect loop waiting for ICE to time out.
+            receivedMessages.value = []
+            isReceiver.value = false
+            refreshQr()
+          }
         }
         catch {
           // Ignore malformed messages from remote peers.
@@ -350,8 +358,7 @@ export function useTextTransferPage() {
         cancelText: t('toolA.leaveCancel'),
       })
       if (leave) {
-        // Close immediately so the remote peer notices right away instead of
-        // waiting ~30 s for ICE keepalives to expire.
+        await sendGoodbye()
         webrtc.disconnect()
         signaling.disconnect()
       }
@@ -705,6 +712,17 @@ export function useTextTransferPage() {
       name: localDeviceInfo.name,
       icon: localDeviceInfo.icon,
     })
+  }
+  async function sendGoodbye() {
+    // Notify the remote peer before closing so they return to QR screen
+    // immediately rather than spinning through the reconnect loop.
+    // Only send if the DataChannel is actually open — sendControl is a no-op
+    // otherwise, and there's nothing useful to wait for.
+    if (webrtc.connectionState.value === 'connected') {
+      webrtc.sendControl('peer-disconnect', {})
+      // Give SCTP ~80 ms to flush the message before we tear down the channel.
+      await new Promise<void>(r => setTimeout(r, 80))
+    }
   }
   function raiseQuickShareHint(reason: 'big-file' | 'relay' | 'retry') {
     if (quickShareHintDismissed) return
@@ -1062,6 +1080,7 @@ export function useTextTransferPage() {
       cancelText: t('toolA.leaveCancel'),
     })
     if (leave) {
+      await sendGoodbye()
       receivedMessages.value = []
       isReceiver.value = false
       refreshQr()
