@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- English core pages -->
+  <url><loc>https://fileio.top/</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/transfer</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/share</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileio.top/blog</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/guides/file-transfer</loc><lastmod>2026-04-16</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/about</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/contact</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://fileio.top/privacy</loc><lastmod>2026-04-16</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://fileio.top/terms</loc><lastmod>2026-04-16</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <!-- zh-CN core pages -->
+  <url><loc>https://fileio.top/zh-CN</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/zh-CN/transfer</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/zh-CN/share</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/guides/file-transfer</loc><lastmod>2026-04-16</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/about</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/contact</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- zh-TW core pages -->
+  <url><loc>https://fileio.top/zh-TW</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/zh-TW/transfer</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fileio.top/zh-TW/share</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fileio.top/zh-TW/blog</loc><lastmod>2026-04-16</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-TW/guides/file-transfer</loc><lastmod>2026-04-16</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-TW/about</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-TW/contact</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- English blog posts -->
+  <url><loc>https://fileio.top/blog/best-airdrop-alternative-for-windows-2026</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/best-free-ai-tools-2025</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/file-io-alternative-quick-share-comparison</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/fileio-vs-airdrop-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/blog/fileio-vs-localsend-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/blog/fileio-vs-snapdrop-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/blog/fileio-vs-wetransfer-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/blog/how-to-transfer-files-phone-to-pc</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/iphone-to-windows-file-transfer-no-app-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/send-large-video-from-phone-to-pc-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/temporary-file-sharing-link-and-qr-guide</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/blog/transfer-files-phone-to-laptop-without-usb-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- zh-CN blog posts -->
+  <url><loc>https://fileio.top/zh-CN/blog/best-airdrop-alternative-for-windows-2026</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/best-free-ai-tools-2025</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/file-io-alternative-quick-share-comparison</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/fileio-vs-airdrop-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/fileio-vs-localsend-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/fileio-vs-snapdrop-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/fileio-vs-wetransfer-comparison</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/how-to-transfer-files-phone-to-pc</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/iphone-to-windows-file-transfer-no-app-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/send-large-video-from-phone-to-pc-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/temporary-file-sharing-link-and-qr-guide</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fileio.top/zh-CN/blog/transfer-files-phone-to-laptop-without-usb-guide</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>

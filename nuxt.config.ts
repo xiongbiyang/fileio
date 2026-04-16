@@ -1,45 +1,4 @@
-﻿import { useBlogPosts } from './composables/useBlogPosts'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-
-function getBlogPostLastmod(slug: string, fallbackDate: string) {
-  try {
-    const filePath = resolve(process.cwd(), 'content', 'blog', `${slug}.md`)
-    const raw = readFileSync(filePath, 'utf8')
-    const frontmatterMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-    if (!frontmatterMatch) return fallbackDate
-    const frontmatter = frontmatterMatch[1]
-    const match = frontmatter.match(/^(updated|updatedAt|lastmod|modified|dateModified):\s*["']?([^"'\n]+)["']?\s*$/im)
-    if (!match) return fallbackDate
-    const value = match[2].trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value
-    const parsed = new Date(value)
-    if (Number.isNaN(parsed.getTime())) return fallbackDate
-    return parsed.toISOString().slice(0, 10)
-  } catch {
-    return fallbackDate
-  }
-}
-
-const blogPosts = useBlogPosts()
-const blogSitemapUrls = [
-  // English blog URLs
-  ...blogPosts.map(post => ({
-    loc: `/blog/${post.slug}`,
-    lastmod: getBlogPostLastmod(post.slug, post.date),
-    changefreq: 'monthly' as const,
-    priority: (post.slug.startsWith('fileio-vs-') ? 0.8 : 0.7) as 0.8 | 0.7,
-  })),
-  // zh-CN blog URLs
-  ...blogPosts.filter(post => post.zhCN).map(post => ({
-    loc: `/zh-CN/blog/${post.slug}`,
-    lastmod: getBlogPostLastmod(post.slug, post.date),
-    changefreq: 'monthly' as const,
-    priority: (post.slug.startsWith('fileio-vs-') ? 0.8 : 0.7) as 0.8 | 0.7,
-  })),
-]
-
-// https://nuxt.com/docs/api/configuration/nuxt-config
+﻿// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   debug: false,
@@ -74,48 +33,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/sitemap',
   ],
-
-  site: {
-    url: 'https://fileio.top',
-  },
-
-  sitemap: {
-    zeroRuntime: true,
-    xsl: false,
-    exclude: ['/settings', '/share/**'],
-    urls: [
-      // English core pages
-      { loc: '/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
-      { loc: '/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
-      { loc: '/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
-      { loc: '/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
-      { loc: '/privacy', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
-      { loc: '/terms', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: 0.5 },
-      // zh-CN core pages
-      { loc: '/zh-CN', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-CN/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-CN/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
-      { loc: '/zh-CN/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
-      { loc: '/zh-CN/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/zh-CN/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
-      { loc: '/zh-CN/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
-      // zh-TW core pages
-      { loc: '/zh-TW', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-TW/transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 1.0 },
-      { loc: '/zh-TW/share', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.9 },
-      { loc: '/zh-TW/blog', lastmod: new Date().toISOString().split('T')[0], changefreq: 'daily', priority: 0.8 },
-      { loc: '/zh-TW/guides/file-transfer', lastmod: new Date().toISOString().split('T')[0], changefreq: 'weekly', priority: 0.8 },
-      { loc: '/zh-TW/about', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.7 },
-      { loc: '/zh-TW/contact', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: 0.6 },
-      // Blog URLs (en + zh-CN)
-      ...blogSitemapUrls,
-    ],
-  },
 
   components: [
     {
@@ -249,10 +167,6 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: [
-        '/sitemap.xml',
-        '/__sitemap__/en-US.xml',
-        '/__sitemap__/zh-CN.xml',
-        '/__sitemap__/zh-TW.xml',
         '/blog',
         '/guides/file-transfer',
       ],
