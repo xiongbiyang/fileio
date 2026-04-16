@@ -302,6 +302,10 @@ const uploadProgress = ref(0)
 const uploadSpeed = ref('')
 const uploadEta = ref('')
 const uploadDone = ref('')
+// Held so the close (X) button can abort an in-flight upload. Cleared in
+// xhr.onload / xhr.onerror / on manual cancel.
+let activeUploadXhr: XMLHttpRequest | null = null
+let cancelledByUser = false
 const turnstileContainer = ref<HTMLElement | null>(null)
 const turnstileWidgetId = ref<string | null>(null)
 
@@ -364,7 +368,20 @@ function setSelectedFile(file: File | null) {
 }
 
 function clearSelectedFile() {
+  // If an upload is in flight, abort the XHR so the PUT to R2 stops
+  // immediately — otherwise the close-button click only clears the UI
+  // while bytes keep flowing in the background.
+  if (activeUploadXhr) {
+    cancelledByUser = true
+    activeUploadXhr.abort()
+    activeUploadXhr = null
+  }
   selectedFile.value = null
+  isUploading.value = false
+  uploadProgress.value = 0
+  uploadSpeed.value = ''
+  uploadEta.value = ''
+  uploadDone.value = ''
   if (fileInput.value) fileInput.value.value = ''
 }
 
@@ -476,6 +493,8 @@ async function handleUpload() {
   // Phase 2: stream the file bytes directly to R2 with the presigned URL.
   // Use XHR (not fetch) so we can surface upload progress to the user.
   const xhr = new XMLHttpRequest()
+  activeUploadXhr = xhr
+  cancelledByUser = false
   xhr.open('PUT', presigned.uploadUrl)
   // Replay every header that was signed — R2 rejects the request if any of
   // them are missing or mismatched. Omit any header whose value might be
@@ -509,6 +528,7 @@ async function handleUpload() {
     }
   }
   xhr.onload = () => {
+    activeUploadXhr = null
     if (xhr.status >= 200 && xhr.status < 300) {
       // Carry all state on the URL fragment rather than the query string
       // so the share id never lands in Referer headers, browser history's
@@ -530,9 +550,22 @@ async function handleUpload() {
     resetTurnstile()
   }
   xhr.onerror = () => {
+    activeUploadXhr = null
+    // User-initiated abort fires onerror too (plus onabort). Don't show an
+    // error toast or reset Turnstile if the user cancelled deliberately —
+    // clearSelectedFile has already cleaned the UI.
+    if (cancelledByUser) {
+      cancelledByUser = false
+      return
+    }
     isUploading.value = false
     notify(t('share.errUpload'), 'error')
     resetTurnstile()
+  }
+  xhr.onabort = () => {
+    activeUploadXhr = null
+    // Same deal as onerror's user-cancel branch.
+    cancelledByUser = false
   }
   xhr.send(file)
 }
