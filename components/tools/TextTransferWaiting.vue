@@ -27,10 +27,10 @@
           <div v-for="msg in receivedMessages" :key="msg.id" class="flex" :class="msg.isSelf ? 'justify-end' : 'justify-start'">
             <div class="max-w-[85%] px-4 py-3 rounded-2xl text-sm" :class="msg.isSelf ? 'primary-gradient text-on-primary rounded-tr-none' : 'bg-surface-container-lowest dark:bg-surface-container-high text-on-surface dark:text-surface rounded-tl-none'">
               <p>{{ msg.content }}</p>
-              <a v-if="msg.downloadUrl" :href="msg.downloadUrl" :download="msg.downloadName" target="_blank" rel="noopener" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs">
+              <button v-if="msg.downloadUrl" type="button" class="mt-2 flex items-center gap-1 font-bold text-primary text-xs active:opacity-60" @click="handleDownload(msg.downloadUrl!, msg.downloadName ?? '')">
                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">download</span>
                 {{ $t('toolA.tapToSave') }}
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -314,6 +314,39 @@ function handleDesktopFileChange(event: Event) {
   const files = Array.from(input.files || [])
   input.value = ''
   if (files.length) emit('desktopFileSelect', files)
+}
+
+async function handleDownload(url: string, name: string) {
+  // Web Share API: shows a native share sheet as an overlay — no page navigation,
+  // so the WebRTC connection stays alive. iOS Safari 15.1+ supports file sharing.
+  if (typeof navigator?.share === 'function') {
+    try {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const file = new File([blob], name, { type: blob.type })
+      const canShare = typeof navigator.canShare === 'function'
+        ? navigator.canShare({ files: [file] })
+        : true
+      if (canShare) {
+        await navigator.share({ files: [file] })
+        return
+      }
+    }
+    catch (err) {
+      // AbortError = user dismissed the share sheet — that's fine, no fallback needed.
+      if (err instanceof Error && err.name === 'AbortError') return
+      // Any other error (e.g. browser doesn't support file sharing) → fall through.
+    }
+  }
+  // Desktop / Android Chrome: standard anchor download (works reliably, no navigation).
+  const a = document.createElement('a')
+  a.href = url
+  a.download = name
+  a.target = '_blank'
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 
 const props = defineProps<{
